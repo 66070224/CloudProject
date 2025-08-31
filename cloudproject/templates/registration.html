@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <script>
+        function dragStartHandler(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+        function dragOverHandler(event) {
+            event.preventDefault();
+        }
+        function dropHandler(event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData("text");
+            event.target.appendChild(document.getElementById(data));
+        }
+    </script>
+</head>
+<body>
+    <div ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+        ลงทะเบียน
+    </div>
+    <div>
+        วิชา
+        <div id="cloud" draggable="true" ondragstart="dragStartHandler(event)">cloud</div>
+        <div id="serverside" draggable="true" ondragstart="dragStartHandler(event)">serverside</div>
+    </div>
+</body>
+</html>
