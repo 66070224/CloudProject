@@ -6,26 +6,89 @@
     <title>Registration</title>
     <script>
         function dragStartHandler(event) {
-            event.dataTransfer.setData("text", event.target.id);
+            event.dataTransfer.setData("id", event.target.id);
+            event.dataTransfer.setData("name", event.target.innerText);
         }
         function dragOverHandler(event) {
             event.preventDefault();
         }
         function dropHandler(event) {
             event.preventDefault();
-            const data = event.dataTransfer.getData("text");
-            event.target.appendChild(document.getElementById(data));
+            document.getElementById(event.dataTransfer.getData("id")).remove();
+            event.target.innerHTML += `<div id="${event.dataTransfer.getData("id")}" class="corse"><label>${event.dataTransfer.getData("name")}</label> <button onclick="removeCorse(event)">remove</button></div>`;
+            sortCorse("drop-area");
+        }
+        function removeCorse(event) {
+            area = document.getElementsByClassName("drag-area")[0];
+            const mother = event.target.parentElement;
+            area.innerHTML += `<div id="${mother.id}" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>${mother.children[0].innerText}</label></div>`;
+            mother.remove();
+            sortCorse("drag-area");
+        }
+        function sortCorse(classname) {
+            const area = document.getElementsByClassName(classname)[0];
+            const elements = Array.from(area.children);
+            elements.sort((a, b) => { return parseInt(a.id) - parseInt(b.id); });
+            elements.forEach(element => {
+                area.appendChild(element);
+            });
         }
     </script>
+    <style>
+        main {
+            text-align: center;
+            
+        }
+        .registration, .corses {
+            border: 1px solid black;
+            width: 300px;
+            height: 200px;
+            display: inline-block;
+            vertical-align: top;
+            margin: 10px;
+            padding: 10px;
+        }
+        .drop-area, .drag-area {
+            border: 1px dashed black;
+            width: 90%;
+            height: 150px;
+            margin: auto;
+            padding: 5px;
+            overflow: auto;
+        }
+        .drag-area .corse {
+            border-bottom: 1px solid black;
+            width: full;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            cursor: move;
+        }
+        .drop-area .corse {
+            border-bottom: 1px solid black;
+            width: full;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
-        ลงทะเบียน
-    </div>
-    <div>
-        วิชา
-        <div id="cloud" draggable="true" ondragstart="dragStartHandler(event)">cloud</div>
-        <div id="serverside" draggable="true" ondragstart="dragStartHandler(event)">serverside</div>
-    </div>
+    {% include 'nav.html' %}
+    <main>
+        <div class="registration">
+            ลงทะเบียน
+            <div class="drop-area" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+            </div>
+        </div>
+        <div class="corses">
+            วิชา
+            <div class="drag-area">
+                <div id="1" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>cloud</label></div>
+                <div id="2" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>serverside</label></div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
