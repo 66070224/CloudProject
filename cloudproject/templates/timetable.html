@@ -1,5 +1,24 @@
-<html>
-    <body>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                text-align: center;
+            }
+            th, td {
+                padding: 5px;
+            }
+            th {
+                background-color: lightgray;
+            }
+            .course {
+                background-color: lightblue;
+            }
+        </style>
+    </head>
+    <body onload="loadHandler()">
         <table>
             <tr>
                 <th>Time</th>
@@ -38,9 +57,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="3" class="course">RE</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -54,10 +71,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="4" class="course">TOOLS</td>
                 <td></td>
                 <td></td>
             </tr>
@@ -69,19 +83,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="4" class="course">SERVERSIDE</td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
                 <th>THU</th>
                 <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="3" class="course">ENG</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -94,14 +103,9 @@
             <tr>
                 <th>FRI</th>
                 <td></td>
+                <td colspan="3" class="course">MIS</td>
                 <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="4" class="course">CLOUD</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -122,5 +126,10 @@
                 <td></td>
             </tr>    
         </table>
+        <script>
+            function loadHandler() {
+                console.log("Timetable loaded");
+            }
+        </script>
     </body>
 </html>

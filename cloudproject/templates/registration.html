@@ -4,44 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
-    <script>
-        function dragStartHandler(event) {
-            event.dataTransfer.setData("id", event.target.id);
-            event.dataTransfer.setData("name", event.target.innerText);
-        }
-        function dragOverHandler(event) {
-            event.preventDefault();
-        }
-        function dropHandler(event) {
-            event.preventDefault();
-            document.getElementById(event.dataTransfer.getData("id")).remove();
-            event.target.innerHTML += `<div id="${event.dataTransfer.getData("id")}" class="corse"><label>${event.dataTransfer.getData("name")}</label> <button onclick="removeCorse(event)">remove</button></div>`;
-            sortCorse("drop-area");
-        }
-        function removeCorse(event) {
-            area = document.getElementsByClassName("drag-area")[0];
-            const mother = event.target.parentElement;
-            area.innerHTML += `<div id="${mother.id}" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>${mother.children[0].innerText}</label></div>`;
-            mother.remove();
-            sortCorse("drag-area");
-        }
-        function sortCorse(classname) {
-            const area = document.getElementsByClassName(classname)[0];
-            const elements = Array.from(area.children);
-            elements.sort((a, b) => { return parseInt(a.id) - parseInt(b.id); });
-            elements.forEach(element => {
-                area.appendChild(element);
-            });
-        }
-    </script>
     <style>
         main {
             text-align: center;
             
         }
+        .container {
+            width: 700px;
+            margin: auto;
+        }
         .registration, .corses {
             border: 1px solid black;
-            width: 300px;
+            width: 100%;
             height: 200px;
             display: inline-block;
             vertical-align: top;
@@ -75,20 +49,59 @@
     </style>
 </head>
 <body>
-    {% include 'nav.html' %}
+
+    <nav>
+        {% include 'nav.html' %}
+    </nav>
+
     <main>
-        <div class="registration">
-            ลงทะเบียน
-            <div class="drop-area" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+        {% include 'timetable.html' %}
+        <div class="container">
+            <div class="registration">
+                ลงทะเบียน
+                <div class="drop-area" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+                </div>
             </div>
-        </div>
-        <div class="corses">
-            วิชา
-            <div class="drag-area">
-                <div id="1" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>cloud</label></div>
-                <div id="2" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>serverside</label></div>
+            <div class="corses">
+                วิชา
+                <div class="drag-area">
+                    <div id="1" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>cloud</label></div>
+                    <div id="2" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>serverside</label></div>
+                </div>
             </div>
         </div>
     </main>
+
+    <script>
+        function dragStartHandler(event) {
+            event.dataTransfer.setData("id", event.target.id);
+            event.dataTransfer.setData("name", event.target.innerText);
+        }
+        function dragOverHandler(event) {
+            event.preventDefault();
+        }
+        function dropHandler(event) {
+            event.preventDefault();
+            document.getElementById(event.dataTransfer.getData("id")).remove();
+            event.target.innerHTML += `<div id="${event.dataTransfer.getData("id")}" class="corse"><label>${event.dataTransfer.getData("name")}</label> <button onclick="removeCorse(event)">remove</button></div>`;
+            sortCorse("drop-area");
+        }
+        function removeCorse(event) {
+            area = document.getElementsByClassName("drag-area")[0];
+            const mother = event.target.parentElement;
+            area.innerHTML += `<div id="${mother.id}" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>${mother.children[0].innerText}</label></div>`;
+            mother.remove();
+            sortCorse("drag-area");
+        }
+        function sortCorse(classname) {
+            const area = document.getElementsByClassName(classname)[0];
+            const elements = Array.from(area.children);
+            elements.sort((a, b) => { return parseInt(a.id) - parseInt(b.id); });
+            elements.forEach(element => {
+                area.appendChild(element);
+            });
+        }
+    </script>
+
 </body>
 </html>
