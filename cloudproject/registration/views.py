@@ -1,11 +1,21 @@
+from django.views import View
 from django.shortcuts import render
+from .models import Course
 
 # Create your views here.
-def home(request):
-    return render(request, "home.html")
+class HomeView(View):
+    def get(self, request):
+        return render(request, "home.html")
+    
+class RegistrationView(View):
+    def get(self, request):
+        courses = Course.objects.all()
+        context = {'courses': courses}
+        return render(request, "registration.html", context)
+    def post(self, request):
+        
+        pass
 
-def registration(request):
-    return render(request, "registration.html")
-
-def login(request):
-    return render(request, "login.html")
+class LoginView(View):
+    def get(self, request):
+        return render(request, "login.html")
