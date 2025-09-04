@@ -4,19 +4,20 @@
 {% block head %}
 {% endblock %}
 {% block content %}
-<div>
-    Login Page
-    <button type="button">Google</button>
-    <br>
-    or Staff Login
-    <form method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-    </form>
-</div>
+    <div>
+        Login Page
+        <br>
+        <button type="button">Google</button>
+        <br>----------------------------------
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 {% endblock %}
 {% block scripts %}
 {% endblock %}

@@ -72,6 +72,10 @@ class CourseSection(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     section_number = models.IntegerField()
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    class TypeChoices(models.TextChoices):
+        LECTURE = 'LEC', 'Lecture'
+        LAB = 'LAB', 'Lab'
+    class_type = models.CharField(max_length=3, choices=TypeChoices.choices)
     class DayChoices(models.TextChoices):
         MONDAY = 'Mon', 'Monday'
         TUESDAY = 'Tue', 'Tuesday'
