@@ -108,4 +108,4 @@ class PreEnrollQueue(models.Model):
         unique_together = ('student', 'course_section')
     
     def __str__(self):
-        return f"{self.student.student_code} - {self.course_section.course.code} ({self.course_section.section_number})"
+        return f"{self.student.code} - {self.course_section.course.code} ({self.course_section.section_number})"

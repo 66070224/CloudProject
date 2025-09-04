@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load socialaccount %}
 {% block title %}Login{% endblock %}
 {% block head %}
 {% endblock %}
@@ -7,7 +8,7 @@
     <div>
         Login Page
         <br>
-        <button type="button">Google</button>
+        <a href="{% provider_login_url 'google' %}">Google</a>
         <br>----------------------------------
         <form action="" method="post">
             {% csrf_token %}
