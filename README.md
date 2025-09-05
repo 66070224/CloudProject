@@ -6,4 +6,4 @@
 นายแสงชัย โรจน์ธนิกกุล	66070317
 
 dependencies  ที่ใช้
-django django-allauth django-environ PyFWT
+django django-allauth django-environ PyFWT มีอีกแต่จำไม่ได้
