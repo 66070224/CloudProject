@@ -1,27 +1,181 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Registration{% endblock %}
-{% block head %}
-    <link rel="stylesheet" href="{% static 'styles/registration.css' %}">
-{% endblock %}
-{% block scripts %}
-    <script src="{% static 'scripts/registration.js' %}"></script>
-{% endblock %}
+
 {% block content %}
     {% include 'timetable.html' %}
-    <div class="container">
-        <div class="registration">
-            ลงทะเบียน
-            <div class="drop-area" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
-            </div>
-        </div>
-        <div class="corses">
-            วิชา
-            <div class="drag-area">
+    <div>
+        ลงทะเบียน
+        <table class="w-full text-center border-2 mb-2" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+            <thead>
+                <tr>
+                    <th>รหัสวิชา</th>
+                    <th>ชื่อวิชา</th>
+                    <th>หน่วยกิต</th>
+                    <th>กลุ่ม</th>
+                    <th>ผู้สอน</th>
+                    <th>เวลาเรียน</th>
+                    <th>สถานที่</th>
+                    <th>รับ</th>
+                    <th>ลง</th>
+                    <th>ลบ</th>
+                </tr>
+            </thead>
+            <tbody id="droparea" class="w-full">
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        วิชา
+        <table class="w-full text-center border-2 mb-2">
+            <thead>
+                <tr>
+                    <th>รหัสวิชา</th>
+                    <th>ชื่อวิชา</th>
+                    <th>หน่วยกิต</th>
+                </tr>
+            </thead>
+            <tbody id="dragarea">
                 {% for course in courses %}
-                    <div id="{{ course.code }}" draggable="true" ondragstart="dragStartHandler(event)" class="corse"><label>{{ course.code }} | {{ course.name }}</label></div>
+                    <tr class="hover:bg-gray-200 cursor-pointer" draggable="true" ondragstart="dragStartHandler(event)" id="{{ course.code }}">
+                        <td>{{ course.code }}</td>
+                        <td>{{ course.name }}</td>
+                        <td>{{ course.credits }}</td>
+                    </tr>
                 {% endfor %}
-            </div>
-        </div>
+            </tbody>
+        </table>
     </div>
 {% endblock %}
+
+
+{% block scripts %}
+    {{ courses|json_script:"courses-data" }}
+    <script>
+        function dragStartHandler(event) {
+            event.dataTransfer.setData("id", event.target.id);
+        }
+        function dragOverHandler(event) {
+            event.preventDefault();
+        }
+        function dropHandler(event) {
+            const courses = JSON.parse(document.getElementById("courses-data").textContent);
+            event.preventDefault();
+            document.getElementById(event.dataTransfer.getData("id")).remove();
+            courses.forEach(course => {
+                if (course.code == event.dataTransfer.getData("id")) {
+                    const tr = document.createElement("tr");
+                    tr.className = "hover:bg-gray-200";
+                    tr.id = course.code;
+                    const code = document.createElement("td");
+                    code.textContent = course.code;
+                    const name = document.createElement("td");
+                    name.textContent = course.name;
+                    const credits = document.createElement("td");
+                    credits.textContent = course.credits;
+                    const section = document.createElement("td");
+                    const select = document.createElement("select");
+                    select.id = "sectionfor" + course.code
+                    select.onchange = secChange;
+                    let option = document.createElement("option");
+                    option.textContent = "เลือก";
+                    option.selected = true;
+                    option.value = "no"
+                    select.appendChild(option);
+                    course.sections.forEach(section => {
+                        option = document.createElement("option");
+                        option.value = section.section_number;
+                        option.textContent = section.section_number;
+                        select.appendChild(option);
+                    })
+                    section.appendChild(select)
+                    const teacher = document.createElement("td");
+                    teacher.textContent = "";
+                    const time = document.createElement("td");
+                    time.textContent = "";
+                    const location = document.createElement("td");
+                    location.textContent = "";
+                    const capacity = document.createElement("td");
+                    capacity.textContent = "";
+                    const enrolled = document.createElement("td");
+                    enrolled.textContent = "";
+                    const remove = document.createElement("td");
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.textContent = "remove";
+                    button.onclick = removeCorse;
+                    button.className = "bg-red-500 hover:bg-red-700 text-white";
+                    remove.appendChild(button);
+                    tr.appendChild(code);
+                    tr.appendChild(name);
+                    tr.appendChild(credits);
+                    tr.appendChild(section);
+                    tr.appendChild(teacher)
+                    tr.appendChild(time);
+                    tr.appendChild(location);
+                    tr.appendChild(capacity);
+                    tr.appendChild(enrolled);
+                    tr.appendChild(remove);
+                    document.getElementById("droparea").appendChild(tr);
+                }
+            });
+            sortCorse("droparea");
+        }
+        function removeCorse(event) {
+            const courses = JSON.parse(document.getElementById("courses-data").textContent);
+            const mother = event.target.parentElement.parentElement;
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-gray-200 cursor-pointer";
+            tr.draggable = true;
+            tr.ondragstart = dragStartHandler;
+            tr.id = mother.id;
+            const code = document.createElement("td");
+            code.textContent = mother.id;
+            const name = document.createElement("td");
+            const credits = document.createElement("td");
+            courses.forEach(course => {
+                if (course.code == mother.id) {
+                    name.textContent = course.name;
+                    credits.textContent = course.credits;
+                }
+            });
+            tr.appendChild(code);
+            tr.appendChild(name);
+            tr.appendChild(credits);
+            document.getElementById("dragarea").appendChild(tr);
+            mother.remove();
+            sortCorse("dragarea");
+            return;
+        }
+        function secChange(event) {
+            const select = event.target;
+            if (select.value === "no") return;
+            const courses = JSON.parse(document.getElementById("courses-data").textContent);
+            courses.forEach(course => {
+                if (course.code === select.id.slice(10)) {
+                    course.sections.forEach(section => {
+                        if (section.section_number.toString() === select.value) {
+                            const tr = select.parentElement.parentElement;
+                            tr.children[4].textContent = section.teacher;
+                            tr.children[5].textContent = section.start_time;
+                            tr.children[6].textContent = section.location;
+                            tr.children[7].textContent = section.capacity;
+                            tr.children[8].textContent = section.enrolled_count;
+                            return;
+                        }
+                    })
+                }
+            })  
+        }
+        function sortCorse(id) {
+            const area = document.getElementById(id);
+            const elements = Array.from(area.children);
+            elements.sort((a, b) => { return parseInt(a.id) - parseInt(b.id); });
+            elements.forEach(element => {
+                area.appendChild(element);
+            });
+        }
+    </script>
+{% endblock %}
+

@@ -1,16 +1,21 @@
 from django.db import models
+from django.contrib.auth.models import User as AuthUser
 
 #----------------------------------------------
 # User
 #----------------------------------------------
-class User(models.Model):
-    email = models.EmailField(unique=True)
+class UserInfo(models.Model):
+    user = models.OneToOneField(AuthUser, on_delete=models.CASCADE, primary_key=True)
+    title = models.CharField(max_length=10)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
     class RoleChoices(models.TextChoices):
         STUDENT = 'STU', 'Student'
         TEACHER = 'TEA', 'Teacher'
-        ADMIN = 'ADM', 'Admin'
     role = models.CharField(max_length=3, choices=RoleChoices.choices, null=True)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 #----------------------------------------------
 # Faculty and Department
@@ -33,27 +38,21 @@ class Department(models.Model):
 # All Roles
 #----------------------------------------------
 class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    from_user = models.OneToOneField(UserInfo, on_delete=models.CASCADE, primary_key=True)
     code = models.CharField(max_length=10, unique=True)
-    title = models.CharField(max_length=10)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
     year = models.IntegerField()
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, related_name='students')
     enrolled_courses = models.ManyToManyField('CourseSection', blank=True, related_name='enrolled_students')
 
     def __str__(self):
-        return f"{self.code} - {self.first_name} {self.last_name}"
+        return f"{self.code} - {self.from_user.first_name} {self.from_user.last_name}"
 
 class Teacher(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    title = models.CharField(max_length=10)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    from_user = models.OneToOneField(UserInfo, on_delete=models.CASCADE, primary_key=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, related_name='teachers')
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.from_user.first_name} {self.from_user.last_name}"
 
 
 #----------------------------------------------
@@ -69,7 +68,7 @@ class Course(models.Model):
         return f"{self.code} - {self.name} ({self.department.name})"
     
 class CourseSection(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course_sections')
     section_number = models.IntegerField()
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     class TypeChoices(models.TextChoices):
@@ -94,7 +93,7 @@ class CourseSection(models.Model):
         unique_together = ('course', 'section_number')
 
     def __str__(self):
-        return f"{self.course.code} ({self.section_number})"
+        return f"{self.course.code} - Section {self.section_number}"
 
 
 #----------------------------------------------

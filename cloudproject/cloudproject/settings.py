@@ -88,10 +88,9 @@ SOCIALACCOUNT_LOGIN_ON_GET=True
 
 ACCOUNT_LOGOUT_ON_GET = True
 
-LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
-ACCOUNT_LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'home'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'home'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
