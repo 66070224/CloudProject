@@ -1,8 +1,9 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% block title %}Home{% endblock %}
 {% block content %}
     <h1>Welcome to the Home Page</h1>
+    <p>Hello, {{ user.username }}!</p>
     {% include 'timetable.html' %}
 {% endblock %}
 {% block scripts %}

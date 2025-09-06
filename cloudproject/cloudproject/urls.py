@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomeView.as_view(), name='home'),
     path('registration/', views.RegistrationView.as_view(), name='registration'),
-    path('login/', views.LoginView.as_view(), name='login'),
-    path('accounts/', include('allauth.urls')),  # Include allauth URLs
+    path('logout/', views.logout, name='logout'),
+    path('accounts/', include('allauth.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]

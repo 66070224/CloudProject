@@ -42,6 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # extra apps
+    'tailwind',
+    'theme',
+    'django_browser_reload',
+
     # Our apps
     'registration',
 
@@ -52,6 +57,13 @@ INSTALLED_APPS = [
 
     # Providers (e.g., Google, Facebook)
     'allauth.socialaccount.providers.google',
+]
+
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+
+TAILWIND_APP_NAME = 'theme'
+TAILWIND_IPS = [
+    '127.0.0.1',
 ]
 
 SITE_ID = 1
@@ -66,8 +78,20 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': env('OAUTH_GOOGLE_CLIENT_ID'),
             'secret': env('OAUTH_GOOGLE_CLIENT_SECRET'),
         },
+        'AUTH_PARAMS': {
+            'prompt': 'select_account'
+        },
     }
 }
+
+SOCIALACCOUNT_LOGIN_ON_GET=True
+
+ACCOUNT_LOGOUT_ON_GET = True
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,6 +102,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'cloudproject.urls'
@@ -157,10 +182,3 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-SOCIALACCOUNT_LOGIN_ON_GET=True
-
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
-ACCOUNT_LOGOUT_REDIRECT_URL = 'login'
