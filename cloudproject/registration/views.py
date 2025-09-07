@@ -26,22 +26,34 @@ class RegistrationView(LoginRequiredMixin, View):
                 "code": course.code,
                 "name": course.name,
                 "credits": course.credits,
+                "teachers": [
+                    {
+                        "title": teacher.from_user.title,
+                        "first_name": teacher.from_user.first_name,
+                        "last_name": teacher.from_user.last_name,
+                    }
+                    for teacher in course.teachers.all()
+                ],
                 "sections": [
                     {
-                        "id": section.id,
                         "section_number": section.section_number,
-                        "teacher": section.teacher.from_user.title + section.teacher.from_user.first_name + " " + section.teacher.from_user.last_name,
-                        "day": section.day,
-                        "start_time": section.start_time,
-                        "end_time": section.end_time,
-                        "location": section.location,
                         "capacity": section.capacity,
                         "enrolled_count": section.enrolled_students.count(),
+                        "section_class": [
+                            {
+                                "day": section_class.get_day_display(),
+                                "start_time": section_class.start_time,
+                                "end_time": section_class.end_time,
+                                "location": section_class.location,
+                            }
+                            for section_class in section.section_class.all()
+                        ]
                     }
                     for section in course.course_sections.all()
                 ]
             })
-        context = {"courses": data}
+        days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกย์", "เสาร์"]
+        context = {"courses": data, "days": days, "times": list(range(12))}
         return render(request, "registration.html", context)
     def post(self, request):
         
