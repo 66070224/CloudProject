@@ -1,0 +1,4 @@
+
+<h1>Navbar</h1>
+<a href="">Home</a> | <a href="{% url 'registration_view' %}">Registration</a> | {% if user %} <a href="">Logout</a> {% else %} <a href="{% url 'login_view' %}">Login</a> {% endif %}
+<hr>

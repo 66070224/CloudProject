@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm, Form, ValidationError
+from .validators import validate_password_strength
 
 class LoginForm(forms.Form):
     email = forms.EmailField(
@@ -9,11 +10,12 @@ class LoginForm(forms.Form):
         })
     )
     password = forms.CharField(
-        required=True, 
+        required=True,
+        validators=[validate_password_strength],
         widget=forms.PasswordInput(attrs={
             "class": "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 pr-12",
             "id": "password"
-        })
+        },)
     )
 
     # Validation เฉพาะ field Email
@@ -33,7 +35,7 @@ class LoginForm(forms.Form):
 
 class ChangePasswordFirstTimeForm(forms.Form):
     password = forms.CharField(
-        required=True, 
+        required=True,
         widget=forms.PasswordInput(attrs={
             "class": "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 pr-12",
             "id": "password"
@@ -51,6 +53,9 @@ class ChangePasswordFirstTimeForm(forms.Form):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirmed_password = cleaned_data.get("confirmed_password")
+        
+        validate_password_strength(password) # ตรวจสอบรหัสผ่านว่ามีอักขระตามที่ Cognito กำหนดหรือไม่
+        
         if password != confirmed_password:
             raise ValidationError("รหัสผ่านไม่ตรงกัน")
         

@@ -79,11 +79,19 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'register',
-        'USER': 'regist_it21',
-        'PASSWORD': 'postgres_password_regist_it21',
-        'HOST': 'db-regist-66070317.cpikuy4u2d65.us-east-1.rds.amazonaws.com',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres_2547',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'register',
+    #     'USER': 'regist_it21',
+    #     'PASSWORD': 'postgres_password_regist_it21',
+    #     'HOST': 'db-regist-66070317.cpikuy4u2d65.us-east-1.rds.amazonaws.com',
+    #     'PORT': '5432',
+    # }
 }
 
 

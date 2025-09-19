@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{%block title%}{%endblock%}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    
+    {%block style%}{%endblock%}
     <style>
         .errorlist {color: red;}
+        
     </style>
 </head>
-<body>
-    {%block body%}{%endblock%}
+
+<body class="">
+    <nav>{%include 'layout/nav.html'%}</nav>
+    <div class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        {%block center_box_content%}{%endblock%}
+    </div>
 </body>
 </html>

@@ -25,6 +25,14 @@ def get_secret_hash(email):
     ).digest()
     return base64.b64encode(dig).decode()
 
+# สำหรับตรวจสอบ Role
+def is_student(id_token):
+    import jwt
+    decoded = jwt.decode(id_token, options={"verify_signature":False})
+    groups = decoded.get("cognito:groups", [])
+    
+    return "Student" in groups
+
 # ระบบ Login
 class LoginView(View):
     # แสดงหน้า Login
@@ -62,13 +70,17 @@ class LoginView(View):
                 
                 # กรณี login สำเร็จปกติ
                 if 'AuthenticationResult' in response:
-                    return JsonResponse({
-                        'status': 'ok',
-                        'id_token': response['AuthenticationResult']['IdToken'],
-                        'access_token': response['AuthenticationResult']['AccessToken'],
-                        'refresh_token': response['AuthenticationResult']['RefreshToken']
-                    })
-                
+                    idToken = response['AuthenticationResult']['IdToken']
+                    if is_student(idToken):
+                        from ..models import Student
+                        student = Student.objects.get(email=email)
+
+                        request.session["user"] = student
+                    else:
+                        return JsonResponse({'status': 'success', 'message': 'You are staff.'})
+                    
+                    return JsonResponse({'Role': 'Staff', 'message': response})
+
                 # กรณี user ต้องเปลี่ยนรหัสผ่าน
                 elif response.get('ChallengeName') == 'NEW_PASSWORD_REQUIRED':
                     request.session["email"] = email
@@ -108,6 +120,7 @@ class ChangePasswordView(View):
         session = request.session.pop("session", None)
         form = ChangePasswordFirstTimeForm(request.POST)
 
+        print(email)
         try:
             if form.is_valid():
                 new_password = form.cleaned_data.get("password")
@@ -123,12 +136,22 @@ class ChangePasswordView(View):
                     }
                 )
 
+                # สร้างข้อมูลเบื้องต้นสำหรับนักศึกษา
+                from ..models import Student
+                Student.objects.create(
+                    email=email,
+                    code=email.strip("@")[0]
+                )
+
                 return redirect("login_view")
 
             request.session["email"] = email
+            request.session["session"] = session
             request.session["post_change_password"] = request.POST
             return redirect("change_password_view")
 
         except Exception as e:
+            request.session["email"] = email
+            request.session["session"] = session
             return JsonResponse({'status': 'error', 'message': f"{str(e)}"})
 

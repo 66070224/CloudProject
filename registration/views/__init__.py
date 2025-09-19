@@ -1,2 +1,4 @@
 # สำหรับรวบรวมทุก View
-from .login import LoginView, ChangePasswordView
+from .login import *
+from .tenant import RegistrationView
+from .staff import *

@@ -1,0 +1,89 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Registration{% endblock %}
+
+{% block head %}
+    <style>
+        table, tr, th, td {
+            border-collapse: collapse;
+            border: 1px black solid;
+            padding: 2px;
+        }
+    </style>
+{% endblock %}
+
+{% block center_box_content %}
+    <div>
+        <table id="timetable" class="w-full text-center mb-2">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>8:00-9:00</th>
+                    <th>9:00-10:00</th>
+                    <th>10:00-11:00</th>
+                    <th>11:00-12:00</th>
+                    <th>12:00-13:00</th>
+                    <th>13:00-14:00</th>
+                    <th>14:00-15:00</th>
+                    <th>15:00-16:00</th>
+                    <th>16:00-17:00</th>
+                    <th>17:00-18:00</th>
+                    <th>18:00-19:00</th>
+                    <th>19:00-20:00</th>
+                </tr>
+            </thead>
+            <tbody id="schedule">
+                
+            </tbody>
+        </table>
+    </div>
+    <div>
+        ลงทะเบียน
+        <table class="w-full text-center mb-2" ondrop="" ondragover="">
+            <thead>
+                <tr>
+                    <th>รหัสวิชา</th>
+                    <th>ชื่อวิชา</th>
+                    <th>หน่วยกิต</th>
+                    <th>กลุ่ม</th>
+                    <th>ผู้สอน</th>
+                    <th>เวลาเรียน</th>
+                    <th>สถานที่</th>
+                    <th>รับ</th>
+                    <th>ลง</th>
+                    <th>ลบ</th>
+                </tr>
+            </thead>
+            <tbody id="droparea" class="w-full">
+            </tbody>
+        </table>
+    </div>
+    <div>
+        วิชา
+        <table class="w-full text-center">
+            <thead>
+                <tr>
+                    <th>รหัสวิชา</th>
+                    <th>ชื่อวิชา</th>
+                    <th>หน่วยกิต</th>
+                </tr>
+            </thead>
+            <tbody id="dragarea">
+                {% for course in courses %}
+                    <tr class="hover:bg-gray-200 cursor-pointer" draggable="true" id="{{ course.code }}">
+                        <td>{{ course.code }}</td>
+                        <td>{{ course.name }}</td>
+                        <td>{{ course.credits }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ courses|json_script:"courses-data" }}
+    <script src="{% static 'scripts/registration.js' %}">
+    </script>
+{% endblock %}
