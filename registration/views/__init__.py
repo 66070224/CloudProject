@@ -1,4 +1,4 @@
 # สำหรับรวบรวมทุก View
 from .login import *
-from .tenant import RegistrationView
+from .student import *
 from .staff import *

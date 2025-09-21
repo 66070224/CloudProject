@@ -1,0 +1,7 @@
+{%extends 'components/nav.html'%}
+{%load custom_filters%}
+
+{%block right_item%}
+  <a href="" class="hover:text-gray-300 transition-colors">Profile</a>
+  <a href="{% url 'logout_view' %}" class="hover:text-gray-300 transition-colors">Logout</a>
+{%endblock%}

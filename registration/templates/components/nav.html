@@ -1,0 +1,14 @@
+{%load custom_filters%}
+<!-- Logo / Title -->
+<h1 class="text-2xl font-bold">Home</h1>
+
+<!-- Links -->
+<div class="space-x-4">
+    {%block right_item%}
+        {%if is_login%}
+            <a href="{% url 'logout_view' %}" class="hover:text-gray-300 transition-colors">Logout</a>
+        {%else%}
+            <a href="{% url 'login_view' %}" class="hover:text-gray-300 transition-colors">Login</a>
+        {%endif%}
+    {%endblock%}
+</div>

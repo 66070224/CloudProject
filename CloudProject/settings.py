@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'registration.middleware.RequireLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'CloudProject.urls'
@@ -64,6 +66,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'registration.context_processors.current_user'
             ],
         },
     },
@@ -157,4 +161,5 @@ COGNITO_APP_CLIENT_SECRET = "1j186e1hujt36l9jrlkgpbaml3d8cock44lu2kiot24pc95hlg0
 
 AUTHENTICATION_BACKENDS = (
     "django_cognito_jwt.backends.CognitoBackend",
+    'django.contrib.auth.backends.ModelBackend',
 )

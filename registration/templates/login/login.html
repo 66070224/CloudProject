@@ -20,18 +20,18 @@
       <div>
         <label for="{{form.password.id_for_label}}" class="block text-sm font-medium text-gray-700">Password</label>
         <div class="mt-1 relative">
-          {{form.password}}{{form.password.errors}}
+          {{form.password}}{{form.password.errors}}<p class="errorlist">{{error}}</p>
           <button type="button" id="togglePassword" aria-label="show password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-500">แสดง</button>
         </div>
       </div><br>
 
       <div class="flex items-center justify-between text-sm">
         <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="remember" class="rounded text-indigo-600 focus:ring-indigo-500" />
+          {{form.remember_me}}
           <span>จดจำฉัน</span>
         </label>
 
-        <a href="#" class="text-indigo-600 hover:underline">ลืมรหัสผ่าน?</a>
+        <!-- <a href="" class="text-indigo-600 hover:underline">ลืมรหัสผ่าน?</a> -->
       </div>
 
       <div>
@@ -39,7 +39,7 @@
           เข้าสู่ระบบ
         </button>
       </div>
-      
+
     </form>
   </section>
 </main>

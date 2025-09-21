@@ -17,6 +17,7 @@ class LoginForm(forms.Form):
             "id": "password"
         },)
     )
+    remember_me = forms.BooleanField(required=False)
 
     # Validation เฉพาะ field Email
     def clean_email(self):
