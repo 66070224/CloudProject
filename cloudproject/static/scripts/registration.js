@@ -5,11 +5,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function resetSchedule() {
         const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกย์", "เสาร์"];
+        const dayseng = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         const tbody = document.getElementById("schedule");
         tbody.innerHTML = "";
-        days.forEach(day => {
+        days.forEach((day, j=0) => {
             const tr = document.createElement("tr");
-            tr.id = day;
+            tr.id = dayseng[j];
             const th = document.createElement("th");
             th.textContent = day;
             tr.appendChild(th);
@@ -18,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 tr.appendChild(td);
             }
             tbody.appendChild(tr);
+            j+=1;
         })
     }
     
@@ -123,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let locationtext = "";
         section.section_class.forEach(section_class => {
             timetext += section_class.day + ": " + section_class.start_time + "-" + section_class.end_time + ", ";
-            locationtext += section_class.location + "\n";
+            locationtext += section_class.location + ", ";
         })
         tr.children[5].textContent = timetext;
         tr.children[6].textContent = locationtext;
@@ -151,9 +153,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const section = course.sections.find(s => String(s.section_number) === tr.children[3].children[0].value);
             section.section_class.forEach(sc => {
                 const tr = document.getElementById(sc.day);
-                const start_num = Number(String(sc.start_time).slice(0, 2))
-                tr.children[start_num-7].textContent = course.name;
+                const start_num = Number(String(sc.start_time).slice(0, 2));
+                const end_num = Number(String(sc.end_time).slice(0, 2));
+                const start_index = start_num-7;
+                const column = tr.children[start_index];
+                column.textContent = String(end_num-start_num)+course.name;
+                column.setAttribute("style", "background-color: lightblue;");
             })
+        }
+        for (j=0; j<7; j++) {
+            const row = schedule.children[j];
+            for (let f = row.children.length - 1; f >= 1; f--) {
+                const col = row.children[f];
+                const num = Number(col.innerHTML[0]);
+                col.setAttribute("colspan", num)
+                for (k=1; k<num; k++) {
+                    row.removeChild(row.children[f+k]);
+                }
+                col.innerHTML = col.innerHTML.slice(1)
+            }
         }
     }
 
@@ -164,4 +182,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     document.querySelector("table[ondrop]").addEventListener("drop", dropHandler);
     document.querySelector("table[ondragover]").addEventListener("dragover", e => e.preventDefault());
+    document.getElementById("submitbtn").setAttribute("onclick", "onSubmit()")
 });
+
+function onSubmit() {
+    const droparea = document.getElementById("droparea");
+    if (droparea.children.length === 0) return console.log("no enroll");
+    for (i=0; i<droparea.children.length; i++) {
+        const tr = droparea.children[i];
+        if (tr.children[3].children[0].value === "no") return console.log(tr.children[0].innerHTML, " not select section.");
+    }
+}

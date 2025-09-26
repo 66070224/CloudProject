@@ -41,7 +41,7 @@ class RegistrationView(LoginRequiredMixin, View):
                         "enrolled_count": section.enrolled_students.count(),
                         "section_class": [
                             {
-                                "day": section_class.get_day_display(),
+                                "day": section_class.day,
                                 "start_time": section_class.start_time,
                                 "end_time": section_class.end_time,
                                 "location": section_class.location,

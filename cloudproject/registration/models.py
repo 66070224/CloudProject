@@ -86,13 +86,13 @@ class SectionClass(models.Model):
         LAB = 'LAB', 'Lab'
     class_type = models.CharField(max_length=3, choices=TypeChoices.choices)
     class DayChoices(models.TextChoices):
-        SUNDAY = 'Sun', 'อาทิตย์'
-        MONDAY = 'Mon', 'จันทร์'
-        TUESDAY = 'Tue', 'อังคาร'
-        WEDNESDAY = 'Wed', 'พุทธ'
-        THURSDAY = 'Thu', 'พฤหัสบดี'
-        FRIDAY = 'Fri', 'ศุกย์'
-        SATURDAY = 'Sat', 'เสาร์'
+        SUNDAY = 'Sun', 'Sunday'
+        MONDAY = 'Mon', 'Monday'
+        TUESDAY = 'Tue', 'Tuesday'
+        WEDNESDAY = 'Wed', 'Wednesday'
+        THURSDAY = 'Thu', 'Thursday'
+        FRIDAY = 'Fri', 'Friday'
+        SATURDAY = 'Sat', 'Saturday'
     day = models.CharField(max_length=3, choices=DayChoices.choices)
     start_time = models.TimeField()
     end_time = models.TimeField()
