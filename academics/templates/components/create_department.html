@@ -1,0 +1,70 @@
+<!-- ปุ่ม -->
+<a href="#" id="openModal"
+   class="px-3 py-1.5 w-fit rounded-lg bg-orange-500 text-sm text-white hover:bg-orange-600">
+  Create Section
+</a>
+
+<!-- Overlay -->
+<div id="studentModal" 
+     class="fixed inset-0 {% if not is_invalid %}hidden{% endif %} bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-lg p-6 relative">
+    <!-- ปุ่มปิด -->
+    <button id="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">✕</button>
+
+    <h2 class="text-2xl font-bold text-orange-500 mb-4">Create Section</h2>
+
+    <form method="POST" action="" class="flex flex-col gap-4">
+      {% csrf_token %}
+        {{form.non_field_errors}}
+        <div class="relative">
+          <label for="{{form.name.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department Name</label>
+          {{form.name}}
+          {{form.name.errors}}
+        </div>
+
+        <div class="relative">
+          <label for="{{form.faculty.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Faculty</label>
+          {{form.faculty}}
+          {{form.faculty.errors}}
+        </div>
+
+        <div class="relative">
+          <label for="{{form.term_fees.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Term Fees</label>
+          {{form.term_fees}}
+          {{form.term_fees.errors}}
+        </div>
+      
+      
+      <div class="flex justify-end gap-2">
+        <button type="button" id="cancelModal"
+                class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">
+          Cancel
+        </button>
+        <button type="submit" 
+                class="px-4 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById("studentModal");
+  const openBtn = document.getElementById("openModal");
+  const closeBtn = document.getElementById("closeModal");
+  const cancelBtn = document.getElementById("cancelModal");
+
+  openBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden"; // ปิด scroll หน้าเว็บ
+  });
+
+  [closeBtn, cancelBtn].forEach(btn => {
+    btn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "auto"; // เปิด scroll หน้าเว็บ
+    });
+  });
+</script>

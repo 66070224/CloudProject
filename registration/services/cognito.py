@@ -54,6 +54,7 @@ def get_user(id_token):
     group = groups[0] if groups else None
     return user, group
 
+
 def login_cognito(email, password):
     try:
         return client.initiate_auth(
@@ -71,6 +72,22 @@ def login_cognito(email, password):
     except client.exceptions.UserNotConfirmedException:
         return {'message': "User not confirmed",}
 
+def create_user_cognito(email, password):
+    try:
+        client.admin_create_user(   
+            UserPoolId=USER_POOL_ID,
+            Username=email,
+            UserAttributes=[
+                {"Name": "email", "Value": email},
+                {"Name": "email_verified", "Value": "True"}
+            ],
+            TemporaryPassword=password,
+            MessageAction="SUPPRESS",  # ไม่ส่งอีเมล
+            DesiredDeliveryMediums=["EMAIL"]
+        )
+        return {"message": "Create successed."}
+    except client.exceptions.UsernameExistsException:
+        return {'message': "Username is already exist."}
 
 def change_password_cognito(request, email, password, session):
     try:

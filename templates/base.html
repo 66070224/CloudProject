@@ -1,0 +1,35 @@
+{%load static%} {%load custom_filters%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%block title%}{%endblock%}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    {%block style%}{%endblock%}
+    <style>
+        .errorlist {color: red;}
+        
+    </style>
+</head>
+
+<body class="">
+    <nav class="fixed top-0 w-full flex items-center justify-between bg-orange-400 text-white p-4 z-50">
+        {%include 'nav.html'%}
+    </nav>
+
+    <main class="pt-14">
+        <section class="p-6 max-w-8xl mx-auto">
+            <article aria-label="Head Content">
+                {% block head %}{% endblock %}
+            </article>
+            <article aria-label="Body Content">
+                {% block content %}{% endblock %}
+            </article>
+        </section>
+    </main>
+    {% block script %}{% endblock %}
+</body>
+</html>

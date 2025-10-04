@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'registration',
+    'authen',
+    'users',
+    'academics',
+    'enrollment',
 ]
 
 MIDDLEWARE = [
@@ -50,8 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'registration.middleware.RequireLoginMiddleware',
+    'authen.middleware.RequireLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'CloudProject.urls'
@@ -59,7 +61,7 @@ ROOT_URLCONF = 'CloudProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,7 +69,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'registration.context_processors.current_user'
+                "authen.context_processors.current_user",
             ],
         },
     },
@@ -160,6 +162,5 @@ COGNITO_REGION = "us-east-1"
 COGNITO_APP_CLIENT_SECRET = "1j186e1hujt36l9jrlkgpbaml3d8cock44lu2kiot24pc95hlg0b"
 
 AUTHENTICATION_BACKENDS = (
-    "django_cognito_jwt.backends.CognitoBackend",
     'django.contrib.auth.backends.ModelBackend',
 )

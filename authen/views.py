@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views import View
-from registration.forms import *
+from authen import forms
 
 # Cognito
-from ..services.cognito import get_user, login_cognito, change_password_cognito
+from .services import CognitoService
+
+cognito = CognitoService()
 
 # ระบบ Login
 class LoginView(View):
@@ -13,16 +15,16 @@ class LoginView(View):
         # เช็คว่า Redirect มาจาก method POST หรือไม่
         post = request.session.pop("post_login", False)
         error = request.session.pop("error", "")
-        form = LoginForm(post) if post else LoginForm()
+        form = forms.LoginForm(post) if post else forms.LoginForm()
         
         print(f"{request.session.get('user_email')} is on.")
-        return render(request, "login/login.html", context={
+        return render(request, "login.html", context={
             "form": form, "error": error
         })
     
     # Login logic
     def post(self, request):
-        form = LoginForm(request.POST)
+        form = forms.LoginForm(request.POST)
         
         if form.is_valid():
             email = form.cleaned_data.get("email")
@@ -31,15 +33,20 @@ class LoginView(View):
             print(f"remember: {is_remember}")
             
             # ส่งข้อมูลสำหรับ Login ไปยัง Cognito service
-            login_result = login_cognito(email, password)
-            response = redirect("login_view")
+            login_result = cognito.login_cognito(email, password)
             
             # กรณี login สำเร็จปกติ
             if 'AuthenticationResult' in login_result:
                 idToken = login_result['AuthenticationResult']['IdToken']
-                self.user, self.role = get_user(idToken)
+                self.user, self.role = cognito.get_user(idToken)
                 
                 self.login(request)
+
+                # เปลี่ยนหน้าหลังเช็ค role
+                if self.role == "Staff":
+                    response = redirect("staff_home_view")
+                elif self.role == "Student":
+                    response = redirect("login_view")
 
                 # ถ้าติ๊ก จดจำฉัน
                 if is_remember: 
@@ -74,7 +81,6 @@ class LoginView(View):
         print(self.user.email)
         request.session["user_email"] = self.user.email
         request.session["user_role"] = self.role
-  
 
 # สำหรับเปลี่ยนรหัส ในกรณีที่ User : FORCE_CHANGE_PASSWORD
 class ChangePasswordView(View):
@@ -82,9 +88,9 @@ class ChangePasswordView(View):
     def get(self, request):
         # เช็คว่า Redirect มาจาก method POST หรือไม่
         post = request.session.pop("post_change_password", False)
-        form = ChangePasswordFirstTimeForm(post) if post else ChangePasswordFirstTimeForm()
+        form = forms.ChangePasswordFirstTimeForm(post) if post else forms.ChangePasswordFirstTimeForm()
 
-        return render(request, "login/change_password.html", context={
+        return render(request, "change_password.html", context={
             "form": form,
         })
 
@@ -92,12 +98,12 @@ class ChangePasswordView(View):
     def post(self, request):
         email = request.session.pop("email", None) # ดึงข้อมูลจาก session แล้วลบ session นั้นออกเลย
         session = request.session.pop("session", None)
-        form = ChangePasswordFirstTimeForm(request.POST)
+        form = forms.ChangePasswordFirstTimeForm(request.POST)
 
         if form.is_valid():
             new_password = form.cleaned_data.get("password")
             # ส่งข้อมูลสำหรับเปลี่ยนรหัสไป Cognito service
-            change_password_result = change_password_cognito(request, email, new_password, session)
+            change_password_result = cognito.change_password_cognito(request, email, new_password, session)
 
             print(f"Change {email}'s password successfully.")
             return redirect("login_view")

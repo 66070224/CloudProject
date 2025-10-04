@@ -1,0 +1,32 @@
+{% load custom_filters %}
+<!-- Logo / Title -->
+{% if role|is_staff %}
+    <a href="{% url 'staff_home_view' %}"><h1 class="text-2xl font-bold">Home</h1></a>
+{% elif role|is_student %}
+    <a href="{% url 'login_view' %}"><h1 class="text-2xl font-bold">Home</h1></a>
+{% else %}
+    <a href="{% url 'login_view' %}"><h1 class="text-2xl font-bold">Home</h1></a>
+{% endif %}
+
+<!-- Links -->
+<div class="space-x-4">
+    {% block right_item %}
+        {% if role|is_student %} 
+            
+        {% elif role|is_staff %}
+            <a href="{% url 'manage_student_view' %}" class="hover:text-gray-300 transition-colors">Student</a>
+            <a href="{% url 'manage_professor_view' %}" class="hover:text-gray-300 transition-colors">Professor</a>
+            <a href="{% url 'manage_course_view' %}" class="hover:text-gray-300 transition-colors">Course</a>
+            <a href="{% url 'manage_section_view' %}" class="hover:text-gray-300 transition-colors">Section</a>
+            <a href="{% url 'manage_department_view' %}" class="hover:text-gray-300 transition-colors">Department</a>
+        {% else %} 
+            
+        {% endif %}
+        
+        {%if is_login%}
+            <a href="{% url 'logout_view' %}" class="hover:text-gray-300 transition-colors">Logout</a>
+        {%else%}
+            <a href="{% url 'login_view' %}" class="hover:text-gray-300 transition-colors">Login</a>
+        {%endif%}
+    {%endblock%}
+</div>
