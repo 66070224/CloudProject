@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Student Profile{% endblock %}
+{% block content %}
+    <div class="max-w-5xl mx-auto p-8">
+
+        <div class="mb-6 text-gray-800 flex sm:flex-row flex-col gap-4 justify-between">
+            <div class="flex flex-col gap-1">
+                <h1 class="text-3xl font-bold text-orange-500">Student Profile</h1>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow border border-orange-100 p-6">
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <div>
+                    <h2 class="text-xl font-semibold text-orange-600 mb-3">Personal Information</h2>
+                    <div class="space-y-2 text-gray-700 text-sm">
+                        <p><span class="font-medium text-gray-600">Student ID:</span> {{}}</p>
+                        <p><span class="font-medium text-gray-600">Full Name:</span> {{}}</p>
+                        <p><span class="font-medium text-gray-600">Email:</span> {{}}</p>
+                        <p><span class="font-medium text-gray-600">Phone:</span> {{}}</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold text-orange-600 mb-3">Academic Details</h2>
+                    <div class="space-y-2 text-gray-700 text-sm">
+                        <p><span class="font-medium text-gray-600">Faculty:</span> {{}}</p>
+                        <p><span class="font-medium text-gray-600">Department:</span> {{}}</p>
+                        <p><span class="font-medium text-gray-600">Year:</span> {{}}</p>
+                        <p><span class="font-medium text-gray-600">Advisor:</span> {{}}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="my-6 border-orange-200">
+
+            <h2 class="text-xl font-semibold text-orange-600 mb-3">Enrolled Courses</h2>
+            <div class="overflow-x-auto rounded-lg border border-orange-100">
+                <table class="table-fixed min-w-full divide-y divide-orange-100 text-sm">
+                    <thead class="bg-orange-200 text-left font-semibold text-gray-700">
+                        <tr>
+                            <th class="px-4 py-3">Course Code</th>
+                            <th class="px-4 py-3">Course Name</th>
+                            <th class="px-4 py-3">Credits</th>
+                            <th class="px-4 py-3">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="hover:bg-orange-50 transition">
+                            <td class="px-4 py-3">{{}}</td>
+                            <td class="px-4 py-3">{{}}</td>
+                            <td class="px-4 py-3">{{}}</td>
+                            <td class="px-4 py-3">{{}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
