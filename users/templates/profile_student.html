@@ -15,23 +15,22 @@
                 <div>
                     <h2 class="text-xl font-semibold text-orange-600 mb-3">Personal Information</h2>
                     <div class="space-y-2 text-gray-700 text-sm">
-                        <p><span class="font-medium text-gray-600">Student ID:</span> {{}}</p>
-                        <p><span class="font-medium text-gray-600">Full Name:</span> {{}}</p>
-                        <p><span class="font-medium text-gray-600">Email:</span> {{}}</p>
-                        <p><span class="font-medium text-gray-600">Phone:</span> {{}}</p>
+                        <p><span class="font-medium text-gray-600">Student ID:</span> {{student.code}}</p>
+                        <p><span class="font-medium text-gray-600">Full Name:</span> {{student.first_name}}</p>
+                        <p><span class="font-medium text-gray-600">Email:</span> {{student.email}}</p>
+                        <p><span class="font-medium text-gray-600">Phone:</span> {{student.phone_number}}</p>
                     </div>
                 </div>
 
                 <div>
                     <h2 class="text-xl font-semibold text-orange-600 mb-3">Academic Details</h2>
                     <div class="space-y-2 text-gray-700 text-sm">
-                        <p><span class="font-medium text-gray-600">Faculty:</span> {{}}</p>
-                        <p><span class="font-medium text-gray-600">Department:</span> {{}}</p>
-                        <p><span class="font-medium text-gray-600">Year:</span> {{}}</p>
-                        <p><span class="font-medium text-gray-600">Advisor:</span> {{}}</p>
+                        <p><span class="font-medium text-gray-600">Faculty:</span> {{student.department.faculty}}</p>
+                        <p><span class="font-medium text-gray-600">Department:</span> {{student.department.name}}</p>
+                        <p><span class="font-medium text-gray-600">Year:</span> {{student.year}}</p>
+                        <!-- <p><span class="font-medium text-gray-600">Advisor:</span> </p> -->
                     </div>
                 </div>
-
             </div>
 
             <hr class="my-6 border-orange-200">
@@ -48,12 +47,16 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
+                        {% for course in student.enrolled_courses.all %}
                         <tr class="hover:bg-orange-50 transition">
-                            <td class="px-4 py-3">{{}}</td>
-                            <td class="px-4 py-3">{{}}</td>
-                            <td class="px-4 py-3">{{}}</td>
-                            <td class="px-4 py-3">{{}}</td>
+                            <td class="px-4 py-3">{{course.course_section.course.course.code}}</td>
+                            <td class="px-4 py-3">{{course.course_section.course.name}}</td>
+                            <td class="px-4 py-3">{{course.course_section.course.credits}}</td>
+                            <td class="px-4 py-3">{{course.grade}}</td>
                         </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="px-4 py-3">No Courses enrolled.</td></tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

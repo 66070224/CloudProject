@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}{% load static %}
 {% block title %}Professor Dashboard{% endblock %}
 
 {% block head %}
@@ -18,33 +18,24 @@
       <label class="text-2xl font-medium" for="search">Quick Search</label>
       <div class="flex flex-row gap-x-4 flex-wrap sm:justify-end" aria-label="Advanced Filters">
         <div aria-label="Full name">
-          <!-- {% if filter == '' or filter == None %} -->
+          {% if filter == '' or filter == None %}
             <input class="cursor-pointer" type="radio" id="fullname" name="a_filter" value="" checked />
-          <!-- {% else %} -->
+          {% else %}
             <input class="cursor-pointer" type="radio" id="fullname" name="a_filter" value="" />
-          <!-- {% endif %} -->
+          {% endif %}
           <label class="cursor-pointer" for="fullname">Full Name</label>
         </div>
-        <div aria-label="Email">
-          <!-- {% if filter == 'email' %} -->
-            <input class="cursor-pointer" type="radio" id="email" name="a_filter" value="email" checked />
-          <!-- {% else %} -->
-            <input class="cursor-pointer" type="radio" id="email" name="a_filter" value="email" />
-          <!-- {% endif %} -->
-          <label class="cursor-pointer" for="email">Email</label>
-        </div>
-
-        <div aria-label="Faculty">
-          <!-- {% if filter == 'faculty' %} -->
-            <input class="cursor-pointer" type="radio" id="faculty" name="a_filter" value="faculty" checked />
-          <!-- {% else %} -->
-            <input class="cursor-pointer" type="radio" id="faculty" name="a_filter" value="faculty" />
-          <!-- {% endif %} -->
-          <label class="cursor-pointer" for="faculty">Faculty</label>
+        <div aria-label="Department">
+          {% if filter == 'department' %}
+            <input class="cursor-pointer" type="radio" id="department" name="a_filter" value="department" checked />
+          {% else %}
+            <input class="cursor-pointer" type="radio" id="department" name="a_filter" value="department" />
+          {% endif %}
+          <label class="cursor-pointer" for="department">Department</label>
         </div>
       </div>
 
-      <input class="block w-[300px] rounded-md field-sizing-content border-[1px] px-4 py-2" id="search" type="text" placeholder="Search students..." autocomplete="search" value=" !!!!! " title="Filter data" />
+      <input class="block w-[300px] rounded-md field-sizing-content border-[1px] px-4 py-2" id="search" type="text" placeholder="Search professors..." autocomplete="search" value="{{search}}" title="Filter data" />
     </div>
   </div>
 {% endblock %}
@@ -82,4 +73,7 @@
       </tbody>
     </table>
   </div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/staff_filter.js' %}"></script>
 {% endblock %}

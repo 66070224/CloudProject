@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from . import forms, models
+from . import forms
+from .models import *
+from academics.models import *
+from enrollment.models import *
 from django.db import transaction
+from django.db.models import Q
 
 class StaffHomeView(View):
     def get(self, request):
@@ -12,12 +16,32 @@ class StaffHomeView(View):
     
 class ManageStudentView(View):
     def get(self, request):
+        # filter
+        filter = request.GET.get("filter", "")
+        search = request.GET.get("search", "")
+
         invalid = request.session.pop("invalid", False)
-        students = models.Student.objects.all()
         form = forms.StudentForm(invalid) if invalid else forms.StudentForm()
+        students = Student.objects.all()
+
+        if search:
+            if filter == "":
+                students = students.filter(
+                    Q(first_name__icontains=search) | Q(last_name__icontains=search)
+                )
+            elif filter == "email":
+                students = students.filter(email__icontains=search)
+            elif filter == "department":
+                students = students.filter(
+                    Q(department__name__icontains=search) | Q(department__faculty__name__icontains=search)
+                )
 
         return render(request, "manage_student.html", context={
-            "students": students, "is_invalid": invalid, "form": form
+            "students": students, 
+            "is_invalid": invalid, 
+            "form": form,
+            "filter": filter,
+            "search": search,
         })
     def post(self, request):
         form = forms.StudentForm(request.POST)
@@ -39,14 +63,14 @@ class ManageStudentView(View):
 class EditStudentView(View):
     def get(self, request, student_code):
         invalid = request.session.pop("invalid", False)
-        student = models.Student.objects.get(code=student_code)
+        student = Student.objects.get(code=student_code)
         form = forms.StudentForm(invalid, instance=student) if invalid else forms.StudentForm(instance=student)
 
         return render(request, "edit_student.html", context={
             "form": form,
         })
     def post(self, request, student_code):
-        student = models.Student.objects.get(code=student_code)
+        student = Student.objects.get(code=student_code)
         form = forms.StudentForm(request.POST, instance=student)
 
         try:
@@ -63,3 +87,13 @@ class EditStudentView(View):
             request.session["invalid"] = request.POST
 
             return redirect('edit_student_view', student_code=student_code)
+
+class StudentProfileView(View):
+    def get(self, request):
+        student_code = request.session.get("student_code")
+        print(f"In Student View : {student_code}")
+        student = Student.objects.get(code=student_code)
+
+        return render(request, "profile_student.html", context={
+            "student": student
+        })

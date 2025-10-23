@@ -4,16 +4,32 @@ from django.views import View
 from . import forms
 from . import models
 from django.db import transaction
+from django.db.models import Q
 
 # Create your views here.
 class ManageCourseView(View):
     def get(self, request):
+        filter = request.GET.get("filter", "")
+        search = request.GET.get("search", "")
+
         invalid = request.session.pop("invalid", False)
-        courses = models.Course.objects.all()
         form = forms.CourseForm(invalid) if invalid else forms.CourseForm()
+        courses = models.Course.objects.all()
+
+        if search:
+            if filter=="":
+                courses = courses.filter(name__icontains=search)
+            elif filter=="department":
+                courses = courses.filter(
+                    Q(department__name__icontains=search) | Q(department__faculty__name__icontains=search)
+                )
 
         return render(request, "course.html", context={
-            "courses": courses, "is_invalid": invalid, "form": form
+            "courses": courses, 
+            "is_invalid": invalid, 
+            "form": form,
+            "filter": filter,
+            "search": search,
         })
     def post(self, request):
         form = forms.CourseForm(request.POST)
@@ -64,12 +80,24 @@ class EditCourseView(View):
 
 class ManageSectionView(View):
     def get(self, request):
+        filter = request.GET.get("filter", "")
+        search = request.GET.get("search", "")
+
         invalid = request.session.pop("invalid", False)
-        sections = models.CourseSection.objects.all()
         form = forms.SectionForm(invalid) if invalid else forms.SectionForm()
+        sections = models.CourseSection.objects.all()
+
+        if search:
+            sections = sections.filter(
+                Q(course__code__icontains=search) | Q(course__name__icontains=search)
+            )
 
         return render(request, "section.html", context={
-            "sections": sections, "is_invalid": invalid, "form": form
+            "sections": sections, 
+            "is_invalid": invalid, 
+            "form": form,
+            "filter": filter,
+            "search": search,
         })
     def post(self, request):
         form = forms.SectionForm(request.POST)
@@ -131,12 +159,25 @@ class EditSectionView(View):
 
 class ManageDepartmentView(View):
     def get(self, request):
+        filter = request.GET.get("filter", "")
+        search = request.GET.get("search", "")
+
         invalid = request.session.pop("invalid", False)
-        departments = models.Department.objects.all()
         form = forms.DepartmentForm(invalid) if invalid else forms.DepartmentForm()
+        departments = models.Department.objects.all()
+
+        if search:
+            if filter == "":
+                departments = departments.filter(name__icontains=search)
+            elif filter == "faculty":
+                departments = departments.filter(faculty__name__icontains=search)
 
         return render(request, "department.html", context={
-            "departments": departments, "is_invalid": invalid, "form": form
+            "departments": departments, 
+            "is_invalid": invalid, 
+            "form": form,
+            "filter": filter,
+            "search": search,
         })
     def post(self, request):
         form = forms.DepartmentForm(request.POST)
@@ -186,12 +227,29 @@ class EditDepartmentView(View):
 
 class ManageProfessorView(View):
     def get(self, request):
+        filter = request.GET.get("filter", "")
+        search = request.GET.get("search", "")
+
         invalid = request.session.pop("invalid", False)
-        professors = models.Professor.objects.all()
         form = forms.ProfessorForm(invalid) if invalid else forms.ProfessorForm()
+        professors = models.Professor.objects.all()
+
+        if search:
+            if filter == "":
+                professors = professors.filter(
+                    Q(first_name__icontains=search) | Q(last_name__icontains=search)
+                )
+            elif filter == "department":
+                professors = professors.filter(
+                    Q(department__name__icontains=search) | Q(department__faculty__name__icontains=search)
+                )
 
         return render(request, "professor.html", context={
-            "professors": professors, "is_invalid": invalid, "form": form
+            "professors": professors, 
+            "is_invalid": invalid, 
+            "form": form,
+            "filter": filter,
+            "search": search,
         })
     def post(self, request):
         form = forms.ProfessorForm(request.POST)

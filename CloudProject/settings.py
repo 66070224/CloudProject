@@ -164,3 +164,9 @@ COGNITO_APP_CLIENT_SECRET = "1j186e1hujt36l9jrlkgpbaml3d8cock44lu2kiot24pc95hlg0
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
+
+# ตำแหน่ง Base static
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]

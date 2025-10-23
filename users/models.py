@@ -6,7 +6,8 @@ class Student(models.Model):
     last_name = models.CharField(max_length=30)
     email = models.EmailField(unique=True, max_length=254)
     code = models.CharField(max_length=10, unique=True)
-    start_year = models.DateField(auto_now_add=True)
+    phone_number = models.CharField(max_length=10, blank=True, null=True)
+    year = models.IntegerField(default=1)
     department = models.ForeignKey("academics.Department", on_delete=models.CASCADE, null=True)
     enrolled_courses = models.ManyToManyField('academics.CourseSection', blank=True, through="enrollment.EnrollStudent")
 

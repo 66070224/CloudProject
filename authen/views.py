@@ -39,14 +39,18 @@ class LoginView(View):
             if 'AuthenticationResult' in login_result:
                 idToken = login_result['AuthenticationResult']['IdToken']
                 self.user, self.role = cognito.get_user(idToken)
-                
-                self.login(request)
 
+                self.login(request)
+                response = redirect("login_view")
                 # เปลี่ยนหน้าหลังเช็ค role
                 if self.role == "Staff":
                     response = redirect("staff_home_view")
                 elif self.role == "Student":
-                    response = redirect("login_view")
+                    request.session["student_code"] = email[:8]
+                    print(request.session.get('student_code'))
+                    response = redirect("student_profile_view")
+                else:
+                    request.session["error"] = login_result["ไม่พบ Role"]
 
                 # ถ้าติ๊ก จดจำฉัน
                 if is_remember: 
