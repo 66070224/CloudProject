@@ -1,0 +1,21 @@
+<nav class="flex bg-orange-400">
+    <h1 class="flex-1">REG</h1>
+    {% if user.is_authenticated %}
+    <div class="flex-1">
+        {% if user.role == 'adm' %}
+        <a href="/admin/">admin</a>
+        <a href="{% url 'createregistra' %}">create registra</a>
+        {% elif user.role == 'reg' %}
+        <a href="{% url 'createprofessor' %}">create professor</a>
+        <a href="{% url 'createstudent' %}">create student</a>
+        {% elif user.role == 'stu' %}
+        <a href="{% url 'enroll_index' %}">enroll</a>
+        {% endif %}
+        
+    </div>
+    <span>{{ user.email }}</span>
+    <a href="{% url 'logout' %}">logout</a>
+    {% else %}
+    <a href="{% url 'login' %}" class="flex-none">Login</a>
+    {% endif %}
+</nav>
