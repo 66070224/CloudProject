@@ -3,13 +3,14 @@ from django.views import View
 from django.urls import reverse
 from personnels.forms import StudentForm, CustomerUserForm, ProfessorForm, RegistraForm
 from django.db import transaction
+from personnels.models import Student, Professor, Registra, Payment
 
 # Create your views here.
 class CreateStudentView(View):
     def get(self, request):
         userform = CustomerUserForm()
         studentform = StudentForm()
-        return render(request, "createstudent.html", {"userform": userform, "studentform": studentform})
+        return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": studentform})
     def post(self, request):
         userform = CustomerUserForm(data=request.POST)
         studentform = StudentForm(data=request.POST)
@@ -23,16 +24,16 @@ class CreateStudentView(View):
                     user.save()
                     student.save()
                     return redirect(reverse("createstudent"))
-                return render(request, "createstudent.html", {"userform": userform, "studentform": studentform})
+                return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": studentform})
         except Exception as e:
             print(e)
-            return render(request, "createstudent.html", {"userform": userform, "studentform": studentform})
+            return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": studentform})
 
 class CreateProfessorView(View):
     def get(self, request):
         userform = CustomerUserForm()
         professorform = ProfessorForm()
-        return render(request, "createstudent.html", {"userform": userform, "studentform": professorform})
+        return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": professorform})
     def post(self, request):
         userform = CustomerUserForm(data=request.POST)
         professorform = ProfessorForm(data=request.POST)
@@ -46,16 +47,16 @@ class CreateProfessorView(View):
                     user.save()
                     professor.save()
                     return redirect(reverse("createprofessor"))
-                return render(request, "createstudent.html", {"userform": userform, "studentform": professorform})
+                return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": professorform})
         except Exception as e:
             print(e)
-            return render(request, "createstudent.html", {"userform": userform, "studentform": professorform})
+            return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": professorform})
         
 class CreateRegistraView(View):
     def get(self, request):
         userform = CustomerUserForm()
         registraform = RegistraForm()
-        return render(request, "createstudent.html", {"userform": userform, "studentform": registraform})
+        return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": registraform})
     def post(self, request):
         userform = CustomerUserForm(data=request.POST)
         registraform = RegistraForm(data=request.POST)
@@ -69,9 +70,28 @@ class CreateRegistraView(View):
                     user.save()
                     registra.save()
                     return redirect(reverse("createregistra"))
-                return render(request, "createstudent.html", {"userform": userform, "studentform": registraform})
+                return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": registraform})
         except Exception as e:
             print(e)
-            return render(request, "createstudent.html", {"userform": userform, "studentform": registraform})
+            return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": registraform})
+        
+class StudentListView(View):
+    def get(self, request):
+        registra = Registra.objects.get(user_id=request.user.id)
+        students = Student.objects.filter(department__faculty=registra.faculty)
+        return render(request, "personnels/student.html", {"students": students})
+
+class ProfessorListView(View):
+    def get(self, request):
+        registra = Registra.objects.get(user_id=request.user.id)
+        professors = Professor.objects.filter(department__faculty=registra.faculty)
+        return render(request, "personnels/professor.html", {"professors": professors})
+    
+class PaymentListView(View):
+    def get(self, request):
+        registra = Registra.objects.get(user_id=request.user.id)
+        payments = Payment.objects.filter(department__faculty=registra.faculty)
+        return render(request, "personnels/termfeelist.html", {"payments": payments})
+        
 
 

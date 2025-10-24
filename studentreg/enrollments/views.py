@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from courses.models import Course, Section
 from departments.models import Semester
-from personnels.models import Student
+from personnels.models import Student, Payment, Registra
 from enrollments.models import Enroll
 
 from django.db import transaction, IntegrityError
@@ -34,9 +34,19 @@ class SubmitView(APIView):
                     section = Section.objects.get(course__code=course_code, number=sec_num)
                     enroll = Enroll(student=student, section=section)
                     enroll.save()
+                    semester = Semester.objects.first()
+                    payment = Payment(student=student, department=student.department, year=semester.year, term=semester.term)
+                    payment.save()
+                    student.enrolled = True
+                    student.save()
             return Response({"text": "Success"}, status=200)
         except IntegrityError as e:
             return Response({"text": "คุณเคยลงวิชานี้ไปแล้ว"}, status=500)
         except Exception as e:
             return Response({"text": "Error"}, status=500)
-    
+
+class EnrollListView(View):
+    def get(self, request):
+        registra = Registra.objects.get(user_id=request.user.id)
+        enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty).order_by("-date")
+        return render(request, 'enrollments/enrolllist.html', {"enrolls": enrolls})

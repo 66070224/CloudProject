@@ -18,6 +18,8 @@ class Department(models.Model):
 class Semester(models.Model):
     year = models.IntegerField()
     term = models.IntegerField()
+    enroll = models.BooleanField(default=False)
+    edit = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.year} {self.term}"

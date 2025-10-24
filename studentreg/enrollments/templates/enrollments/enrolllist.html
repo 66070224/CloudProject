@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Student List{% endblock %}
+{% block head %}
+<style>
+    table, th{
+        border: 1px black solid;
+        border-collapse: collapse;
+    }
+    tr, td {
+        border-inline: 1px black solid;
+        border-collapse: collapse;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<main>
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th>รหัสนักศึกษา</th>
+                    <th>วิชา</th>
+                    <th>section</th>
+                    <th>ยืนยัน</th>
+                    <th>ยกเลิก</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enroll in enrolls %}
+                <tr>
+                    <td>{{ enroll.student.student_id }}</td>
+                    <td>{{ enroll.section.course.code }}{{ enroll.section.course.name }}</td>
+                    <td>{{ enroll.section.number }}</td>
+                    <td><button class="bg-green-500" >ยืนยัน</button></td>
+                    <td><button class="bg-red-500" >ยกเลิก</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+{% endblock %}

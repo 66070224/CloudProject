@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Student List{% endblock %}
+{% block content %}
+<main>
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th>รหัส</th>
+                    <th>ชื่อ</th>
+                    <th>ดู section</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{ course.code }}</td>
+                    <td>{{ course.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+{% endblock %}
