@@ -174,3 +174,5 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+ALLOWED_HOSTS = ['3.236.194.98']
