@@ -16,6 +16,7 @@
         <a href="{% url 'mycourse' %}">My Courses</a>
         {% elif user.role == 'stu' %}
         <a href="{% url 'enroll_index' %}">Enroll</a>
+        <a href="{% url 'mytermfee' %}">Term fees</a>
         {% endif %}
     </div>
     <div class="flex flex-none gap-5">

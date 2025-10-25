@@ -23,7 +23,7 @@ class Professor(models.Model):
         return f"{self.department} {self.user.first_name}"
 
 class Registra(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -36,6 +36,7 @@ class Payment(models.Model):
     term = models.IntegerField()
     class StatusChoices(models.TextChoices):
         NO = "N", _("ยัง")
-        YES = "Y", _("เรียบร้อย")
+        WAIT = "W", _("รอตรวจสอบ")
+        YES = "Y", _("ยืนยัน")
     pay = models.CharField(max_length=1, choices=StatusChoices, default=StatusChoices.NO)
     

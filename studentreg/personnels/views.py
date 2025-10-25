@@ -92,6 +92,12 @@ class PaymentListView(View):
         registra = Registra.objects.get(user_id=request.user.id)
         payments = Payment.objects.filter(department__faculty=registra.faculty)
         return render(request, "personnels/termfeelist.html", {"payments": payments})
+    
+class MyPaymentView(View):
+    def get(self, request):
+        student = Student.objects.get(user_id=request.user.id)
+        payments = Payment.objects.filter(student=student)
+        return render(request, "personnels/termfee.html", {"payments": payments})
         
 
 

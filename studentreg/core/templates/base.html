@@ -7,6 +7,17 @@
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
     {% tailwind_css %}
+    <style>
+        table, th{
+            border: 1px gainsboro solid;
+            border-collapse: collapse;
+        }
+        tr, td {
+            border-inline: 1px gainsboro solid;
+            border-collapse: collapse;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     {% include 'nav.html' %}
