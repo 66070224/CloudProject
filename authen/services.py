@@ -1,6 +1,6 @@
 import jwt, boto3
 from django.conf import settings
-from django_cognito_jwt.validator import TokenValidator
+from django_cognito_jwt.validator import TokenValidator, TokenError
 from types import SimpleNamespace
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
@@ -42,7 +42,25 @@ class CognitoService():
 
     # รับข้อมูลผู้ใช้ โดยเช็ค groups ก่อน (ผ่าน JWT)
     def get_user(self, id_token):
-        claims = self.validator.validate(id_token)
+        from datetime import datetime, timezone, timedelta
+        try:
+            # decode token แบบไม่ verify
+            unverified_claims = jwt.decode(id_token, options={"verify_signature": False})
+            iat = unverified_claims.get("iat")
+            if iat:
+                token_time = datetime.fromtimestamp(iat, tz=timezone.utc)
+                now = datetime.now(timezone.utc)
+                # ยอมเวลา skew 60 วินาที
+                if now + timedelta(seconds=60) < token_time:
+                    print("Token not yet valid")
+                    return None, None
+
+            # validate token จริง
+            claims = self.validator.validate(id_token)
+        except TokenError as e:
+            print(f"Token validation error: {str(e)}")
+            return None, None
+        
         email = claims.get("email")
         groups = claims.get("cognito:groups", [])
 
