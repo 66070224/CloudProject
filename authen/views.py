@@ -74,7 +74,7 @@ class LoginView(View):
             # กรณีที่ข้อมูลไม่ถูกต้อง
             else:
                 request.session["error"] = login_result["message"]
-                return response
+                return redirect("login_view")
 
         # กรณี Form ไม่ valid จะส่งแจ้งข้อมูลผิดพลาดกลับไป
         request.session["post_login"] = request.POST
@@ -93,6 +93,7 @@ class ChangePasswordView(View):
         # เช็คว่า Redirect มาจาก method POST หรือไม่
         post = request.session.pop("post_change_password", False)
         form = forms.ChangePasswordFirstTimeForm(post) if post else forms.ChangePasswordFirstTimeForm()
+        print("in change password")
 
         return render(request, "change_password.html", context={
             "form": form,

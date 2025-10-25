@@ -10,11 +10,11 @@ from django.contrib.auth.models import User
 
 class StaffHomeView(View):
     def get(self, request):
-        staff_code = request.session.get("staff_code")
-        staff = User.objects.get(code=staff_code)
+        # staff_code = request.session.get("staff_code")
+        # staff = User.objects.get(code=staff_code)
         total_students = Student.objects.count()
         total_courses = Course.objects.count()
-        return render(request, "home.html", context={ 'staff' : staff, 'total_students': total_students, 'total_courses': total_courses })
+        return render(request, "home.html", context={ 'total_students': total_students, 'total_courses': total_courses })
 
 class ManageStudentView(View):
     def get(self, request):
