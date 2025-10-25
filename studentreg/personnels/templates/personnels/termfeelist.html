@@ -3,29 +3,30 @@
 {% block content %}
 <main>
     <section>
-        <table>
+        <table class="bg-white">
             <thead>
-                <tr>
-                    <td>รหัส</td>
-                    <th>ชื่อ</th>
-                    <th>ปี</th>
-                    <th>คณะ</th>
-                    <th>สาขา</th>
-                    <th>ราคา</th>
-                    <th>สถานะ</th>
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">รหัส</td>
+                    <th class="px-4 py-2">ชื่อ</th>
+                    <th class="px-4 py-2">ปี</th>
+                    <th class="px-4 py-2">คณะ</th>
+                    <th class="px-4 py-2">สาขา</th>
+                    <th class="px-4 py-2">ราคา</th>
+                    <th class="px-4 py-2">สถานะ</th>
+                    <th class="px-4 py-2">ตรวจสอบ</th>
                 </tr>
             </thead>
             <tbody>
                 {% for payment in payments %}
-                <tr>
-                    <td>{{ payment.student.student_id }}</td>
-                    <td>{{ payment.student.user.title }} {{ payment.student.user.first_name }} {{ payment.student.user.last_name }}</td>
-                    <td>{{ payment.student.year }}</td>
-                    <td>{{ payment.department.faculty.name }}</td>
-                    <td>{{ payment.department.name }}</td>
-                    <td>{{ payment.department.term_fees }}</td>
-                    <td>{{ payment.get_pay_display }}</td>
-
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">{{ payment.student.student_id }}</td>
+                    <td class="px-4 py-2">{{ payment.student.user.title }} {{ payment.student.user.first_name }} {{ payment.student.user.last_name }}</td>
+                    <td class="px-4 py-2">{{ payment.student.year }}</td>
+                    <td class="px-4 py-2">{{ payment.department.faculty.name }}</td>
+                    <td class="px-4 py-2">{{ payment.department.name }}</td>
+                    <td class="px-4 py-2">{{ payment.department.term_fees }}</td>
+                    <td class="px-4 py-2 {% if payment.pay == 'N' %} text-red-500 {% elif payment.pay == 'W' %} text-yellow-500 {% else %} text-green-500 {% endif %}">{{ payment.get_pay_display }}</td>
+                    <td class="px-4 py-2">{% if payment.pay == "W" %}<a href="{% url 'paymentdetail' payment.id %}">ตรวจสอบ</a>{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

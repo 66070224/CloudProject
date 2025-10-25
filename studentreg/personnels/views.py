@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse
-from personnels.forms import StudentForm, CustomerUserForm, ProfessorForm, RegistraForm
+from personnels.forms import StudentForm, CustomerUserForm, ProfessorForm, RegistraForm, PayForm, EditCustomerUserForm
 from django.db import transaction
 from personnels.models import Student, Professor, Registra, Payment
+from accounts.models import CustomUser
 
 # Create your views here.
 class CreateStudentView(View):
@@ -12,7 +13,7 @@ class CreateStudentView(View):
         studentform = StudentForm()
         return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": studentform})
     def post(self, request):
-        userform = CustomerUserForm(data=request.POST)
+        userform = CustomerUserForm(request.POST, request.FILES)
         studentform = StudentForm(data=request.POST)
         try:
             with transaction.atomic():
@@ -33,9 +34,9 @@ class CreateProfessorView(View):
     def get(self, request):
         userform = CustomerUserForm()
         professorform = ProfessorForm()
-        return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": professorform})
+        return render(request, "personnels/createprofessor.html", {"userform": userform, "professorform": professorform})
     def post(self, request):
-        userform = CustomerUserForm(data=request.POST)
+        userform = CustomerUserForm(request.POST, request.FILES)
         professorform = ProfessorForm(data=request.POST)
         try:
             with transaction.atomic():
@@ -47,18 +48,18 @@ class CreateProfessorView(View):
                     user.save()
                     professor.save()
                     return redirect(reverse("createprofessor"))
-                return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": professorform})
+                return render(request, "personnels/createprofessor.html", {"userform": userform, "professorform": professorform})
         except Exception as e:
             print(e)
-            return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": professorform})
+            return render(request, "personnels/createprofessor.html", {"userform": userform, "professorform": professorform})
         
 class CreateRegistraView(View):
     def get(self, request):
         userform = CustomerUserForm()
         registraform = RegistraForm()
-        return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": registraform})
+        return render(request, "personnels/createregistra.html", {"userform": userform, "registraform": registraform})
     def post(self, request):
-        userform = CustomerUserForm(data=request.POST)
+        userform = CustomerUserForm(request.POST, request.FILES)
         registraform = RegistraForm(data=request.POST)
         try:
             with transaction.atomic():
@@ -70,10 +71,10 @@ class CreateRegistraView(View):
                     user.save()
                     registra.save()
                     return redirect(reverse("createregistra"))
-                return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": registraform})
+                return render(request, "personnels/createregistra.html", {"userform": userform, "registraform": registraform})
         except Exception as e:
             print(e)
-            return render(request, "personnels/createstudent.html", {"userform": userform, "studentform": registraform})
+            return render(request, "personnels/createregistra.html", {"userform": userform, "registraform": registraform})
         
 class StudentListView(View):
     def get(self, request):
@@ -90,7 +91,7 @@ class ProfessorListView(View):
 class PaymentListView(View):
     def get(self, request):
         registra = Registra.objects.get(user_id=request.user.id)
-        payments = Payment.objects.filter(department__faculty=registra.faculty)
+        payments = Payment.objects.filter(department__faculty=registra.faculty, pay__in=("W", "N"))
         return render(request, "personnels/termfeelist.html", {"payments": payments})
     
 class MyPaymentView(View):
@@ -99,5 +100,52 @@ class MyPaymentView(View):
         payments = Payment.objects.filter(student=student)
         return render(request, "personnels/termfee.html", {"payments": payments})
         
+class PayView(View):
+    def get(self, request, id):
+        student = Student.objects.get(user_id=request.user.id)
+        payment = Payment.objects.get(student=student, id=id)
+        form = PayForm(instance=payment)
+        return render(request, "personnels/pay.html", {"form": form, "price": payment.department.term_fees})
+    def post(self, request, id):
+        student = Student.objects.get(user_id=request.user.id)
+        payment = Payment.objects.get(student=student, id=id)
+        form = PayForm(request.POST, request.FILES, instance=payment)
+        if form.is_valid():
+            payment = form.save(commit=False)
+            payment.pay = "W"
+            payment.save()
+            return redirect(reverse("mytermfee"))
+        return render(request, "personnels/pay.html", {"form": form})
+    
+class PaymentDetailView(View):
+    def get(self, request, id):
+        payment = Payment.objects.get(id=id)
+        return render(request, "personnels/paymentdetail.html", {"payment": payment})
+    def post(self, request, id):
+        payment = Payment.objects.get(id=id)
+        payment.pay = "Y"
+        payment.save()
+        return redirect(reverse("termfeelist"))
 
-
+class EditProfessorView(View):
+    def get(self, request, id):
+        user = CustomUser.objects.get(id=id)
+        professor = Professor.objects.get(user=user)
+        userform = EditCustomerUserForm(instance=user)
+        professorform = ProfessorForm(instance=professor)
+        return render(request, "personnels/editprofessor.html", {"userform": userform, "professorform": professorform})
+    def post(self, request):
+        user = CustomUser.objects.get(id=id)
+        professor = Professor.objects.get(user=user)
+        userform = EditCustomerUserForm(request.POST, request.FILES, instance=user)
+        professorform = ProfessorForm(request.POST, instance=professor)
+        try:
+            with transaction.atomic():
+                if userform.is_valid() and professorform.is_valid():
+                    userform.save()
+                    professorform.save()
+                    return redirect(reverse("edit"))
+                return render(request, "personnels/editprofessor.html", {"userform": userform, "professorform": professorform})
+        except Exception as e:
+            print(e)
+            return render(request, "personnels/editprofessor.html", {"userform": userform, "professorform": professorform})

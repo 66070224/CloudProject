@@ -14,7 +14,6 @@
 </style>
 {% endblock %}
 {% block content %}
-<main>
     <h1>ลงทะเบียนเรียน</h1>
 
     <section>
@@ -81,10 +80,12 @@
             <tbody id="queues">
             </tbody>
         </table>
+        <button onclick="submit()">ยืนยัน</button>
     </section>
 
     <section>
-        <button onclick="submit()">ยืนยัน</button>
+        <input id="inputcode" type="text" class="border border-amber-400 rounded-2xl bg-white">
+        <button onclick="toQueues(event)" id="inputbutton">เพิ่ม</button>
     </section>
 
     <section>
@@ -107,9 +108,9 @@
             </tbody>
         </table>
     </section>
+{% endblock %}
 
-</main>
-
+{% block script %}
 <script>
     window.addEventListener("load", load);
 
@@ -119,7 +120,17 @@
     }
 
     async function toQueues(event) {
-        const code = event.currentTarget.id;
+        const id = event.currentTarget.id;
+        var code = ""
+        if (id === "inputbutton") {
+            const input = document.getElementById("inputcode");
+            code = input.value
+        } else {
+            code = id
+        }
+
+        if (code === "") return
+
         const queues = document.getElementById("queues");
         for (c=0; c<queues.children.length; c++) {
             if (queues.children[c].id === code) return

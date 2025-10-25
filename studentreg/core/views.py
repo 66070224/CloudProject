@@ -10,7 +10,9 @@ import json
 class HomeView(View):
     def get(self, request):
         context = {}
-        if request.user.role == "stu":
+        if not request.user.is_authenticated:
+            return render(request, 'home.html')
+        if request.user.is_student:
             student = Student.objects.get(user_id=request.user.id)
             enrolls = Enroll.objects.filter(student=student, status="con").select_related("section__course").prefetch_related("section__classes")
             enroll_data = []

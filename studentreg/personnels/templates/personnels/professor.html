@@ -4,20 +4,22 @@
 <main>
     <section>
         <a href="{% url 'createprofessor' %}">Create Professor</a>
-        <table>
+        <table class="bg-white">
             <thead>
-                <tr>
-                    <th>ชื่อ</th>
-                    <th>คณะ</th>
-                    <th>สาขา</th>
+                <tr class="border border-gray-300">
+                    <th class="px-4 py-2">ชื่อ</th>
+                    <th class="px-4 py-2">คณะ</th>
+                    <th class="px-4 py-2">สาขา</th>
+                    <th class="px-4 py-2">แก้ไข</th>
                 </tr>
             </thead>
             <tbody>
                 {% for professor in professors %}
-                <tr>
-                    <td>{{ professor.user.title }} {{ professor.user.first_name }} {{ professor.user.last_name }}</td>
-                    <td>{{ professor.department.faculty.name }}</td>
-                    <td>{{ professor.department.name }}</td>
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">{{ professor.user.title }} {{ professor.user.first_name }} {{ professor.user.last_name }}</td>
+                    <td class="px-4 py-2">{{ professor.department.faculty.name }}</td>
+                    <td class="px-4 py-2">{{ professor.department.name }}</td>
+                    <td class="px-4 py-2"><a href="{% url 'editprofessor' professor.user.id %}">แก้ไข</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

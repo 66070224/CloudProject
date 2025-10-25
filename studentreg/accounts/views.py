@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth import login, logout, get_user, update_session_auth_hash
 from django.urls import reverse
+from accounts.models import CustomUser
+from django.contrib import messages
 
 # Create your views here.
 class LoginView(View):
@@ -21,3 +23,21 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect(reverse("login"))
+    
+class ProfileView(View):
+    def get(self, request):
+        return render(request, 'profile.html')
+
+class ChangePassword(View):
+    def get(self, request):
+        form = PasswordChangeForm(request.user)
+        return render(request, 'changepassword.html', { "form": form })
+    def post(self, request):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว!')
+            return redirect(reverse("profile"))
+        messages.error(request, 'โปรดตรวจสอบข้อมูลอีกครั้ง')
+        return render(request, 'changepassword.html', {'form': form})

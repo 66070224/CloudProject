@@ -3,23 +3,24 @@
 {% block content %}
 <main>
     <section>
-        <table>
+        <table class="bg-white">
             <thead>
-                <tr>
-                    <th>ปี</th>
-                    <th>เทอม</th>
-                    <th>ราคา</th>
-                    <th>สถานะ</th>
+                <tr class="border border-gray-300">
+                    <th class="px-4 py-2">ปีการศึกษา</th>
+                    <th class="px-4 py-2">เทอม</th>
+                    <th class="px-4 py-2">ราคา</th>
+                    <th class="px-4 py-2">สถานะ</th>
+                    <th class="px-4 py-2">จ่าย</th>
                 </tr>
             </thead>
             <tbody>
                 {% for payment in payments %}
-                <tr>
-                    <td>{{ payment.year }}</td>
-                    <td>{{ payment.term }}</td>
-                    <td>{{ payment.department.term_fees }}</td>
-                    <td>{{ payment.get_pay_display }}</td>
-
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">{{ payment.year }}</td>
+                    <td class="px-4 py-2">{{ payment.term }}</td>
+                    <td class="px-4 py-2">{{ payment.department.term_fees }}</td>
+                    <td class="px-4 py-2 {% if payment.pay == 'N' %} text-red-500 {% elif payment.pay == 'W' %} text-yellow-500 {% else %} text-green-500 {% endif %}">{{ payment.get_pay_display }}</td>
+                    <td class="px-4 py-2">{% if payment.pay != "Y" %}<a href="{% url 'pay' payment.id %}" class="bg-amber-400 py-1 px-5 rounded text-white">จ่าย</a>{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

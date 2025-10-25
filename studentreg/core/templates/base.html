@@ -5,22 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    {% block head %}{% endblock %}
     {% tailwind_css %}
     <style>
-        table, th{
-            border: 1px gainsboro solid;
-            border-collapse: collapse;
+        section {
+            border: 2px rgb(255, 102, 0) solid;
+            border-radius: 25px;
+            padding: 25px;
+            background-color: rgb(255, 250, 240);
         }
-        tr, td {
-            border-inline: 1px gainsboro solid;
-            border-collapse: collapse;
-            text-align: center;
+        .errorlist {
+            background-color: red;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        input[type="text"], input[type="password"], input[type="email"], input[type="file"] {
+            width: 100%;
+            border: 1px orange solid;
+            border-radius: 5px;
+            background-color: white;
         }
     </style>
+    {% block head %}{% endblock %}
 </head>
 <body>
-    {% include 'nav.html' %}
-    {% block content %}{% endblock %}
+    <nav class="fixed w-screen flex bg-orange-400 text-white p-5 rounded-b-lg">
+        {% include 'nav.html' %}
+    </nav>
+    <main class="min-h-screen flex flex-col pt-25 items-center gap-5 overflow-y-auto">
+        {% block content %}{% endblock %}
+    </main>
+    {% block script %}{% endblock %}
 </body>
 </html>

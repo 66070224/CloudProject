@@ -4,24 +4,24 @@
 <main>
     <section>
         <a href="{% url 'createstudent' %}">Create Student</a>
-        <table>
+        <table class="bg-white border ">
             <thead>
-                <tr>
-                    <td>รหัส</td>
-                    <th>ชื่อ</th>
-                    <th>ปี</th>
-                    <th>คณะ</th>
-                    <th>สาขา</th>
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">รหัส</td>
+                    <th class="px-4 py-2">ชื่อ</th>
+                    <th class="px-4 py-2">ปี</th>
+                    <th class="px-4 py-2">คณะ</th>
+                    <th class="px-4 py-2">สาขา</th>
                 </tr>
             </thead>
             <tbody>
                 {% for student in students %}
-                <tr>
-                    <td>{{ student.student_id }}</td>
-                    <td>{{ student.user.title }} {{ student.user.first_name }} {{ student.user.last_name }}</td>
-                    <td>{{ student.year }}</td>
-                    <td>{{ student.department.faculty.name }}</td>
-                    <td>{{ student.department.name }}</td>
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">{{ student.student_id }}</td>
+                    <td class="px-4 py-2">{{ student.user.title }} {{ student.user.first_name }} {{ student.user.last_name }}</td>
+                    <td class="px-4 py-2">{{ student.year }}</td>
+                    <td class="px-4 py-2">{{ student.department.faculty.name }}</td>
+                    <td class="px-4 py-2">{{ student.department.name }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

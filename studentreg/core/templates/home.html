@@ -2,6 +2,9 @@
 {% block title %}Home{% endblock %}
 {% block head %}
 <style>
+    table {
+        background-color: white;
+    }
     table, th{
         border: 1px gainsboro solid;
         border-collapse: collapse;
@@ -11,58 +14,69 @@
         border-collapse: collapse;
         text-align: center;
     }
+    tr {
+        height: 50px;
+    }
 </style>
 {% endblock %}
 {% block content %}
-<main>
-    HEllo
-    {% if user.role == "stu" %}
-    <section>
-        <table>
-            <thead>
-                <tr>
-                    <th class="p-1"></th>
-                    <th class="p-1" colspan="4">08:00-09:00</th>
-                    <th class="p-1" colspan="4">09:00-10:00</th>
-                    <th class="p-1" colspan="4">10:00-11:00</th>
-                    <th class="p-1" colspan="4">11:00-12:00</th>
-                    <th class="p-1" colspan="4">12:00-13:00</th>
-                    <th class="p-1" colspan="4">13:00-14:00</th>
-                    <th class="p-1" colspan="4">14:00-15:00</th>
-                    <th class="p-1" colspan="4">15:00-16:00</th>
-                    <th class="p-1" colspan="4">16:00-17:00</th>
-                    <th class="p-1" colspan="4">17:00-18:00</th>
-                    <th class="p-1" colspan="4">18:00-19:00</th>
-                    <th class="p-1" colspan="4">19:00-20:00</th>
-                </tr>
-            </thead>
-            <tbody id="schedule">
-                <tr id="table_mon">
-                    <td class="p1">Mon</td>
-                </tr>
-                <tr id="table_tue">
-                    <td class="p1">Tue</td>
-                </tr>
-                <tr id="table_wed">
-                    <td class="p1">Wed</td>
-                </tr>
-                <tr id="table_thu">
-                    <td class="p1">Thu</td>
-                </tr>
-                <tr id="table_fri">
-                    <td class="p1">Fri</td>
-                </tr>
-                <tr id="table_sat">
-                    <td class="p1">Sat</td>
-                </tr>
-                <tr id="table_sun">
-                    <td class="p1">Sun</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+    {% if user.is_authenticated %}
+        {% if user.is_student %}
+        <section class="flex flex-col gap-5">
+            <div class="flex justify-center">
+                <h1 class="text-2xl">ตารางเรียน</h1>
+            </div>
+            {% if user.student.enrolled %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="p-1"></th>
+                            <th class="p-1" colspan="4">08:00-09:00</th>
+                            <th class="p-1" colspan="4">09:00-10:00</th>
+                            <th class="p-1" colspan="4">10:00-11:00</th>
+                            <th class="p-1" colspan="4">11:00-12:00</th>
+                            <th class="p-1" colspan="4">12:00-13:00</th>
+                            <th class="p-1" colspan="4">13:00-14:00</th>
+                            <th class="p-1" colspan="4">14:00-15:00</th>
+                            <th class="p-1" colspan="4">15:00-16:00</th>
+                            <th class="p-1" colspan="4">16:00-17:00</th>
+                            <th class="p-1" colspan="4">17:00-18:00</th>
+                            <th class="p-1" colspan="4">18:00-19:00</th>
+                            <th class="p-1" colspan="4">19:00-20:00</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule">
+                        <tr id="table_mon">
+                            <td class="p1">Mon</td>
+                        </tr>
+                        <tr id="table_tue">
+                            <td class="p1">Tue</td>
+                        </tr>
+                        <tr id="table_wed">
+                            <td class="p1">Wed</td>
+                        </tr>
+                        <tr id="table_thu">
+                            <td class="p1">Thu</td>
+                        </tr>
+                        <tr id="table_fri">
+                            <td class="p1">Fri</td>
+                        </tr>
+                        <tr id="table_sat">
+                            <td class="p1">Sat</td>
+                        </tr>
+                        <tr id="table_sun">
+                            <td class="p1">Sun</td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% else %}
+            <span>คุณยังไม่ได้ลงทะเบียน</span>
+            {% endif %}
+        </section>
+        {% endif %}
     {% endif %}
-
+{% endblock %}
+{% block script %}
     <script>
         window.addEventListener("load", load);
 
@@ -139,6 +153,4 @@
 
         }
     </script>
-
-</main>
 {% endblock %}
