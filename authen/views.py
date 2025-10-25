@@ -50,7 +50,7 @@ class LoginView(View):
                     print(request.session.get('student_code'))
                     response = redirect("student_profile_view")
                 else:
-                    request.session["error"] = login_result["ไม่พบ Role"]
+                    request.session["error"] = "ไม่พบ Role"
 
                 # ถ้าติ๊ก จดจำฉัน
                 if is_remember: 
