@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import View
 from rest_framework.views import APIView
-from courses.models import Course
+from courses.models import Course, Section
 from django.http import Http404
 from courses.serializers import CourseSerializer
 from rest_framework.response import Response
-from personnels.models import Professor
+from personnels.models import Professor, Registra
+from courses.forms import CourseForm, SectionForm, ClassForm
 
 # Create your views here.
 class CourseDetailAPI(APIView):
@@ -26,3 +28,106 @@ class MyCourseView(View):
         professor = Professor.objects.get(user_id=request.user.id)
         courses = Course.objects.filter(professors=professor)
         return render(request, "courses/professor/course.html", {"courses": courses})
+    
+class RegistraIndexView(View):
+    def get(self, request):
+        return render(request, "courses/registra/index.html")
+    
+class RegistraCourseView(View):
+    def get(self, request):
+
+        text = request.GET.get("text")
+        type = request.GET.get("type")
+
+        registra = Registra.objects.get(user_id=request.user.id)
+        courses = Course.objects.filter(department__faculty=registra.faculty)
+
+        if text and type and text != "None":
+            if type == "code":
+                courses = courses.filter(code=text)
+            elif type == "name":
+                courses = courses.filter(name=text)
+            elif type == "department":
+                courses = courses.filter(department__name__icontains=text)
+            elif type == "faculty":
+                courses = courses.filter(department__faculty__name__icontains=text)
+            elif type == "year":
+                courses = courses.filter(year=text)
+            elif type == "term":
+                courses = courses.filter(term=text)
+
+        if text == "None" or text == None:
+            text = ""
+
+        return render(request, "courses/registra/list/course.html", {"courses": courses, "text": text, "type": type})
+    
+class CreateCourseView(View):
+    def get(self, request):
+        form = CourseForm()
+        return render(request, "courses/registra/edit/course.html", {"form": form})
+    def post(self, request):
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("course_registra_courselist"))
+        return render(request, "courses/registra/edit/course.html", {"form": form})
+    
+class EditCourseView(View):
+    def get(self, request, id):
+        course = Course.objects.get(id=id)
+        form = CourseForm(instance=course)
+        return render(request, "courses/registra/edit/course.html", {"form": form})
+    def post(self, request, id):
+        course = Course.objects.get(id=id)
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("course_registra_courselist"))
+        return render(request, "courses/registra/edit/course.html", {"form": form})
+    
+class RegistraSectionView(View):
+    def get(self, request):
+
+        text = request.GET.get("text")
+        type = request.GET.get("type")
+
+        registra = Registra.objects.get(user_id=request.user.id)
+        sections = Section.objects.filter(course__department__faculty=registra.faculty)
+
+        if text and type and text != "None":
+            if type == "course":
+                sections = sections.filter(course__name__icontains=text)
+            elif type == "section":
+                try:
+                    sections = sections.filter(number=int(text))
+                except Exception:
+                    pass
+
+        if text == "None" or text == None:
+            text = ""
+
+        return render(request, "courses/registra/list/section.html", {"sections": sections, "text": text, "type": type})
+
+class CreateSectionView(View):
+    def get(self, request):
+        form = SectionForm()
+        return render(request, "courses/registra/create/section.html", {"form": form})
+    def post(self, request):
+        form = SectionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("course_registra_courselist"))
+        return render(request, "courses/registra/create/section.html", {"form": form})
+
+class EditSectionView(View):
+    def get(self, request, id):
+        section = Section.objects.get(id=id)
+        form = SectionForm(instance=section)
+        return render(request, "courses/registra/edit/section.html", {"form": form})
+    def post(self, request, id):
+        section = Section.objects.get(id=id)
+        form = SectionForm(request.POST, instance=section)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("course_registra_sectionlist"))
+        return render(request, "courses/registra/edit/section.html", {"form": form})

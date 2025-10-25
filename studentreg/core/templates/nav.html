@@ -8,11 +8,12 @@
         <a href="/admin/">admin</a>
         <a href="{% url 'createregistra' %}">create registra</a>
         {% elif user.role == 'reg' %}
-        <div class="flex flex-1/6 gap-6">
+        <div class="flex flex-1/5 gap-6">
             <a href="{% url 'professorlist' %}">Professor List</a>
             <a href="{% url 'studentlist' %}">Student List</a>
             <a href="{% url 'termfeelist' %}">Term fee List</a>
             <a href="{% url 'enroll_enrolllist' %}">Enroll List</a>
+            <a href="{% url 'course_registra' %}">Courses</a>
         </div>
         {% elif user.role == 'pro' %}
         <a href="{% url 'mycourse' %}">My Courses</a>

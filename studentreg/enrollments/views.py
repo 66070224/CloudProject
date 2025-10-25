@@ -67,7 +67,7 @@ class EnrollListView(View):
     def get(self, request):
         registra = Registra.objects.get(user_id=request.user.id)
         enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
-        return render(request, 'enrollments/enrolllist.html', {"enrolls": enrolls})
+        return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls})
 
 class ConfirmAPI(APIView):
     def get(self, request, id, text):

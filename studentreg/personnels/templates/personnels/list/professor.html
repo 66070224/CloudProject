@@ -1,9 +1,22 @@
 {% extends 'base.html' %}
 {% block title %}Professor List{% endblock %}
 {% block content %}
-<main>
-    <section>
-        <a href="{% url 'createprofessor' %}">Create Professor</a>
+    <section class="">
+            <form action="" method="get" class="flex flex-col gap-2">
+                <input type="text" name="text" value="{{ text }}">
+                <div class="flex gap-5">
+                    <span><input type="radio" name="type" id="name" value="name" {% if type == "name" or type == "" %} checked {% endif %}>ชื่อ</span>
+                    <span><input type="radio" name="type" id="faculty" value="faculty" {% if type == "faculty" %} checked {% endif %}>คณะ</span>
+                    <span><input type="radio" name="type" id="department" value="department" {% if type == "department" %} checked {% endif %}>สาขา</span>
+                </div>
+                <button type="submit" class="bg-orange-400 text-white py-1 px-5 rounded-2xl">Search</button>
+            </form>    
+    </section>
+
+    <section class="flex flex-col gap-5">
+        <div>
+            <a href="{% url 'createprofessor' %}" class="bg-orange-400 text-white py-1 px-5 rounded-2xl text-xl">Create Professor</a>
+        </div>
         <table class="bg-white">
             <thead>
                 <tr class="border border-gray-300">
@@ -25,5 +38,4 @@
             </tbody>
         </table>
     </section>
-</main>
 {% endblock %}

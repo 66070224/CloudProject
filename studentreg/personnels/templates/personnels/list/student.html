@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Student List{% endblock %}
+{% block content %}
+    <section class="">
+            <form action="" method="get" class="flex flex-col gap-2">
+                <input type="text" name="text" value="{{ text }}">
+                <div class="flex gap-5">
+                    <span><input type="radio" name="type" id="id" value="id" {% if type == "id" %} checked {% endif %}>รหัส</span>
+                    <span><input type="radio" name="type" id="name" value="name" {% if type == "name" or type == "" %} checked {% endif %}>ชื่อ</span>
+                    <span><input type="radio" name="type" id="year" value="year" {% if type == "year" %} checked {% endif %}>ปี</span>
+                    <span><input type="radio" name="type" id="faculty" value="faculty" {% if type == "faculty" %} checked {% endif %}>คณะ</span>
+                    <span><input type="radio" name="type" id="department" value="department" {% if type == "department" %} checked {% endif %}>สาขา</span>
+                </div>
+                <button type="submit" class="bg-orange-400 text-white py-1 px-5 rounded-2xl">Search</button>
+            </form>    
+    </section>
+
+    <section class="flex flex-col gap-5">
+        <div>
+            <a href="{% url 'createstudent' %}" class="bg-orange-400 text-white py-1 px-5 rounded-2xl text-xl">Create Student</a>
+        </div>
+        <table class="bg-white border ">
+            <thead>
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">รหัส</td>
+                    <th class="px-4 py-2">ชื่อ</th>
+                    <th class="px-4 py-2">ปี</th>
+                    <th class="px-4 py-2">คณะ</th>
+                    <th class="px-4 py-2">สาขา</th>
+                    <th class="px-4 py-2">แก้ไข</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">{{ student.student_id }}</td>
+                    <td class="px-4 py-2">{{ student.user.title }} {{ student.user.first_name }} {{ student.user.last_name }}</td>
+                    <td class="px-4 py-2">{{ student.year }}</td>
+                    <td class="px-4 py-2">{{ student.department.faculty.name }}</td>
+                    <td class="px-4 py-2">{{ student.department.name }}</td>
+                    <td class="px-4 py-2"><a href="{% url 'editstudent' student.user.id %}">แก้ไข</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

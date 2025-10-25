@@ -5,6 +5,7 @@ urlpatterns = [
     path('mytermfee', MyPaymentView.as_view(), name="mytermfee"),
     path('pay/<int:id>', PayView.as_view(), name="pay"),
     path('studentlist', StudentListView.as_view(), name="studentlist"),
+    path('editstudent/<int:id>', EditStudentView.as_view(), name="editstudent"),
     path('professorlist', ProfessorListView.as_view(), name="professorlist"),
     path('editprofessor/<int:id>', EditProfessorView.as_view(), name="editprofessor"),
     path('termfeelist', PaymentListView.as_view(), name="termfeelist"),

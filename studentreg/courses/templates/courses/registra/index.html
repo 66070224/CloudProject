@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}My Sections{% endblock %}
+{% block content %}
+    <section class="flex flex-col justify-center gap-5">
+        <h1 class="text-2xl">จัดการวิชา</h1>
+        <a href="{% url 'course_registra_courselist' %}" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Courses</a>
+        <a href="{% url 'course_registra_sectionlist' %}" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Sections</a>
+        <a href="" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Classes</a>
+    </section>
+{% endblock %}

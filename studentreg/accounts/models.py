@@ -37,7 +37,7 @@ class CustomUser(AbstractUser):
         REGISTRA = "reg", _("Registra")
         ADMIN = "adm", _("Admin")
     role = models.CharField(max_length=3, choices=RoleChoices.choices, default=RoleChoices.STUDENT)
-    img = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    img = models.ImageField(upload_to='profile_images/')
 
     USERNAME_FIELD = 'email'
 
