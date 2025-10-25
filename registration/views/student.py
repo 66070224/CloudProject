@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from ..models import *
 from django.db.models import OuterRef
 from django.db.models import F
+from academics.models import Course
 
 class RegistrationView(View):
 
@@ -42,7 +43,7 @@ class RegistrationView(View):
                 ]
             })
         days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกย์", "เสาร์"]
-        context = {"courses": data, "days": days, "times": list(range(12)), user: user}
+        context = {"courses": data, "days": days, "times": list(range(12)), 'user' : user}
         return render(request, "registration.html", context)
     def post(self, request):
         

@@ -7,51 +7,53 @@
     <div class="bg-white shadow-md rounded-2xl p-12">
       <h1 class="text-3xl font-bold text-orange-500">Edit Student</h1>
 
-      <form action="" method="POST" class="flex flex-col gap-4 mt-10" >
+      <form action="" method="POST" class="flex flex-col gap-4 mt-10">
         {% csrf_token %}
         {{form.non_field_errors}}
         <div class="relative">
-          <label for="{{form.code.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Code</label>
+          <label for="{{form.code.id_for_label}}"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Code</label>
           {{form.code}}
           {{form.code.errors}}
         </div>
 
         <div class="flex gap-4">
           <div class="relative flex-1">
-            <label for="{{form.first_name.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
+            <label for="{{form.first_name.id_for_label}}"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
             {{form.first_name}}
             {{form.first_name.err.errors}}
           </div>
 
           <div class="relative flex-1">
-            <label for="{{form.last_name.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
+            <label for="{{form.last_name.id_for_label}}"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
             {{form.last_name}}
             {{form.last_name.errors}}
           </div>
         </div>
-      
+
         <div class="relative">
-          <label for="{{form.email.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+          <label for="{{form.email.id_for_label}}"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
           {{form.email}}
           {{form.email.errors}}
         </div>
 
         <div class="relative">
-          <label for="{{form.department.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
+          <label for="{{form.department.id_for_label}}"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
           {{form.department}}
           {{form.department.errors}}
         </div>
-        
         <div class="flex justify-end gap-2">
-          <a href="{% url 'manage_student_view' %}"
-                class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 mt-8">
+          <a href="{% url 'manage_student_view' %}" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 mt-8">
             Cancel
           </a>
-          <button type="submit" 
-                  class="px-4 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 mt-8">
+          <button type="submit" class="px-4 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 mt-8">
             Confirm
           </button>
-      </div>
+        </div>
       </form>
     </div>
   </section>
