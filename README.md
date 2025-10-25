@@ -6,5 +6,4 @@
 นายแสงชัย โรจน์ธนิกกุล	66070317
 
 dependencies  ที่ใช้
-django django-tailwind[reload] psycopg2-binary
-django django-allauth django-environ PyFWT มีอีกแต่จำไม่ได้
+django django-tailwind[reload] psycopg2-binary Pillow
