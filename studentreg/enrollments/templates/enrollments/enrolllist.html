@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Student List{% endblock %}
+{% block title %}Enroll List{% endblock %}
 {% block head %}
 <style>
     table, th{
@@ -32,12 +32,18 @@
                     <td>{{ enroll.student.student_id }}</td>
                     <td>{{ enroll.section.course.code }}{{ enroll.section.course.name }}</td>
                     <td>{{ enroll.section.number }}</td>
-                    <td><button class="bg-green-500" >ยืนยัน</button></td>
-                    <td><button class="bg-red-500" >ยกเลิก</button></td>
+                    <td><a href="{% url 'api_confirm' enroll.id 'c' %}">ยืนยัน</a></td>
+                    <td><a href="{% url 'api_confirm' enroll.id 'r' %}">ยกเลิก</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </section>
+
+    <script>
+        function confirm(id) {
+            console.log(id)
+        }
+    </script>
 </main>
 {% endblock %}

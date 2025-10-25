@@ -1,7 +1,9 @@
-<nav class="flex bg-orange-400">
-    <a href="{% url 'home' %}" class="flex-1">REG</a>
-    {% if user.is_authenticated %}
+<nav class="flex bg-orange-400 text-white p-5">
     <div class="flex-1">
+        <a href="{% url 'home' %}">REG</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="flex flex-1 gap-5">
         {% if user.role == 'adm' %}
         <a href="/admin/">admin</a>
         <a href="{% url 'createregistra' %}">create registra</a>
@@ -15,11 +17,12 @@
         {% elif user.role == 'stu' %}
         <a href="{% url 'enroll_index' %}">Enroll</a>
         {% endif %}
-        
     </div>
-    <span>{{ user.email }}</span>
-    <a href="{% url 'logout' %}">logout</a>
+    <div class="flex flex-none gap-5">
+        <span>{{ user.email }}</span>
+        <a href="{% url 'logout' %}">logout</a>
     {% else %}
-    <a href="{% url 'login' %}" class="flex-none">Login</a>
+        <a href="{% url 'login' %}" class="hover:bg-red-400">Login</a>
     {% endif %}
+    </div>
 </nav>

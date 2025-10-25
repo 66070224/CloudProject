@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import View
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -18,11 +19,12 @@ class IndexView(View):
 class EnrollView(View):
     def get(self, request):
         student = Student.objects.get(user_id=request.user.id)
+        if student.enrolled: return redirect(reverse("home"))
         semester = Semester.objects.first()
         courses = Course.objects.filter(year=student.year, term=semester.term)
         return render(request, 'enrollments/enroll.html', {"courses": courses})
 
-class SubmitView(APIView):
+class SubmitAPI(APIView):
     def get(self, request, courses):
         student = Student.objects.get(user_id=request.user.id)
         splitcourses = str(courses).split(",")
@@ -48,5 +50,15 @@ class SubmitView(APIView):
 class EnrollListView(View):
     def get(self, request):
         registra = Registra.objects.get(user_id=request.user.id)
-        enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty).order_by("-date")
+        enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
         return render(request, 'enrollments/enrolllist.html', {"enrolls": enrolls})
+
+class ConfirmAPI(APIView):
+    def get(self, request, id, text):
+        enroll = Enroll.objects.get(id=id)
+        if text == "c":
+            enroll.status = "con"
+            enroll.save()
+        elif text == "r":
+            enroll.delete()
+        return redirect(reverse("enroll_enrolllist"))
