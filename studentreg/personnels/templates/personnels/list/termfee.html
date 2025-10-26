@@ -21,12 +21,12 @@
                 <tr class="border border-gray-300">
                     <td class="px-4 py-2">{{ payment.student.student_id }}</td>
                     <td class="px-4 py-2">{{ payment.student.user.title }} {{ payment.student.user.first_name }} {{ payment.student.user.last_name }}</td>
-                    <td class="px-4 py-2">{{ payment.student.year }}</td>
-                    <td class="px-4 py-2">{{ payment.department.faculty.name }}</td>
-                    <td class="px-4 py-2">{{ payment.department.name }}</td>
-                    <td class="px-4 py-2">{{ payment.department.term_fees }}</td>
-                    <td class="px-4 py-2 {% if payment.pay == 'N' %} text-red-500 {% elif payment.pay == 'W' %} text-yellow-500 {% else %} text-green-500 {% endif %}">{{ payment.get_pay_display }}</td>
-                    <td class="px-4 py-2">{% if payment.pay == "W" %}<a href="{% url 'personel_payment_detail' payment.id %}">ตรวจสอบ</a>{% endif %}</td>
+                    <td class="px-4 py-2">{{ payment.student.student_year }}</td>
+                    <td class="px-4 py-2">{{ payment.student.department.faculty.name }}</td>
+                    <td class="px-4 py-2">{{ payment.student.department.name }}</td>
+                    <td class="px-4 py-2">{{ payment.student.department.term_fees }}</td>
+                    <td class="px-4 py-2 {% if payment.status == 'N' %} text-red-500 {% elif payment.status == 'W' %} text-yellow-500 {% else %} text-green-500 {% endif %}">{{ payment.get_status_display }}</td>
+                    <td class="px-4 py-2">{% if payment.status == "W" %}<a href="{% url 'personel_payment_detail' payment.id %}">ตรวจสอบ</a>{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

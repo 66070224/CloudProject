@@ -6,7 +6,7 @@ urlpatterns = [
 
     path('course', CourseListView.as_view(), name="course_course_list"),
     path('course/create', CreateCourseView.as_view(), name="course_course_create"),
-    path('course/edit/<int:id>', EditCourseView.as_view(), name="course_course_edit"),
+    path('course/edit/<str:code>', EditCourseView.as_view(), name="course_course_edit"),
 
     path('section', SectionListView.as_view(), name="course_section_list"),
     path('section/create', CreateSectionView.as_view(), name="course_section_create"),

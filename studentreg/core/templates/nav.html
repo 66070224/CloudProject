@@ -9,7 +9,7 @@
             <a href="{% url 'personel_registra_list' %}">registra</a>
         </div>
         {% elif user.role == 'reg' %}
-        <div class="flex flex-1/5 gap-6">
+        <div class="flex flex-1 gap-6">
             <a href="{% url 'personel_professor_list' %}">Professor</a>
             <a href="{% url 'personel_student_list' %}">Student</a>
             <a href="{% url 'personel_payment_list' %}">Termfee</a>

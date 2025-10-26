@@ -30,7 +30,7 @@ class EnrollView(LoginRequiredMixin, View):
         student = Student.objects.get(user_id=request.user.id)
         if student.enrolled: return redirect(reverse("home"))
         semester = Semester.objects.first()
-        courses = Course.objects.filter(year=student.year, term=semester.term)
+        courses = Course.objects.filter(year=student.student_year, term=semester.term)
         return render(request, 'enrollments/enroll.html', {"courses": courses})
     
 class EnrollListView(LoginRequiredMixin, View):
@@ -57,7 +57,7 @@ class GradeView(LoginRequiredMixin, View):
 #----------------------------------------------------------------------------------------------------------------------------
 class SubmitAPI(LoginRequiredMixin, APIView):
     def get(self, request, courses):
-        student = Student.objects.get(user_id=request.user.id)
+        student = Student.objects.get(user=request.user)
         splitcourses = str(courses).split(",")
         try:
             with transaction.atomic():
@@ -65,6 +65,14 @@ class SubmitAPI(LoginRequiredMixin, APIView):
                     if course_with_sec == "": continue
                     course_code, sec_num = course_with_sec.split("_")
                     section = Section.objects.get(course__code=course_code, number=sec_num)
+
+                    count = Enroll.objects.filter(section=section).count()
+
+                    if (section.capacity < count):
+                        return Response({
+                            "text": f"วิชา {section.course.name} เซ็ค {section.number} เต็มแล้ว"
+                        }, status=400)
+
 
                     new_classes = Class.objects.filter(section=section)
                     existing_classes = Class.objects.filter(section__enrolls__student=student)
@@ -86,12 +94,13 @@ class SubmitAPI(LoginRequiredMixin, APIView):
                     student.enrolled = True
                     student.save()
                 semester = Semester.objects.first()
-                payment = Payment(student=student, department=student.department, year=semester.year, term=semester.term)
+                payment = Payment(student=student, student_year=student.student_year, term=semester.term)
                 payment.save()
             return Response({"text": "Success"}, status=200)
         except IntegrityError as e:
             return Response({"text": "คุณเคยลงวิชานี้ไปแล้ว"}, status=500)
         except Exception as e:
+            print(e)
             return Response({"text": "Error"}, status=500)
 
 class ConfirmAPI(LoginRequiredMixin, APIView):

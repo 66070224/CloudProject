@@ -28,8 +28,3 @@ urlpatterns = [
     path('personnels/', include("personnels.urls")),
     path('courses/', include("courses.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-if settings.DEBUG:
-    urlpatterns += [
-        path("__reload__/", include("django_browser_reload.urls")),
-    ]

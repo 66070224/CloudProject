@@ -290,8 +290,8 @@ class PaymentListView(LoginRequiredMixin, View):
         if not request.user.is_registra:
             return redirect(reverse("home"))
 
-        registra = Registra.objects.get(user_id=request.user.id)
-        payments = Payment.objects.filter(department__faculty=registra.faculty, pay__in=("W", "N"))
+        registra = Registra.objects.get(user=request.user)
+        payments = Payment.objects.filter(student__department__faculty=registra.faculty, status__in=("W", "N"))
         return render(request, "personnels/list/termfee.html", {"payments": payments})
     
 class MyPaymentView(LoginRequiredMixin, View):
@@ -300,7 +300,7 @@ class MyPaymentView(LoginRequiredMixin, View):
         if not request.user.is_student:
             return redirect(reverse("home"))
 
-        student = Student.objects.get(user_id=request.user.id)
+        student = Student.objects.get(user=request.user)
         payments = Payment.objects.filter(student=student)
         return render(request, "personnels/student/termfee.html", {"payments": payments})
         
@@ -310,10 +310,10 @@ class PayView(LoginRequiredMixin, View):
         if not request.user.is_student:
             return redirect(reverse("home"))
 
-        student = Student.objects.get(user_id=request.user.id)
+        student = Student.objects.get(user=request.user)
         payment = Payment.objects.get(student=student, id=id)
         form = PayForm(instance=payment)
-        return render(request, "personnels/student/pay.html", {"form": form, "price": payment.department.term_fees})
+        return render(request, "personnels/student/pay.html", {"form": form, "price": payment.student.department.term_fees})
     def post(self, request, id):
         
         if not request.user.is_student:
@@ -324,7 +324,7 @@ class PayView(LoginRequiredMixin, View):
         form = PayForm(request.POST, request.FILES, instance=payment)
         if form.is_valid():
             payment = form.save(commit=False)
-            payment.pay = "W"
+            payment.status = "W"
             payment.save()
             return redirect(reverse("personel_termfee_list"))
         return render(request, "personnels/student/pay.html", {"form": form})
@@ -343,6 +343,6 @@ class PaymentDetailView(LoginRequiredMixin, View):
             return redirect(reverse("home"))
 
         payment = Payment.objects.get(id=id)
-        payment.pay = "Y"
+        payment.status = "Y"
         payment.save()
         return redirect(reverse("personel_payment_list"))

@@ -56,7 +56,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = 'studentreg.urls'
@@ -87,9 +86,9 @@ WSGI_APPLICATION = 'studentreg.wsgi.application'
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'register',
+        'NAME': 'studentreg',
         'USER': 'postgres',
-        'PASSWORD': 'postgres_2547',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -145,6 +144,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 NPM_BIN_PATH = 'npm.cmd'
-
-if DEBUG:
-    INSTALLED_APPS += ['django_browser_reload']

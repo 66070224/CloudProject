@@ -41,7 +41,7 @@
                     <td class="px-4 py-2">{{ course.department.name }}</td>
                     <td class="px-4 py-2">{{ course.year }}</td>
                     <td class="px-4 py-2">{{ course.term }}</td>
-                    <td class="px-4 py-2"><a href="{% url 'course_course_edit' course.id %}">แก้ไข</a></td>
+                    <td class="px-4 py-2"><a href="{% url 'course_course_edit' course.code %}">แก้ไข</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
