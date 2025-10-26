@@ -5,161 +5,187 @@
     table {
         background-color: white;
     }
-    table, th{
+
+    table,
+    th {
         border: 1px gainsboro solid;
         border-collapse: collapse;
     }
-    tr, td {
+
+    tr,
+    td {
         border-inline: 1px gainsboro solid;
         border-collapse: collapse;
         text-align: center;
     }
+
     tr {
         height: 50px;
     }
 </style>
 {% endblock %}
 {% block content %}
-    {% if user.is_authenticated %}
-        {% if user.is_student %}
-        <section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
-            <div class="flex justify-center">
-                <h1 class="text-5xl">ตารางเรียน</h1>
-            </div>
-            {% if user.student.enrolled %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="p-1"></th>
-                            <th class="p-1" colspan="4">08:00-09:00</th>
-                            <th class="p-1" colspan="4">09:00-10:00</th>
-                            <th class="p-1" colspan="4">10:00-11:00</th>
-                            <th class="p-1" colspan="4">11:00-12:00</th>
-                            <th class="p-1" colspan="4">12:00-13:00</th>
-                            <th class="p-1" colspan="4">13:00-14:00</th>
-                            <th class="p-1" colspan="4">14:00-15:00</th>
-                            <th class="p-1" colspan="4">15:00-16:00</th>
-                            <th class="p-1" colspan="4">16:00-17:00</th>
-                            <th class="p-1" colspan="4">17:00-18:00</th>
-                            <th class="p-1" colspan="4">18:00-19:00</th>
-                            <th class="p-1" colspan="4">19:00-20:00</th>
-                        </tr>
-                    </thead>
-                    <tbody id="schedule">
-                        <tr id="table_mon">
-                            <td class="p1">Mon</td>
-                        </tr>
-                        <tr id="table_tue">
-                            <td class="p1">Tue</td>
-                        </tr>
-                        <tr id="table_wed">
-                            <td class="p1">Wed</td>
-                        </tr>
-                        <tr id="table_thu">
-                            <td class="p1">Thu</td>
-                        </tr>
-                        <tr id="table_fri">
-                            <td class="p1">Fri</td>
-                        </tr>
-                        <tr id="table_sat">
-                            <td class="p1">Sat</td>
-                        </tr>
-                        <tr id="table_sun">
-                            <td class="p1">Sun</td>
-                        </tr>
-                    </tbody>
-                </table>
-            {% else %}
-            <span>คุณยังไม่ได้ลงทะเบียน</span>
-            {% endif %}
-        </section>
-        {% elif user.is_registra %}
-        <section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
-            <div class="flex justify-center">
-                <h1 class="text-5xl">ยินดิต้อนรับ, <a href="{% url 'profile' %}" class="text-orange-400">{{ user.first_name }}</a></h1>
-            </div>
-            <div>
-                <h1></h1>
-            </div>
-        </section>
-        {% endif %}
+{% if user.is_authenticated %}
+{% if user.is_student %}
+<section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
+    <div class="flex justify-center">
+        <h1 class="text-5xl">ตารางเรียน</h1>
+    </div>
+    {% if user.student.enrolled %}
+    <table>
+        <thead>
+            <tr>
+                <th class="p-1"></th>
+                <th class="p-1" colspan="4">08:00-09:00</th>
+                <th class="p-1" colspan="4">09:00-10:00</th>
+                <th class="p-1" colspan="4">10:00-11:00</th>
+                <th class="p-1" colspan="4">11:00-12:00</th>
+                <th class="p-1" colspan="4">12:00-13:00</th>
+                <th class="p-1" colspan="4">13:00-14:00</th>
+                <th class="p-1" colspan="4">14:00-15:00</th>
+                <th class="p-1" colspan="4">15:00-16:00</th>
+                <th class="p-1" colspan="4">16:00-17:00</th>
+                <th class="p-1" colspan="4">17:00-18:00</th>
+                <th class="p-1" colspan="4">18:00-19:00</th>
+                <th class="p-1" colspan="4">19:00-20:00</th>
+            </tr>
+        </thead>
+        <tbody id="schedule">
+            <tr id="table_mon">
+                <td class="p1">Mon</td>
+            </tr>
+            <tr id="table_tue">
+                <td class="p1">Tue</td>
+            </tr>
+            <tr id="table_wed">
+                <td class="p1">Wed</td>
+            </tr>
+            <tr id="table_thu">
+                <td class="p1">Thu</td>
+            </tr>
+            <tr id="table_fri">
+                <td class="p1">Fri</td>
+            </tr>
+            <tr id="table_sat">
+                <td class="p1">Sat</td>
+            </tr>
+            <tr id="table_sun">
+                <td class="p1">Sun</td>
+            </tr>
+        </tbody>
+    </table>
+    {% else %}
+    <span>คุณยังไม่ได้ลงทะเบียน</span>
     {% endif %}
+</section>
+{% elif user.is_registra %}
+<section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
+    <div class="flex justify-center">
+        <h1 class="text-5xl">ยินดิต้อนรับ, <a href="{% url 'profile' %}" class="text-orange-400">
+                {{user.first_name}}</a></h1>
+    </div>
+</section>
+<section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
+    <div class="flex gap-5 ">
+        <div class="bg-white shadow rounded-lg p-4 border border-orange-100">
+            <h2 class="text-gray-500 text-sm">นักศึกษาทั้งหมด</h2>
+            <p class="text-2xl font-bold text-orange-500">{{ total_students }}</p>
+        </div>
+        <div class="bg-white shadow rounded-lg p-4 border border-orange-100">
+            <h2 class="text-gray-500 text-sm">วิชาที่เปิดสอน</h2>
+            <p class="text-2xl font-bold text-orange-500">{{ total_courses }}</p>
+        </div>
+        <div class="bg-white shadow rounded-lg p-4 border border-orange-100">
+            <h2 class="text-gray-500 text-sm">คณะทั้งหมด</h2>
+            <p class="text-2xl font-bold text-orange-500">{{ total_departments }}</p>
+        </div>
+    </div>
+</section>
+<div class="flex gap-5 mt-6">
+    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'professorlist' %}">Professor List</a>
+    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'studentlist' %}">Student List</a>
+    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'termfeelist' %}">Term fee List</a>
+    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'enroll_enrolllist' %}">Enroll List</a>
+    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'course_registra' %}">Courses</a>
+</div>
+{% endif %}
+{% endif %}
 {% endblock %}
 {% block script %}
-    <script>
-        window.addEventListener("load", load);
+<script>
+    window.addEventListener("load", load);
 
-        function load() {
-            const enrolls = JSON.parse('{{ enrolls_json|escapejs }}');
-            console.log(enrolls);
-            const colors = [
-                '#EF4444',
-                '#F59E0B',
-                '#10B981',
-                '#3B82F6',
-                '#8B5CF6',
-                '#EC4899',
-                '#14B8A6',
-                '#F97316',
-                '#84CC16',
-                '#06B6D4',
-                '#6366F1',
-                '#22C55E',
-                ];
-            const tbody = document.getElementById("schedule");
-            const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    function load() {
+        const enrolls = JSON.parse('{{ enrolls_json|escapejs }}');
+        console.log(enrolls);
+        const colors = [
+            '#EF4444',
+            '#F59E0B',
+            '#10B981',
+            '#3B82F6',
+            '#8B5CF6',
+            '#EC4899',
+            '#14B8A6',
+            '#F97316',
+            '#84CC16',
+            '#06B6D4',
+            '#6366F1',
+            '#22C55E',
+        ];
+        const tbody = document.getElementById("schedule");
+        const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-            for (let d = 0; d < days.length; d++) {
-                const tr = tbody.children[d];
-                tr.innerHTML = `<td class="p1">${days[d]}</td>`;
-                for (let t = 0; t < 48; t++) {
-                    tr.appendChild(document.createElement("td"));
-                }
+        for (let d = 0; d < days.length; d++) {
+            const tr = tbody.children[d];
+            tr.innerHTML = `<td class="p1">${days[d]}</td>`;
+            for (let t = 0; t < 48; t++) {
+                tr.appendChild(document.createElement("td"));
             }
-
-            for (let i = 0; i < enrolls.length; i++) {
-
-                const rannum = Math.floor(Math.random() * colors.length)
-                const randomColor = colors[rannum];
-                colors.splice(rannum, 1)
-
-                const classes = enrolls[i].classes
-
-                for (let c = 0; c < classes.length; c++) {
-                    const dayIndex = days.indexOf(classes[c].day);
-                    if (dayIndex === -1) return;
-
-                    const [startH, startM] = classes[c].start_time.split(":").map(Number);
-                    const [endH, endM] = classes[c].end_time.split(":").map(Number);
-                    const startTotal = (startH - 8) * 60 + startM;
-                    const endTotal = (endH - 8) * 60 + endM;
-
-                    const startIndex = Math.floor(startTotal / 15) + 1;
-                    const endIndex = Math.floor(endTotal / 15) + 1;
-
-                    const tr = tbody.children[dayIndex];
-                    const td = tr.children[startIndex];
-                    if (td) {
-                        td.innerText = `${endIndex-startIndex}@${enrolls[i].course_code} ${enrolls[i].course_name}\n${classes[c].location}`;
-                        td.style.backgroundColor = randomColor;
-                        td.style.color = "white";
-                    }
-                }
-            }
-            for(d=0; d<tbody.children.length; d++) {
-                const day = tbody.children[d]
-                for(t=1; t<day.children.length; t++){
-                    const td = day.children[t]
-                    if (td.innerText === "") continue
-                    const duration = td.innerText.split("@")
-                    td.innerText = duration[1]
-                    td.setAttribute("colspan", duration[0])
-                    for (e=1; e<Number(duration[0]); e++) {
-                        day.children[t+1].remove()
-                    }
-                }
-            }
-
         }
-    </script>
+
+        for (let i = 0; i < enrolls.length; i++) {
+
+            const rannum = Math.floor(Math.random() * colors.length)
+            const randomColor = colors[rannum];
+            colors.splice(rannum, 1)
+
+            const classes = enrolls[i].classes
+
+            for (let c = 0; c < classes.length; c++) {
+                const dayIndex = days.indexOf(classes[c].day);
+                if (dayIndex === -1) return;
+
+                const [startH, startM] = classes[c].start_time.split(":").map(Number);
+                const [endH, endM] = classes[c].end_time.split(":").map(Number);
+                const startTotal = (startH - 8) * 60 + startM;
+                const endTotal = (endH - 8) * 60 + endM;
+
+                const startIndex = Math.floor(startTotal / 15) + 1;
+                const endIndex = Math.floor(endTotal / 15) + 1;
+
+                const tr = tbody.children[dayIndex];
+                const td = tr.children[startIndex];
+                if (td) {
+                    td.innerText = `${endIndex - startIndex}@${enrolls[i].course_code} ${enrolls[i].course_name}\n${classes[c].location}`;
+                    td.style.backgroundColor = randomColor;
+                    td.style.color = "white";
+                }
+            }
+        }
+        for (d = 0; d < tbody.children.length; d++) {
+            const day = tbody.children[d]
+            for (t = 1; t < day.children.length; t++) {
+                const td = day.children[t]
+                if (td.innerText === "") continue
+                const duration = td.innerText.split("@")
+                td.innerText = duration[1]
+                td.setAttribute("colspan", duration[0])
+                for (e = 1; e < Number(duration[0]); e++) {
+                    day.children[t + 1].remove()
+                }
+            }
+        }
+
+    }
+</script>
 {% endblock %}

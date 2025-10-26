@@ -70,7 +70,7 @@ class CreateRegistraView(View):
                     registra.user = user
                     user.save()
                     registra.save()
-                    return redirect(reverse("registralist"))
+                    return redirect(reverse("home"))
                 return render(request, "personnels/create/registra.html", {"userform": userform, "registraform": registraform})
         except Exception as e:
             print(e)

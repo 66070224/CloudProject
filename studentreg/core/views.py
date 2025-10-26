@@ -4,6 +4,9 @@ from django.views import View
 from enrollments.models import Enroll
 from personnels.models import Student
 
+from courses.models import Course
+from departments.models import Department
+
 import json
 
 # Create your views here.
@@ -37,4 +40,8 @@ class HomeView(View):
 
             # แปลงเป็น JSON string
             context["enrolls_json"] = json.dumps(enroll_data)
+        if request.user.is_registra:
+            context["total_students"] = Student.objects.count()
+            context["total_courses"] = Course.objects.count()
+            context["total_departments"] = Department.objects.filter(faculty=request.user.registra.faculty).count()
         return render(request, 'home.html', context)
