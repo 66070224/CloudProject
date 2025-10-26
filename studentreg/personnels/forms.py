@@ -25,12 +25,12 @@ class EditCustomerUserForm(UserChangeForm):
 class StudentForm(ModelForm):
     class Meta():
         model = Student
-        fields = ["student_id", "department", "year"]
+        fields = ["student_id", "department", "student_year"]
 
 class ProfessorForm(ModelForm):
     class Meta():
         model = Professor
-        fields = ["department"]
+        fields = ["faculty"]
 
 class RegistraForm(ModelForm):
     class Meta():

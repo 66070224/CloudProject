@@ -2,11 +2,36 @@
 {% block title %}Create Student{% endblock %}
 {% block content %}
     <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
+        <div>
+            <img id="imgPreview" src="#" alt="No image selected" class="w-50 h-50">
+        </div>
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ userform.as_p }}
-            {{ studentform.as_p }}
+            {{ userform.as_div }}
+            {{ studentform.as_div }}
             <button type="submit">Create</button>
         </form>
     </section>
+{% endblock %}
+
+{% block script %}
+<script>
+    const fileInput = document.querySelector('input[type="file"][name="img"]');
+    const preview = document.getElementById('imgPreview');
+
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if(file){
+            const reader = new FileReader();
+            reader.onload = function(e){
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+    });
+</script>
 {% endblock %}

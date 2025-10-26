@@ -13,20 +13,49 @@ from django.db import transaction, IntegrityError
 
 from enrollments.forms import GradeForm
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
-class IndexView(View):
+class IndexView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'enrollments/index.html')
 
-class EnrollView(View):
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# ENROLL
+#----------------------------------------------------------------------------------------------------------------------------
+class EnrollView(LoginRequiredMixin, View):
     def get(self, request):
         student = Student.objects.get(user_id=request.user.id)
         if student.enrolled: return redirect(reverse("home"))
         semester = Semester.objects.first()
         courses = Course.objects.filter(year=student.year, term=semester.term)
         return render(request, 'enrollments/enroll.html', {"courses": courses})
+    
+class EnrollListView(LoginRequiredMixin, View):
+    def get(self, request):
+        registra = Registra.objects.get(user_id=request.user.id)
+        enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
+        return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls})
 
-class SubmitAPI(APIView):
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# GRADE
+#----------------------------------------------------------------------------------------------------------------------------
+class GradeView(LoginRequiredMixin, View):
+    def get(self, request, id):
+        enroll = Enroll.objects.get(id=id)
+        grade = Grade.objects.get(enroll=enroll)
+        form = GradeForm(instance=grade)
+        return render(request, "enrollments/grade/student.html", {"form": form})
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# API
+#----------------------------------------------------------------------------------------------------------------------------
+class SubmitAPI(LoginRequiredMixin, APIView):
     def get(self, request, courses):
         student = Student.objects.get(user_id=request.user.id)
         splitcourses = str(courses).split(",")
@@ -65,13 +94,7 @@ class SubmitAPI(APIView):
         except Exception as e:
             return Response({"text": "Error"}, status=500)
 
-class EnrollListView(View):
-    def get(self, request):
-        registra = Registra.objects.get(user_id=request.user.id)
-        enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
-        return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls})
-
-class ConfirmAPI(APIView):
+class ConfirmAPI(LoginRequiredMixin, APIView):
     def get(self, request, id, text):
         enroll = Enroll.objects.get(id=id)
         if text == "c":
@@ -81,9 +104,3 @@ class ConfirmAPI(APIView):
             enroll.delete()
         return redirect(request.META['HTTP_REFERER'])
     
-class EnrollGradeView(View):
-    def get(self, request, id):
-        enroll = Enroll.objects.get(id=id)
-        grade = Grade.objects.get(enroll=enroll)
-        form = GradeForm(instance=grade)
-        return render(request, "enrollments/grade/student.html", {"form": form})

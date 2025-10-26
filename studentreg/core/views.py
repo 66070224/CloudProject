@@ -1,22 +1,22 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 
 from enrollments.models import Enroll
-from personnels.models import Student
+from personnels.models import Student, Registra
 
 from courses.models import Course
 from departments.models import Department
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 import json
 
 # Create your views here.
-class HomeView(View):
+class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         context = {}
-        if not request.user.is_authenticated:
-            return render(request, 'home.html')
         if request.user.is_student:
-            student = Student.objects.get(user_id=request.user.id)
+            student = Student.objects.get(user=request.user)
             enrolls = Enroll.objects.filter(student=student, status="con").select_related("section__course").prefetch_related("section__classes")
             enroll_data = []
             for e in enrolls:
@@ -41,7 +41,8 @@ class HomeView(View):
             # แปลงเป็น JSON string
             context["enrolls_json"] = json.dumps(enroll_data)
         if request.user.is_registra:
-            context["total_students"] = Student.objects.count()
-            context["total_courses"] = Course.objects.count()
-            context["total_departments"] = Department.objects.filter(faculty=request.user.registra.faculty).count()
+            registra = Registra.objects.get(user=request.user)
+            context["total_students"] = Student.objects.filter(department__faculty=registra.faculty).count()
+            context["total_courses"] = Course.objects.filter(department__faculty=registra.faculty).count()
+            context["total_departments"] = Department.objects.filter(faculty=registra.faculty).count()
         return render(request, 'home.html', context)

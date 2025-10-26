@@ -23,7 +23,7 @@
                     <td class="px-4 py-2">{{ payment.term }}</td>
                     <td class="px-4 py-2">{{ payment.department.term_fees }}</td>
                     <td class="px-4 py-2 {% if payment.pay == 'N' %} text-red-500 {% elif payment.pay == 'W' %} text-yellow-500 {% else %} text-green-500 {% endif %}">{{ payment.get_pay_display }}</td>
-                    <td class="px-4 py-2">{% if payment.pay != "Y" %}<a href="{% url 'pay' payment.id %}" class="bg-amber-400 py-1 px-5 rounded text-white">จ่าย</a>{% endif %}</td>
+                    <td class="px-4 py-2">{% if payment.pay != "Y" %}<a href="{% url 'personel_termfee_pay' payment.id %}" class="bg-amber-400 py-1 px-5 rounded text-white">จ่าย</a>{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

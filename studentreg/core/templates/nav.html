@@ -3,31 +3,35 @@
         <a href="{% url 'home' %}">REG</a>
     </div>
     {% if user.is_authenticated %}
-    
         {% if user.role == 'adm' %}
-        <a href="/admin/">admin</a>
-        <a href="{% url 'createregistra' %}">create registra</a>
+        <div class="flex flex-1 gap-6">
+            <a href="/admin/">admin</a>
+            <a href="{% url 'personel_registra_list' %}">registra</a>
+        </div>
         {% elif user.role == 'reg' %}
         <div class="flex flex-1/5 gap-6">
-            <a href="{% url 'professorlist' %}">Professor List</a>
-            <a href="{% url 'studentlist' %}">Student List</a>
-            <a href="{% url 'termfeelist' %}">Term fee List</a>
-            <a href="{% url 'enroll_enrolllist' %}">Enroll List</a>
-            <a href="{% url 'course_registra' %}">Courses</a>
+            <a href="{% url 'personel_professor_list' %}">Professor</a>
+            <a href="{% url 'personel_student_list' %}">Student</a>
+            <a href="{% url 'personel_payment_list' %}">Termfee</a>
+            <a href="{% url 'enrollment_enroll_list' %}">Enroll</a>
+            <a href="{% url 'course_index' %}">Courses</a>
         </div>
         {% elif user.role == 'pro' %}
         <div class="flex flex-1 gap-6">
-            <a href="{% url 'course_professor_courselist' %}">Courses</a>
-            <a href="{% url 'course_professor_sectionlist' %}">Section</a>
+            <a href="{% url 'course_index' %}">Courses</a>
         </div>
         {% elif user.role == 'stu' %}
         <div class="flex flex-1 gap-6">
-            <a href="{% url 'enroll_enroll' %}">Enroll</a>
-            <a href="{% url 'mytermfee' %}">Term fees</a>
+            <a href="{% url 'enrollment_enroll' %}">Enroll</a>
+            <a href="{% url 'personel_termfee_list' %}">Termfee</a>
         </div>
         {% endif %}
     <div class="flex flex-none gap-5">
+        {% if user.role != 'adm' %}
         <a href="{% url 'profile' %}">{{ user.first_name }}  {{ user.last_name }}</a>
+        {% else %}
+        <span>ADMIN</span>
+        {% endif %}
         <a href="{% url 'logout' %}">logout</a>
     {% else %}
         <a href="{% url 'login' %}" class="hover:bg-red-400">Login</a>

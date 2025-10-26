@@ -7,7 +7,7 @@ from personnels.models import Professor
 
 # Create your models here.
 class Course(models.Model):
-    code = models.CharField(max_length=10, unique=True)
+    code = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     credits = models.IntegerField()
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='courses')

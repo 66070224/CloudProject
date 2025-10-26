@@ -2,15 +2,22 @@ from django.urls import path
 from personnels.views import *
 
 urlpatterns = [
-    path('mytermfee', MyPaymentView.as_view(), name="mytermfee"),
-    path('pay/<int:id>', PayView.as_view(), name="pay"),
-    path('studentlist', StudentListView.as_view(), name="studentlist"),
-    path('editstudent/<int:id>', EditStudentView.as_view(), name="editstudent"),
-    path('professorlist', ProfessorListView.as_view(), name="professorlist"),
-    path('editprofessor/<int:id>', EditProfessorView.as_view(), name="editprofessor"),
-    path('termfeelist', PaymentListView.as_view(), name="termfeelist"),
-    path('paymentdetail/<int:id>', PaymentDetailView.as_view(), name="paymentdetail"),
-    path('craetestudent', CreateStudentView.as_view(), name="createstudent"),
-    path('craeteprofessor', CreateProfessorView.as_view(), name="createprofessor"),
-    path('craeteregistra', CreateRegistraView.as_view(), name="createregistra"),
+    path('termfee', MyPaymentView.as_view(), name="personel_termfee_list"),
+    path('termfee/pay/<int:id>', PayView.as_view(), name="personel_termfee_pay"),
+
+    path('student', StudentListView.as_view(), name="personel_student_list"),
+    path('student/create', CreateStudentView.as_view(), name="personel_student_create"),
+    path('student/edit/<int:id>', EditStudentView.as_view(), name="personel_student_edit"),
+
+    path('professor', ProfessorListView.as_view(), name="personel_professor_list"),
+    path('professor/create', CreateProfessorView.as_view(), name="personel_professor_create"),
+    path('professor/edit/<int:id>', EditProfessorView.as_view(), name="personel_professor_edit"),
+    
+    path('registra', RegistralistView.as_view(), name="personel_registra_list"),
+    path('registra/create', CreateRegistraView.as_view(), name="personel_registra_create"),
+    path('registra/edit/<int:id>', EditRegistraView.as_view(), name="personel_registra_edit"),
+
+    path('payment', PaymentListView.as_view(), name="personel_payment_list"),
+    path('payment/<int:id>', PaymentDetailView.as_view(), name="personel_payment_detail"),
+   
 ]

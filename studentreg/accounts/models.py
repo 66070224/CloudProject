@@ -61,5 +61,9 @@ class CustomUser(AbstractUser):
     def is_admin(self):
         return self.role == self.RoleChoices.ADMIN
     
+    @property
+    def get_full_name_with_title(self):
+        return f"{self.title} {self.first_name} {self.last_name}"
+    
     def __str__(self):
         return f"{self.email}"
