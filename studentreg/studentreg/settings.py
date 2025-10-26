@@ -46,9 +46,6 @@ INSTALLED_APPS = [
     'personnels',
 
     'rest_framework',
-
-    'tailwind',
-    'theme',
 ]
 
 MIDDLEWARE = [
@@ -89,12 +86,12 @@ WSGI_APPLICATION = 'studentreg.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "studentreg",
-        "USER": "postgres",
-        "PASSWORD": "password",
-        "HOST": "localhost",
-        "PORT": "5432",
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'register',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres_2547',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

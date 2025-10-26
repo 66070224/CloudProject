@@ -1,11 +1,11 @@
-{% load static tailwind_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    {% tailwind_css %}
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .errorlist {
             background-color: red;
@@ -32,7 +32,7 @@
     <nav class="fixed w-screen flex bg-orange-400 text-white p-5 rounded-b-lg">
         {% include 'nav.html' %}
     </nav>
-    <main class="min-h-screen flex flex-col pt-25 items-center gap-5 overflow-y-auto">
+    <main class="min-h-screen flex flex-col pt-24 items-center gap-5 overflow-y-auto">
         {% block content %}{% endblock %}
     </main>
     {% block script %}{% endblock %}
