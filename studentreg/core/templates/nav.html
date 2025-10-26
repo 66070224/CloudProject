@@ -17,7 +17,8 @@
         </div>
         {% elif user.role == 'pro' %}
         <div class="flex flex-1 gap-6">
-            <a href="{% url 'mycourse' %}">My Courses</a>
+            <a href="{% url 'course_professor_courselist' %}">Courses</a>
+            <a href="{% url 'course_professor_sectionlist' %}">Section</a>
         </div>
         {% elif user.role == 'stu' %}
         <div class="flex flex-1 gap-6">

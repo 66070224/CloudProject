@@ -11,6 +11,8 @@ from enrollments.models import Enroll, Grade
 
 from django.db import transaction, IntegrityError
 
+from enrollments.forms import GradeForm
+
 # Create your views here.
 class IndexView(View):
     def get(self, request):
@@ -78,3 +80,10 @@ class ConfirmAPI(APIView):
         elif text == "r":
             enroll.delete()
         return redirect(request.META['HTTP_REFERER'])
+    
+class EnrollGradeView(View):
+    def get(self, request, id):
+        enroll = Enroll.objects.get(id=id)
+        grade = Grade.objects.get(enroll=enroll)
+        form = GradeForm(instance=grade)
+        return render(request, "enrollments/grade/student.html", {"form": form})

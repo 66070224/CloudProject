@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Course List{% endblock %}
+{% block content %}
+    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
+            <form action="" method="get" class="flex flex-col gap-2">
+                <input type="text" name="text" value="{{ text }}">
+                <div class="flex gap-5">
+                    <span><input type="radio" name="type" id="code" value="code" {% if type == "code" %} checked {% endif %}>รหัส</span>
+                    <span><input type="radio" name="type" id="name" value="name" {% if type == "name" or type == "" %} checked {% endif %}>ชื่อ</span>
+                    <span><input type="radio" name="type" id="year" value="year" {% if type == "year" %} checked {% endif %}>ปี</span>
+                    <span><input type="radio" name="type" id="term" value="term" {% if type == "term" %} checked {% endif %}>เทอม</span>
+                </div>
+                <button type="submit" class="bg-orange-400 text-white py-1 px-5 rounded-2xl">Search</button>
+            </form>    
+    </section>
+
+    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
+        <table class="bg-white">
+            <thead>
+                <tr class="border border-gray-300">
+                    <th class="px-4 py-2">รหัส</th>
+                    <th class="px-4 py-2">ชื่อ</th>
+                    <th class="px-4 py-2">ปี</th>
+                    <th class="px-4 py-2">เทอม</th>
+                    <th class="px-4 py-2">รายละเอียด</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr class="border border-gray-300">
+                    <td class="px-4 py-2">{{ course.code }}</td>
+                    <td class="px-4 py-2">{{ course.name }}</td>
+                    <td class="px-4 py-2">{{ course.year }}</td>
+                    <td class="px-4 py-2">{{ course.term }}</td>
+                    <td class="px-4 py-2"><a href="{% url 'course_professor_coursedetail' course.id %}">รายละเอียด</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

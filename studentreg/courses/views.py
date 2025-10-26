@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from personnels.models import Professor, Registra
 from courses.forms import CourseForm, SectionForm, ClassForm
 from django.db import transaction, IntegrityError
+from enrollments.models import Enroll
 
 # Create your views here.
 class CourseDetailAPI(APIView):
@@ -23,12 +24,6 @@ class CourseDetailAPI(APIView):
         course = self.get_object(code)
         serializer = CourseSerializer(course)
         return Response(serializer.data)
-
-class MyCourseView(View):
-    def get(self, request):
-        professor = Professor.objects.get(user_id=request.user.id)
-        courses = Course.objects.filter(professors=professor)
-        return render(request, "courses/professor/course.html", {"courses": courses})
     
 class RegistraIndexView(View):
     def get(self, request):
@@ -183,3 +178,28 @@ class EditClassView(View):
             form.save()
             return redirect(reverse("course_registra_classlist"))
         return render(request, "courses/registra/edit/class.html", {"form": form})
+    
+class ProfessorCourseView(View):
+    def get(self, request):
+        professor = Professor.objects.get(user_id=request.user.id)
+        courses = Course.objects.filter(professors=professor)
+        return render(request, "courses/professor/list/course.html", {"courses": courses})
+    
+class ProfessorCourseDetailView(View):
+    def get(self, request, id):
+        professor = Professor.objects.get(user_id=request.user.id)
+        course = Course.objects.get(professors=professor, id=id)
+        return render(request, "courses/professor/detail/course.html", {"course": course})
+    
+class ProfessorSectionView(View):
+    def get(self, request):
+        professor = Professor.objects.get(user_id=request.user.id)
+        sections = Section.objects.filter(course__professors=professor)
+        return render(request, "courses/professor/list/section.html", {"sections": sections})
+    
+class ProfessorSectionDetailView(View):
+    def get(self, request, id):
+        professor = Professor.objects.get(user_id=request.user.id)
+        section = Section.objects.get(course__professors=professor, id=id)
+        enrolls = Enroll.objects.filter(section=section, status="con")
+        return render(request, "courses/professor/detail/section.html", {"section": section, "enrolls": enrolls})

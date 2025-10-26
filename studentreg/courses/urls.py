@@ -16,6 +16,13 @@ urlpatterns = [
     path('registra/class/create', CreateClassView.as_view(), name="course_registra_classcreate"),
     path('registra/class/edit/<int:id>', EditClassView.as_view(), name="course_registra_classedit"),
 
-    path('professor/course', MyCourseView.as_view(), name="mycourse"),
+    path('professor/course', ProfessorCourseView.as_view(), name="course_professor_courselist"),
+    path('professor/course/detail/<int:id>', ProfessorCourseDetailView.as_view(), name="course_professor_coursedetail"),
+
+
+    path('professor/section', ProfessorSectionView.as_view(), name="course_professor_sectionlist"),
+    path('professor/section/detail/<int:id>', ProfessorSectionDetailView.as_view(), name="course_professor_sectiondetail"),
+
+
     path('api/detail/<str:code>', CourseDetailAPI.as_view(), name="api_coursedetail"),
 ]
