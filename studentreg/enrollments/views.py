@@ -77,4 +77,4 @@ class ConfirmAPI(APIView):
             enroll.save()
         elif text == "r":
             enroll.delete()
-        return redirect(reverse("enroll_enrolllist"))
+        return redirect(request.META['HTTP_REFERER'])

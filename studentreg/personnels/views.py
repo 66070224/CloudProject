@@ -24,7 +24,7 @@ class CreateStudentView(View):
                     student.user = user
                     user.save()
                     student.save()
-                    return redirect(reverse("createstudent"))
+                    return redirect(reverse("studentlist"))
                 return render(request, "personnels/create/student.html", {"userform": userform, "studentform": studentform})
         except Exception as e:
             print(e)
@@ -47,7 +47,7 @@ class CreateProfessorView(View):
                     professor.user = user
                     user.save()
                     professor.save()
-                    return redirect(reverse("createprofessor"))
+                    return redirect(reverse("professorlist"))
                 return render(request, "personnels/create/professor.html", {"userform": userform, "professorform": professorform})
         except Exception as e:
             print(e)
@@ -70,7 +70,7 @@ class CreateRegistraView(View):
                     registra.user = user
                     user.save()
                     registra.save()
-                    return redirect(reverse("createregistra"))
+                    return redirect(reverse("registralist"))
                 return render(request, "personnels/create/registra.html", {"userform": userform, "registraform": registraform})
         except Exception as e:
             print(e)

@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}Edit Professor{% endblock %}
+{% block title %}Edit Class{% endblock %}
 {% block content %}
     <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="" method="post">
             {% csrf_token %}
-            {{ userform.as_p }}
-            {{ professorform.as_p }}
+            {{ form.as_div }}
             <button type="submit">Edit</button>
         </form>
     </section>

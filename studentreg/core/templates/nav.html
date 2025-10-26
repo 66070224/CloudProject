@@ -16,10 +16,12 @@
             <a href="{% url 'course_registra' %}">Courses</a>
         </div>
         {% elif user.role == 'pro' %}
-        <a href="{% url 'mycourse' %}">My Courses</a>
+        <div class="flex flex-1 gap-6">
+            <a href="{% url 'mycourse' %}">My Courses</a>
+        </div>
         {% elif user.role == 'stu' %}
         <div class="flex flex-1 gap-6">
-            <a href="{% url 'enroll_index' %}">Enroll</a>
+            <a href="{% url 'enroll_enroll' %}">Enroll</a>
             <a href="{% url 'mytermfee' %}">Term fees</a>
         </div>
         {% endif %}

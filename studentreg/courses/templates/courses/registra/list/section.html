@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Section List{% endblock %}
 {% block content %}
-    <section class="">
+    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
             <form action="" method="get" class="flex flex-col gap-2">
                 <input type="text" name="text" value="{{ text }}">
                 <div class="flex gap-5">
@@ -12,7 +12,7 @@
             </form>    
     </section>
 
-    <section class="flex flex-col gap-5">
+    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
         <div>
             <a href="{% url 'course_registra_sectioncreate' %}" class="bg-orange-400 text-white py-1 px-5 rounded-2xl text-xl">Create Section</a>
         </div>

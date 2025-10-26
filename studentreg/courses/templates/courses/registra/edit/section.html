@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Edit Section{% endblock %}
 {% block content %}
-    <section>
+    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
         <form action="" method="post">
             {% csrf_token %}
             {{ form.as_div }}

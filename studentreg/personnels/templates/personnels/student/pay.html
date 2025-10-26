@@ -2,7 +2,7 @@
 {% block title %}Payment{% endblock %}
 {% load static %}
 {% block content %}
-    <section>
+    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
         <img src="{% static 'img/004999120855175_20251025_173117.jpg' %}" alt="" class="w-100 h-100">
         <h1 class="text-2xl">จำนวนเงิน {{ price }}</h1>
         <form action="" method="post" enctype="multipart/form-data" class="flex flex-col justify-center gap-5">

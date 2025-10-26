@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from rest_framework.views import APIView
-from courses.models import Course, Section
+from courses.models import Course, Section, Class
 from django.http import Http404
 from courses.serializers import CourseSerializer
 from rest_framework.response import Response
 from personnels.models import Professor, Registra
 from courses.forms import CourseForm, SectionForm, ClassForm
+from django.db import transaction, IntegrityError
 
 # Create your views here.
 class CourseDetailAPI(APIView):
@@ -64,13 +65,18 @@ class RegistraCourseView(View):
 class CreateCourseView(View):
     def get(self, request):
         form = CourseForm()
-        return render(request, "courses/registra/edit/course.html", {"form": form})
+        return render(request, "courses/registra/create/course.html", {"form": form})
     def post(self, request):
         form = CourseForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("course_registra_courselist"))
-        return render(request, "courses/registra/edit/course.html", {"form": form})
+        try:
+            with transaction.atomic():
+                if form.is_valid():
+                    form.save()
+                    form.save_m2m()
+                    return redirect(reverse("course_registra_courselist"))
+                return render(request, "courses/registra/create/course.html", {"form": form})
+        except IntegrityError:
+            return render(request, "courses/registra/create/course.html", {"form": form})
     
 class EditCourseView(View):
     def get(self, request, id):
@@ -80,10 +86,15 @@ class EditCourseView(View):
     def post(self, request, id):
         course = Course.objects.get(id=id)
         form = CourseForm(request.POST, instance=course)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("course_registra_courselist"))
-        return render(request, "courses/registra/edit/course.html", {"form": form})
+        try:
+            with transaction.atomic():
+                if form.is_valid():
+                    form.save()
+                    form.save_m2m()
+                    return redirect(reverse("course_registra_courselist"))
+                return render(request, "courses/registra/edit/course.html", {"form": form})
+        except IntegrityError:
+            return render(request, "courses/registra/edit/course.html", {"form": form})
     
 class RegistraSectionView(View):
     def get(self, request):
@@ -131,3 +142,44 @@ class EditSectionView(View):
             form.save()
             return redirect(reverse("course_registra_sectionlist"))
         return render(request, "courses/registra/edit/section.html", {"form": form})
+    
+class RegistraClassView(View):
+    def get(self, request):
+
+        text = request.GET.get("text")
+        type = request.GET.get("type")
+
+        registra = Registra.objects.get(user_id=request.user.id)
+        classes = Class.objects.filter(section__course__department__faculty=registra.faculty)
+
+        if text and type and text != "None":
+            pass
+
+        if text == "None" or text == None:
+            text = ""
+
+        return render(request, "courses/registra/list/class.html", {"classes": classes, "text": text, "type": type})
+
+class CreateClassView(View):
+    def get(self, request):
+        form = ClassForm()
+        return render(request, "courses/registra/create/class.html", {"form": form})
+    def post(self, request):
+        form = ClassForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("course_registra_classlist"))
+        return render(request, "courses/registra/create/class.html", {"form": form})
+
+class EditClassView(View):
+    def get(self, request, id):
+        aclass = Class.objects.get(id=id)
+        form = ClassForm(instance=aclass)
+        return render(request, "courses/registra/edit/class.html", {"form": form})
+    def post(self, request, id):
+        aclass = Class.objects.get(id=id)
+        form = ClassForm(request.POST, instance=aclass)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("course_registra_classlist"))
+        return render(request, "courses/registra/edit/class.html", {"form": form})

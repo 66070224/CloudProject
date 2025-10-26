@@ -22,9 +22,9 @@
 {% block content %}
     {% if user.is_authenticated %}
         {% if user.is_student %}
-        <section class="flex flex-col gap-5">
+        <section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
             <div class="flex justify-center">
-                <h1 class="text-2xl">ตารางเรียน</h1>
+                <h1 class="text-5xl">ตารางเรียน</h1>
             </div>
             {% if user.student.enrolled %}
                 <table>
@@ -72,6 +72,15 @@
             {% else %}
             <span>คุณยังไม่ได้ลงทะเบียน</span>
             {% endif %}
+        </section>
+        {% elif user.is_registra %}
+        <section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
+            <div class="flex justify-center">
+                <h1 class="text-5xl">ยินดิต้อนรับ, <a href="{% url 'profile' %}" class="text-orange-400">{{ user.first_name }}</a></h1>
+            </div>
+            <div>
+                <h1></h1>
+            </div>
         </section>
         {% endif %}
     {% endif %}
