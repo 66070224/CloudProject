@@ -11,32 +11,32 @@ from courses.forms import CourseForm, SectionForm, ClassForm
 from django.db import transaction, IntegrityError
 from enrollments.models import Enroll
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
-class CourseDetailAPI(APIView):
-
-    def get_object(self, code):
-        try:
-            return Course.objects.get(code=code)
-        except Course.DoesNotExist:
-            return Http404
-
-    def get(self, request, code):
-        course = self.get_object(code)
-        serializer = CourseSerializer(course)
-        return Response(serializer.data)
-    
-class RegistraIndexView(View):
+class CourseIndexView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, "courses/registra/index.html")
-    
-class RegistraCourseView(View):
+        return render(request, "courses/index.html")
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# COURSE
+#----------------------------------------------------------------------------------------------------------------------------
+class CourseListView(LoginRequiredMixin, View):
     def get(self, request):
+
+        if not request.user.is_registra or request.user.is_professor:
+            return redirect(reverse("home"))
 
         text = request.GET.get("text")
         type = request.GET.get("type")
 
-        registra = Registra.objects.get(user_id=request.user.id)
-        courses = Course.objects.filter(department__faculty=registra.faculty)
+        if request.user.is_registra:
+            registra = Registra.objects.get(user=request.user)
+            courses = Course.objects.filter(department__faculty=registra.faculty)
+        elif request.user.is_professor:
+            professor = Professor.objects.get(user=request.user)
+            courses = Course.objects.filter(professors=professor)
 
         if text and type and text != "None":
             if type == "code":
@@ -45,8 +45,6 @@ class RegistraCourseView(View):
                 courses = courses.filter(name=text)
             elif type == "department":
                 courses = courses.filter(department__name__icontains=text)
-            elif type == "faculty":
-                courses = courses.filter(department__faculty__name__icontains=text)
             elif type == "year":
                 courses = courses.filter(year=text)
             elif type == "term":
@@ -55,30 +53,63 @@ class RegistraCourseView(View):
         if text == "None" or text == None:
             text = ""
 
-        return render(request, "courses/registra/list/course.html", {"courses": courses, "text": text, "type": type})
+        return render(request, "courses/list/course.html", {"courses": courses, "text": text, "type": type})
     
-class CreateCourseView(View):
+class CourseDetailView(LoginRequiredMixin, View):
+    def get(self, request, id):
+
+        if not request.user.is_registra or request.user.is_professor:
+            return redirect(reverse("home"))
+        
+        if request.user.is_registra:
+            registra = Registra.objects.get(user=request.user)
+            faculty = registra.faculty
+
+        if request.user.is_professor:
+            professor = Professor.objects.get(user=request.user)
+            faculty = professor.faculty
+        
+        course = Course.objects.get(id=id, faculty=faculty)
+        return render(request, "courses/detail/course.html", {"course": course})
+
+class CreateCourseView(LoginRequiredMixin, View):
     def get(self, request):
+        
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         form = CourseForm()
-        return render(request, "courses/registra/create/course.html", {"form": form})
+        return render(request, "courses/create/course.html", {"form": form})
     def post(self, request):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         form = CourseForm(request.POST)
         try:
             with transaction.atomic():
                 if form.is_valid():
                     form.save()
                     form.save_m2m()
-                    return redirect(reverse("course_registra_courselist"))
-                return render(request, "courses/registra/create/course.html", {"form": form})
+                    return redirect(reverse("course_registra_course_list"))
+                return render(request, "courses/create/course.html", {"form": form})
         except IntegrityError:
-            return render(request, "courses/registra/create/course.html", {"form": form})
-    
-class EditCourseView(View):
+            return render(request, "courses/create/course.html", {"form": form})
+
+class EditCourseView(LoginRequiredMixin, View):
     def get(self, request, id):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         course = Course.objects.get(id=id)
         form = CourseForm(instance=course)
-        return render(request, "courses/registra/edit/course.html", {"form": form})
+        return render(request, "courses/edit/course.html", {"form": form})
     def post(self, request, id):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         course = Course.objects.get(id=id)
         form = CourseForm(request.POST, instance=course)
         try:
@@ -86,19 +117,31 @@ class EditCourseView(View):
                 if form.is_valid():
                     form.save()
                     form.save_m2m()
-                    return redirect(reverse("course_registra_courselist"))
-                return render(request, "courses/registra/edit/course.html", {"form": form})
+                    return redirect(reverse("course_registra_course_list"))
+                return render(request, "courses/edit/course.html", {"form": form})
         except IntegrityError:
-            return render(request, "courses/registra/edit/course.html", {"form": form})
-    
-class RegistraSectionView(View):
+            return render(request, "courses/edit/course.html", {"form": form})
+
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# SECTION
+#----------------------------------------------------------------------------------------------------------------------------
+class SectionListView(LoginRequiredMixin, View):
     def get(self, request):
+
+        if not request.user.is_registra or request.user.is_professor:
+            return redirect(reverse("home"))
 
         text = request.GET.get("text")
         type = request.GET.get("type")
 
-        registra = Registra.objects.get(user_id=request.user.id)
-        sections = Section.objects.filter(course__department__faculty=registra.faculty)
+        if request.user.is_registra:
+            registra = Registra.objects.get(user=request.user)
+            sections = Section.objects.filter(course__department__faculty=registra.faculty)
+        elif request.user.is_professor:
+            professor = Professor.objects.get(user=request.user)
+            sections = Section.objects.filter(course__professors=professor)
 
         if text and type and text != "None":
             if type == "course":
@@ -112,34 +155,73 @@ class RegistraSectionView(View):
         if text == "None" or text == None:
             text = ""
 
-        return render(request, "courses/registra/list/section.html", {"sections": sections, "text": text, "type": type})
+        return render(request, "courses/list/section.html", {"sections": sections, "text": text, "type": type})
+    
+class SectionDetailView(LoginRequiredMixin, View):
+    def get(self, request, id):
 
-class CreateSectionView(View):
+        if not request.user.is_registra or request.user.is_professor:
+            return redirect(reverse("home"))
+        
+        if request.user.is_registra:
+            registra = Registra.objects.get(user=request.user)
+            section = Section.objects.get(course__faculty=registra.faculty, id=id)
+        elif request.user.is_professor:
+            professor = Professor.objects.get(user=request.user)
+            section = Section.objects.get(course__professors=professor, id=id)
+        enrolls = Enroll.objects.filter(section=section, status="con")
+        return render(request, "courses/detail/section.html", {"section": section, "enrolls": enrolls})
+    
+class CreateSectionView(LoginRequiredMixin, View):
     def get(self, request):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         form = SectionForm()
-        return render(request, "courses/registra/create/section.html", {"form": form})
+        return render(request, "courses/create/section.html", {"form": form})
     def post(self, request):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         form = SectionForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(reverse("course_registra_courselist"))
-        return render(request, "courses/registra/create/section.html", {"form": form})
-
-class EditSectionView(View):
+            return redirect(reverse("course_registra_course_list"))
+        return render(request, "courses/create/section.html", {"form": form})
+    
+class EditSectionView(LoginRequiredMixin, View):
     def get(self, request, id):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         section = Section.objects.get(id=id)
         form = SectionForm(instance=section)
-        return render(request, "courses/registra/edit/section.html", {"form": form})
+        return render(request, "courses/edit/section.html", {"form": form})
     def post(self, request, id):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         section = Section.objects.get(id=id)
         form = SectionForm(request.POST, instance=section)
         if form.is_valid():
             form.save()
-            return redirect(reverse("course_registra_sectionlist"))
-        return render(request, "courses/registra/edit/section.html", {"form": form})
-    
-class RegistraClassView(View):
+            return redirect(reverse("course_registra_section_list"))
+        return render(request, "courses/edit/section.html", {"form": form})
+
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# CLASS
+#----------------------------------------------------------------------------------------------------------------------------
+class ClassListView(LoginRequiredMixin, View):
     def get(self, request):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
 
         text = request.GET.get("text")
         type = request.GET.get("type")
@@ -153,53 +235,62 @@ class RegistraClassView(View):
         if text == "None" or text == None:
             text = ""
 
-        return render(request, "courses/registra/list/class.html", {"classes": classes, "text": text, "type": type})
+        return render(request, "courses/list/class.html", {"classes": classes, "text": text, "type": type})
 
-class CreateClassView(View):
+class CreateClassView(LoginRequiredMixin, View):
     def get(self, request):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         form = ClassForm()
-        return render(request, "courses/registra/create/class.html", {"form": form})
+        return render(request, "courses/create/class.html", {"form": form})
     def post(self, request):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         form = ClassForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(reverse("course_registra_classlist"))
-        return render(request, "courses/registra/create/class.html", {"form": form})
-
-class EditClassView(View):
+            return redirect(reverse("course_registra_class_list"))
+        return render(request, "courses/create/class.html", {"form": form})
+    
+class EditClassView(LoginRequiredMixin, View):
     def get(self, request, id):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         aclass = Class.objects.get(id=id)
         form = ClassForm(instance=aclass)
-        return render(request, "courses/registra/edit/class.html", {"form": form})
+        return render(request, "courses/edit/class.html", {"form": form})
     def post(self, request, id):
+                
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         aclass = Class.objects.get(id=id)
         form = ClassForm(request.POST, instance=aclass)
         if form.is_valid():
             form.save()
-            return redirect(reverse("course_registra_classlist"))
-        return render(request, "courses/registra/edit/class.html", {"form": form})
-    
-class ProfessorCourseView(View):
-    def get(self, request):
-        professor = Professor.objects.get(user_id=request.user.id)
-        courses = Course.objects.filter(professors=professor)
-        return render(request, "courses/professor/list/course.html", {"courses": courses})
-    
-class ProfessorCourseDetailView(View):
-    def get(self, request, id):
-        professor = Professor.objects.get(user_id=request.user.id)
-        course = Course.objects.get(professors=professor, id=id)
-        return render(request, "courses/professor/detail/course.html", {"course": course})
-    
-class ProfessorSectionView(View):
-    def get(self, request):
-        professor = Professor.objects.get(user_id=request.user.id)
-        sections = Section.objects.filter(course__professors=professor)
-        return render(request, "courses/professor/list/section.html", {"sections": sections})
-    
-class ProfessorSectionDetailView(View):
-    def get(self, request, id):
-        professor = Professor.objects.get(user_id=request.user.id)
-        section = Section.objects.get(course__professors=professor, id=id)
-        enrolls = Enroll.objects.filter(section=section, status="con")
-        return render(request, "courses/professor/detail/section.html", {"section": section, "enrolls": enrolls})
+            return redirect(reverse("course_registra_class_list"))
+        return render(request, "courses/edit/class.html", {"form": form})
+
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# API
+#----------------------------------------------------------------------------------------------------------------------------
+class CourseDetailAPI(LoginRequiredMixin, APIView):
+
+    def get_object(self, code):
+        try:
+            return Course.objects.get(code=code)
+        except Course.DoesNotExist:
+            return Http404
+
+    def get(self, request, code):
+        course = self.get_object(code)
+        serializer = CourseSerializer(course)
+        return Response(serializer.data)

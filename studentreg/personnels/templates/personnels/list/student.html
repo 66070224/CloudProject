@@ -17,7 +17,7 @@
 
     <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
         <div>
-            <a href="{% url 'createstudent' %}" class="bg-orange-400 text-white py-1 px-5 rounded-2xl text-xl">Create Student</a>
+            <a href="{% url 'personel_student_create' %}" class="bg-orange-400 text-white py-1 px-5 rounded-2xl text-xl">Create Student</a>
         </div>
         <table class="bg-white border ">
             <thead>
@@ -38,7 +38,7 @@
                     <td class="px-4 py-2">{{ student.year }}</td>
                     <td class="px-4 py-2">{{ student.department.faculty.name }}</td>
                     <td class="px-4 py-2">{{ student.department.name }}</td>
-                    <td class="px-4 py-2"><a href="{% url 'editstudent' student.user.id %}">แก้ไข</a></td>
+                    <td class="px-4 py-2"><a href="{% url 'personel_student_edit' student.user.id %}">แก้ไข</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

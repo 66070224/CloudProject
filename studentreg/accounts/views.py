@@ -6,12 +6,18 @@ from django.urls import reverse
 from accounts.models import CustomUser
 from django.contrib import messages
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
 class LoginView(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect(reverse("home"))
         form = AuthenticationForm()
         return render(request, 'login.html', {"form": form})
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect(reverse("home"))
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
@@ -19,16 +25,16 @@ class LoginView(View):
             return redirect(reverse("home"))
         return render(request, 'login.html', {"form": form})
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect(reverse("login"))
     
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'profile.html')
 
-class ChangePassword(View):
+class ChangePassword(LoginRequiredMixin, View):
     def get(self, request):
         form = PasswordChangeForm(request.user)
         return render(request, 'changepassword.html', { "form": form })

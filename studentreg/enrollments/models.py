@@ -19,8 +19,13 @@ class Enroll(models.Model):
         unique_together = ('student', 'course')
 
 class Grade(models.Model):
-    enroll = models.OneToOneField(Enroll, on_delete=models.CASCADE, primary_key=True)
+    enroll = models.OneToOneField(Enroll, on_delete=models.CASCADE, primary_key=True, related_name="grade")
     score1 = models.IntegerField(default=0)
     score2 = models.IntegerField(default=0)
     score3 = models.IntegerField(default=0)
     score4 = models.IntegerField(default=0)
+
+    @property
+    def get_finalscore(self):
+        return self.score1 + self.score2 + self.score2 + self.score3
+

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Courses{% endblock %}
+{% block content %}
+    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
+        <h1 class="text-2xl">จัดการวิชา</h1>
+        <a href="{% url 'course_course_list' %}" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Courses</a>
+        <a href="{% url 'course_section_list' %}" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Sections</a>
+        {% if user.is_registra %}
+            <a href="{% url 'course_class_list' %}" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Classes</a>
+        {% endif %}
+    </section>
+{% endblock %}

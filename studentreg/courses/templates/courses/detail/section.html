@@ -28,7 +28,7 @@
                 <tr class="border border-gray-300">
                     <td class="px-4 py-2">{{ enroll.student.student_id }}</td>
                     <td class="px-4 py-2">{{ enroll.student.user.first_name }}</td>
-                    <td class="px-4 py-2"><a href="{% url 'grade' enroll.id %}">แก้ไขคะแนน</a></td>
+                    <td class="px-4 py-2"><a href="{% url 'enrollment_grade_edit' enroll.id %}">แก้ไขคะแนน</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

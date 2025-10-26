@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Class List{% endblock %}
+{% block title %}Section List{% endblock %}
 {% block content %}
     <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
             <form action="" method="get" class="flex flex-col gap-2">
@@ -14,30 +14,24 @@
 
     <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
         <div>
-            <a href="{% url 'course_registra_classcreate' %}" class="bg-orange-400 text-white py-1 px-5 rounded-2xl text-xl">Create Section</a>
+            <a href="{% url 'course_section_create' %}" class="bg-orange-400 text-white py-1 px-5 rounded-2xl text-xl">Create Section</a>
         </div>
         <table class="bg-white">
             <thead>
                 <tr class="border border-gray-300">
-                    <th class="px-4 py-2">รหัสวิชา</th>
+                    <th class="px-4 py-2">วิชา</th>
                     <th class="px-4 py-2">เซ็ค</th>
-                    <th class="px-4 py-2">ประเภท</th>
-                    <th class="px-4 py-2">วัน</th>
-                    <th class="px-4 py-2">เวลาเริ่ม</th>
-                    <th class="px-4 py-2">จบ</th>
+                    <th class="px-4 py-2">จำนวนักศึกษา</th>
                     <th class="px-4 py-2">แก้ไข</th>
                 </tr>
             </thead>
             <tbody>
-                {% for class in classes %}
+                {% for section in sections %}
                 <tr class="border border-gray-300">
-                    <td class="px-4 py-2">{{ class.section.course.code }}</td>
-                    <td class="px-4 py-2">{{ class.section.number }}</td>
-                    <td class="px-4 py-2">{{ class.get_type_display }}</td>
-                    <td class="px-4 py-2">{{ class.day }}</td>
-                    <td class="px-4 py-2">{{ class.start_time }}</td>
-                    <td class="px-4 py-2">{{ class.end_time }}</td>
-                    <td class="px-4 py-2"><a href="{% url 'course_registra_classedit' class.id %}">แก้ไข</a></td>
+                    <td class="px-4 py-2">{{ section.course.name }}</td>
+                    <td class="px-4 py-2">{{ section.number }}</td>
+                    <td class="px-4 py-2">{{ section.enrolls.count }}</td>
+                    <td class="px-4 py-2"><a href="{% url 'course_section_edit' section.id %}">แก้ไข</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
