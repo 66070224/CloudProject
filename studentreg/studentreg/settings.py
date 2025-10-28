@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-=c$f+=2o!!ctf+z1@tf6z!&62_1s^u!ur)nd$o+x%kxut_wiqb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['3.83.249.62', 'localhost']
+ALLOWED_HOSTS = [config('EC2_IP'), config('ALB_DNS_NAME'), 'localhost']
 
 
 # Application definition
@@ -84,7 +85,6 @@ WSGI_APPLICATION = 'studentreg.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-from decouple import config
 DATABASES = {
     "default": {
         'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql'),
