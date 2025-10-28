@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-=c$f+=2o!!ctf+z1@tf6z!&62_1s^u!ur)nd$o+x%kxut_wiqb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['Project-ALB-1660052318.us-east-1.elb.amazonaws.com', '13.220.242.120', 'localhost']
+ALLOWED_HOSTS = ['3.83.249.62', 'localhost']
 
 
 # Application definition
@@ -151,14 +151,14 @@ if DEBUG:
     INSTALLED_APPS += ['django_browser_reload']
 
 # AWS S3 setting
-INSTALLED_APPS += ['storages']
+# INSTALLED_APPS += ['storages']
 
-AWS_ACCESS_KEY_ID = config('ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = config('S3_REGION_NAME')
+# AWS_ACCESS_KEY_ID = config('ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = config('SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = config('STORAGE_BUCKET_NAME')
+# AWS_S3_REGION_NAME = config('S3_REGION_NAME')
 
-# # Static files
-STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# # # Static files
+# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # # Media files
 # DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
