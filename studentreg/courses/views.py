@@ -56,7 +56,7 @@ class CourseListView(LoginRequiredMixin, View):
         return render(request, "courses/list/course.html", {"courses": courses, "text": text, "type": type})
     
 class CourseDetailView(LoginRequiredMixin, View):
-    def get(self, request, id):
+    def get(self, request, code):
 
         if not request.user.is_registra or request.user.is_professor:
             return redirect(reverse("home"))
@@ -69,7 +69,7 @@ class CourseDetailView(LoginRequiredMixin, View):
             professor = Professor.objects.get(user=request.user)
             faculty = professor.faculty
         
-        course = Course.objects.get(id=id, faculty=faculty)
+        course = Course.objects.get(code=code, faculty=faculty)
         return render(request, "courses/detail/course.html", {"course": course})
 
 class CreateCourseView(LoginRequiredMixin, View):
@@ -90,34 +90,32 @@ class CreateCourseView(LoginRequiredMixin, View):
             with transaction.atomic():
                 if form.is_valid():
                     form.save()
-                    form.save_m2m()
-                    return redirect(reverse("course_registra_course_list"))
+                    return redirect(reverse("course_course_list"))
                 return render(request, "courses/create/course.html", {"form": form})
         except IntegrityError:
             return render(request, "courses/create/course.html", {"form": form})
 
 class EditCourseView(LoginRequiredMixin, View):
-    def get(self, request, id):
+    def get(self, request, code):
                 
         if not request.user.is_registra:
             return redirect(reverse("home"))
 
-        course = Course.objects.get(id=id)
+        course = Course.objects.get(code=code)
         form = CourseForm(instance=course)
         return render(request, "courses/edit/course.html", {"form": form})
-    def post(self, request, id):
+    def post(self, request, code):
                 
         if not request.user.is_registra:
             return redirect(reverse("home"))
 
-        course = Course.objects.get(id=id)
+        course = Course.objects.get(code=code)
         form = CourseForm(request.POST, instance=course)
         try:
             with transaction.atomic():
                 if form.is_valid():
                     form.save()
-                    form.save_m2m()
-                    return redirect(reverse("course_registra_course_list"))
+                    return redirect(reverse("course_course_list"))
                 return render(request, "courses/edit/course.html", {"form": form})
         except IntegrityError:
             return render(request, "courses/edit/course.html", {"form": form})
@@ -188,7 +186,7 @@ class CreateSectionView(LoginRequiredMixin, View):
         form = SectionForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(reverse("course_registra_course_list"))
+            return redirect(reverse("course_section_list"))
         return render(request, "courses/create/section.html", {"form": form})
     
 class EditSectionView(LoginRequiredMixin, View):
@@ -209,7 +207,7 @@ class EditSectionView(LoginRequiredMixin, View):
         form = SectionForm(request.POST, instance=section)
         if form.is_valid():
             form.save()
-            return redirect(reverse("course_registra_section_list"))
+            return redirect(reverse("course_section_list"))
         return render(request, "courses/edit/section.html", {"form": form})
 
 
@@ -253,7 +251,7 @@ class CreateClassView(LoginRequiredMixin, View):
         form = ClassForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(reverse("course_registra_class_list"))
+            return redirect(reverse("course_class_list"))
         return render(request, "courses/create/class.html", {"form": form})
     
 class EditClassView(LoginRequiredMixin, View):
@@ -274,7 +272,7 @@ class EditClassView(LoginRequiredMixin, View):
         form = ClassForm(request.POST, instance=aclass)
         if form.is_valid():
             form.save()
-            return redirect(reverse("course_registra_class_list"))
+            return redirect(reverse("course_class_list"))
         return render(request, "courses/edit/class.html", {"form": form})
 
 

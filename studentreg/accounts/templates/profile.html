@@ -13,7 +13,7 @@
         <div >
         คณะ <span class="bg-white py-1 px-3 rounded-full border border-amber-500 mr-2">{{ user.student.department.faculty.name }}</span>
         สาขา <span class="bg-white py-1 px-3 rounded-full border border-amber-500 mr-2">{{ user.student.department.name }}</span>
-        ปี <span class="bg-white py-1 px-3 rounded-full border border-amber-500">{{ user.student.year }}</span>
+        ปี <span class="bg-white py-1 px-3 rounded-full border border-amber-500">{{ user.student.student_year }}</span>
     </div>
     {% elif user.is_registra %}
         <div>คณะ <span class="bg-white py-1 px-3 rounded-full border border-amber-500">{{ user.registra.faculty.name }}</span></div>

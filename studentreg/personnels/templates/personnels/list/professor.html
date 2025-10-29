@@ -22,7 +22,6 @@
                 <tr class="border border-gray-300">
                     <th class="px-4 py-2">ชื่อ</th>
                     <th class="px-4 py-2">คณะ</th>
-                    <th class="px-4 py-2">สาขา</th>
                     <th class="px-4 py-2">แก้ไข</th>
                 </tr>
             </thead>
@@ -30,8 +29,7 @@
                 {% for professor in professors %}
                 <tr class="border border-gray-300">
                     <td class="px-4 py-2">{{ professor.user.title }} {{ professor.user.first_name }} {{ professor.user.last_name }}</td>
-                    <td class="px-4 py-2">{{ professor.department.faculty.name }}</td>
-                    <td class="px-4 py-2">{{ professor.department.name }}</td>
+                    <td class="px-4 py-2">{{ professor.faculty.name }}</td>
                     <td class="px-4 py-2"><a href="{% url 'personel_professor_edit' professor.user.id %}">แก้ไข</a></td>
                 </tr>
                 {% endfor %}
