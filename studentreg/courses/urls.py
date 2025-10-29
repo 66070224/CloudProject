@@ -17,4 +17,5 @@ urlpatterns = [
     path('class/edit/<int:id>', EditClassView.as_view(), name="course_class_edit"),
 
     path('api/detail/<str:code>', CourseDetailAPI.as_view(), name="course_api_course_detail"),
+    path('api/delete/<str:type>/<int:id>', DeleteAPI.as_view(), name="course_api_delete"),
 ]

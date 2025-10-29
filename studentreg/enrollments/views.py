@@ -105,11 +105,25 @@ class SubmitAPI(LoginRequiredMixin, APIView):
 
 class ConfirmAPI(LoginRequiredMixin, APIView):
     def get(self, request, id, text):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         enroll = Enroll.objects.get(id=id)
         if text == "c":
             enroll.status = "con"
             enroll.save()
         elif text == "r":
             enroll.delete()
+        return redirect(request.META['HTTP_REFERER'])
+    
+class RefundAPI(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        enroll = Enroll.objects.get(id=id)
+        enroll.delete()
         return redirect(request.META['HTTP_REFERER'])
     

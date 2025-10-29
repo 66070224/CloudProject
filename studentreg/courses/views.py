@@ -292,3 +292,35 @@ class CourseDetailAPI(LoginRequiredMixin, APIView):
         course = self.get_object(code)
         serializer = CourseSerializer(course)
         return Response(serializer.data)
+    
+class DeleteAPI(LoginRequiredMixin, APIView):
+
+    def get(self, request, type,id):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        try:
+
+            #redirect(request.META['HTTP_REFERER'])
+
+            if type == "course":
+                course = Course.objects.get(code=id)
+                course.delete()
+                return redirect(reverse("course_course_list"))
+            elif type == "section":
+                section = Section.objects.get(id=id)
+                section.delete()
+                return redirect(reverse("course_section_list"))
+            elif type == "class":
+                aclass = Class.objects.get(id=id)
+                aclass.delete()
+                return redirect(reverse("course_class_list"))
+        except Class.DoesNotExist:
+            return Response({
+                "text": "ไม่พบข้อมูลที่ต้องการลบ"
+            }, status=404)
+        except IntegrityError:
+            return Response({
+                "text": "ไม่สามารถลบข้อมูลได้ เนื่องจากมีการใช้งานอยู่"
+            }, status=400)
