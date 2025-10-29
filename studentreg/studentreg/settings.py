@@ -136,7 +136,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 # Root
-STATIC_ROOT = BASE_DIR / "static_root_dummy"
+# STATIC_ROOT = BASE_DIR / "static_root_dummy"
 # MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
@@ -161,6 +161,7 @@ AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 
 
 # Static files
+STATIC_ROOT = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 STATICFILES_STORAGE = "studentreg.storage_backends.StaticStorage"
 DEFAULT_FILE_STORAGE = "studentreg.storage_backends.MediaStorage"
 # URL -> S3
