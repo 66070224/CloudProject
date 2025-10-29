@@ -5,34 +5,50 @@
 <h1 class="text-2xl font-bold mb-4">ลงทะเบียนเรียน</h1>
 
 <section class="mb-6 overflow-x-auto">
-    <table class="min-w-full border border-gray-200 text-center">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="border border-gray-300 p-1"></th>
-                <th class="border border-gray-300 p-1" colspan="4">08:00-09:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">09:00-10:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">10:00-11:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">11:00-12:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">12:00-13:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">13:00-14:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">14:00-15:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">15:00-16:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">16:00-17:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">17:00-18:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">18:00-19:00</th>
-                <th class="border border-gray-300 p-1" colspan="4">19:00-20:00</th>
-            </tr>
-        </thead>
-        <tbody id="schedule">
-            <tr id="table_mon"><td class="border border-gray-300 p-1 font-semibold">Mon</td></tr>
-            <tr id="table_tue"><td class="border border-gray-300 p-1 font-semibold">Tue</td></tr>
-            <tr id="table_wed"><td class="border border-gray-300 p-1 font-semibold">Wed</td></tr>
-            <tr id="table_thu"><td class="border border-gray-300 p-1 font-semibold">Thu</td></tr>
-            <tr id="table_fri"><td class="border border-gray-300 p-1 font-semibold">Fri</td></tr>
-            <tr id="table_sat"><td class="border border-gray-300 p-1 font-semibold">Sat</td></tr>
-            <tr id="table_sun"><td class="border border-gray-300 p-1 font-semibold">Sun</td></tr>
-        </tbody>
-    </table>
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full border border-gray-200 border-collapse text-sm">
+            <thead>
+                <tr class="bg-orange-50 text-gray-700">
+                    <th class="border border-gray-200 p-2"></th>
+                    <th class="border border-gray-200 p-2" colspan="4">08:00-09:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">09:00-10:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">10:00-11:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">11:00-12:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">12:00-13:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">13:00-14:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">14:00-15:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">15:00-16:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">16:00-17:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">17:00-18:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">18:00-19:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">19:00-20:00</th>
+                </tr>
+            </thead>
+            <tbody id="schedule" class="text-gray-700">
+                <tr id="table_mon">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Mon</td>
+                </tr>
+                <tr id="table_tue">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Tue</td>
+                </tr>
+                <tr id="table_wed">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Wed</td>
+                </tr>
+                <tr id="table_thu">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Thu</td>
+                </tr>
+                <tr id="table_fri">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Fri</td>
+                </tr>
+                <tr id="table_sat">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Sat</td>
+                </tr>
+                <tr id="table_sun">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Sun</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
 
 <section class="mb-6 overflow-x-auto">
@@ -259,9 +275,11 @@
 
         for (let d = 0; d < days.length; d++) {
             const tr = tbody.children[d];
-            tr.innerHTML = `<td class="p1">${days[d]}</td>`;
+            tr.innerHTML = `<td class="border border-gray-200 p-2 font-medium text-gray-600">${days[d]}</td>`;
             for (let t = 0; t < 48; t++) {
-                tr.appendChild(document.createElement("td"));
+                const td = document.createElement("td");
+                td.className = "border border-gray-200";
+                tr.appendChild(td);
             }
         }
 
