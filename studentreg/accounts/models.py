@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
 from departments.models import Department, Faculty
+from studentreg.storage_backends import MediaStorage  # import storage backend
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -37,7 +38,7 @@ class CustomUser(AbstractUser):
         REGISTRA = "reg", _("Registra")
         ADMIN = "adm", _("Admin")
     role = models.CharField(max_length=3, choices=RoleChoices.choices, default=RoleChoices.STUDENT)
-    img = models.ImageField(upload_to='profile_images/')
+    img = models.ImageField(upload_to='profile_images/', storage=MediaStorage())
 
     USERNAME_FIELD = 'email'
 
