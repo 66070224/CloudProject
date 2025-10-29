@@ -27,14 +27,28 @@ class IndexView(LoginRequiredMixin, View):
 #----------------------------------------------------------------------------------------------------------------------------
 class EnrollView(LoginRequiredMixin, View):
     def get(self, request):
-        student = Student.objects.get(user_id=request.user.id)
-        if student.enrolled: return redirect(reverse("home"))
-        semester = Semester.objects.first()
-        courses = Course.objects.filter(year=student.student_year, term=semester.term)
-        return render(request, 'enrollments/enroll.html', {"courses": courses})
+
+        if not request.user.is_student:
+            return redirect(reverse("home"))
+        
+        try:
+            student = Student.objects.get(user=request.user)
+            if student.enrolled: return redirect(reverse("home"))
+            semester = Semester.objects.first()
+            courses = Course.objects.filter(year=student.student_year, term=semester.term)
+            return render(request, 'enrollments/enroll.html', {"courses": courses})
+        except Student.DoesNotExist:
+            return redirect(reverse("home"))
+        except Semester.DoesNotExist:
+            return Response("No semester found", status=500)
+        
     
 class EnrollListView(LoginRequiredMixin, View):
     def get(self, request):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         registra = Registra.objects.get(user_id=request.user.id)
         enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
         return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls})
