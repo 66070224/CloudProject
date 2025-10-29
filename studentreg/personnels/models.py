@@ -4,6 +4,8 @@ from accounts.models import CustomUser
 from departments.models import Department, Faculty
 from django.utils.translation import gettext_lazy as _
 
+from studentreg.storage_backends import MediaStorage
+
 # Create your models here.
 class Student(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name="student")
@@ -38,5 +40,5 @@ class Payment(models.Model):
         WAIT = "W", _("รอตรวจสอบ")
         YES = "Y", _("ยืนยัน")
     status = models.CharField(max_length=1, choices=StatusChoices, default=StatusChoices.NO)
-    slip = models.ImageField(upload_to="slips/", blank=True, null=True)
+    slip = models.ImageField(upload_to="slips/", storage=MediaStorage(), blank=True, null=True)
     
