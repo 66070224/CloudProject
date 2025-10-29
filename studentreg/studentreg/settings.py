@@ -151,14 +151,17 @@ if DEBUG:
     INSTALLED_APPS += ['django_browser_reload']
 
 # AWS S3 setting
-# INSTALLED_APPS += ['storages']
+INSTALLED_APPS += ['storages']
 
-# AWS_ACCESS_KEY_ID = config('ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = config('SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = config('STORAGE_BUCKET_NAME')
-# AWS_S3_REGION_NAME = config('S3_REGION_NAME')
+AWS_ACCESS_KEY_ID = config('ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = config('S3_REGION_NAME')
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 
-# # # Static files
-# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-# # Media files
-# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# Static files
+STATICFILES_STORAGE = "studentreg.storage_backends.StaticStorage"
+DEFAULT_FILE_STORAGE = "studentreg.storage_backends.MediaStorage"
+# URL -> S3
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
