@@ -1,46 +1,53 @@
 {% extends 'base.html' %}
 {% block title %}Class List{% endblock %}
-{% block content %}
-    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-            <form action="" method="get" class="flex flex-col gap-2">
-                <input type="text" name="text" value="{{ text }}">
-                <div class="flex gap-5">
-                    <span><input type="radio" name="type" id="course" value="course" {% if type == "course" or type == "" %} checked {% endif %}>วิชา</span>
-                    <span><input type="radio" name="type" id="section" value="section" {% if type == "section" %} checked {% endif %}>เซ็ค</span>
-                </div>
-                <button type="submit" class="bg-orange-400 text-white py-1 px-5 rounded-2xl">Search</button>
-            </form>    
-    </section>
 
-    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-        <div>
-            <a href="{% url 'course_class_create' %}" class="bg-orange-400 text-white py-1 px-5 rounded-2xl text-xl">Create Class</a>
+{% block content %}
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    <form action="" method="get" class="flex flex-col gap-2">
+        <input type="text" name="text" value="{{ text }}" class="border border-gray-300 rounded px-3 py-1">
+        <div class="flex gap-5">
+            <span><input type="radio" name="type" id="course" value="course" {% if type == "course" or type == "" %} checked {% endif %}>วิชา</span>
+            <span><input type="radio" name="type" id="section" value="section" {% if type == "section" %} checked {% endif %}>เซ็ค</span>
         </div>
-        <table class="bg-white">
-            <thead>
-                <tr class="border border-gray-300">
-                    <th class="px-4 py-2">รหัสวิชา</th>
-                    <th class="px-4 py-2">เซ็ค</th>
-                    <th class="px-4 py-2">ประเภท</th>
-                    <th class="px-4 py-2">วัน</th>
-                    <th class="px-4 py-2">เวลาเริ่ม</th>
-                    <th class="px-4 py-2">จบ</th>
-                    <th class="px-4 py-2">แก้ไข</th>
+        <button type="submit" class="bg-orange-400 hover:bg-orange-500 text-white py-2 px-6 rounded-2xl transition-colors">Search</button>
+    </form>
+</section>
+
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    <div class="mb-4">
+        <a href="{% url 'course_class_create' %}" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-6 rounded-2xl text-xl shadow">
+            Create Class
+        </a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
+            <thead class="bg-orange-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัสวิชา</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เซ็ค</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ประเภท</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">วัน</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เวลาเริ่ม</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">จบ</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">แก้ไข</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-200">
                 {% for class in classes %}
-                <tr class="border border-gray-300">
-                    <td class="px-4 py-2">{{ class.section.course.code }}</td>
-                    <td class="px-4 py-2">{{ class.section.number }}</td>
-                    <td class="px-4 py-2">{{ class.get_type_display }}</td>
-                    <td class="px-4 py-2">{{ class.day }}</td>
-                    <td class="px-4 py-2">{{ class.start_time }}</td>
-                    <td class="px-4 py-2">{{ class.end_time }}</td>
-                    <td class="px-4 py-2"><a href="{% url 'course_class_edit' class.id %}">แก้ไข</a></td>
+                <tr class="hover:bg-orange-50 transition-colors">
+                    <td class="px-6 py-3">{{ class.section.course.code }}</td>
+                    <td class="px-6 py-3">{{ class.section.number }}</td>
+                    <td class="px-6 py-3">{{ class.get_type_display }}</td>
+                    <td class="px-6 py-3">{{ class.day }}</td>
+                    <td class="px-6 py-3">{{ class.start_time }}</td>
+                    <td class="px-6 py-3">{{ class.end_time }}</td>
+                    <td class="px-6 py-3">
+                        <a href="{% url 'course_class_edit' class.id %}" class="text-orange-500 hover:text-orange-600 font-medium">แก้ไข</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </section>
+    </div>
+</section>
 {% endblock %}

@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}Courses{% endblock %}
+
 {% block content %}
-    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-        <h1 class="text-2xl">จัดการวิชา</h1>
-        <a href="{% url 'course_course_list' %}" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Courses</a>
-        <a href="{% url 'course_section_list' %}" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Sections</a>
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    <h1 class="text-3xl font-bold mb-4">จัดการวิชา</h1>
+    <div class="flex flex-wrap gap-4">
+        <a href="{% url 'course_course_list' %}" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white px-4 py-2 rounded-2xl shadow">Courses</a>
+        <a href="{% url 'course_section_list' %}" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white px-4 py-2 rounded-2xl shadow">Sections</a>
         {% if user.is_registra %}
-            <a href="{% url 'course_class_list' %}" class="bg-orange-400 px-3 py-1 text-white rounded-2xl">Classes</a>
+            <a href="{% url 'course_class_list' %}" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white px-4 py-2 rounded-2xl shadow">Classes</a>
         {% endif %}
-    </section>
+    </div>
+</section>
 {% endblock %}

@@ -1,20 +1,28 @@
 {% extends 'base.html' %}
 {% block title %}Payment Detail{% endblock %}
+
 {% block content %}
-    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-        <img src="{{ payment.slip.url }}" alt="" class="w-100 h-100">
-        <div class="bg-white p-3">
-            <h1 >รายระเอียด</h1>
-            <p>
-                {{ payment.student.student_id }} <br>
-                {{ payment.student.user.title }} {{ payment.student.user.first_name }} {{ payment.student.user.last_name }} <br>
-                ปี {{ payment.year }} <br>
-                เทอม {{ payment.term }}
-            </p>
-        </div>
-        <form action="" method="post" class="flex justify-center">
-            {% csrf_token %}
-            <button type="submit" class="bg-green-400 text-white p-1 rounded">ยืนยัน</button>
-        </form>
-    </section>
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-2xl mx-auto mt-10">
+    <div class="flex justify-center">
+        <img src="{{ payment.slip.url }}" alt="Slip Image" class="w-full max-w-md h-auto rounded-lg object-contain shadow-md">
+    </div>
+
+    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <h1 class="text-2xl font-bold mb-2 text-orange-500">รายละเอียด</h1>
+        <p class="text-gray-700 leading-relaxed">
+            รหัสนักศึกษา: {{ payment.student.student_id }} <br>
+            ชื่อ: {{ payment.student.user.title }} {{ payment.student.user.first_name }} {{ payment.student.user.last_name }} <br>
+            ปี: {{ payment.year }} <br>
+            เทอม: {{ payment.term }}
+        </p>
+    </div>
+
+    <form action="" method="post" class="flex justify-center mt-4">
+        {% csrf_token %}
+        <button type="submit" 
+                class="bg-green-400 hover:bg-green-500 transition-colors text-white font-medium py-2 px-6 rounded-2xl shadow">
+            ยืนยัน
+        </button>
+    </form>
+</section>
 {% endblock %}

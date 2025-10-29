@@ -1,33 +1,51 @@
 {% extends 'base.html' %}
+
 {% block title %}Term fee List{% endblock %}
+
 {% block content %}
-<main>
-    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
+<main class="min-h-screen bg-gray-50 p-6">
+    <section class="flex flex-col gap-6 shadow-xl p-8 rounded-2xl bg-white max-w-6xl mx-auto">
         <div class="flex justify-center">
-            <h1 class="text-5xl">ค่าเทอม</h1>
+            <h1 class="text-5xl font-extrabold text-orange-500">ค่าเทอม</h1>
         </div>
-        <table class="bg-white">
-            <thead>
-                <tr class="border border-gray-300">
-                    <th class="px-4 py-2">ปี</th>
-                    <th class="px-4 py-2">เทอม</th>
-                    <th class="px-4 py-2">ราคา</th>
-                    <th class="px-4 py-2">สถานะ</th>
-                    <th class="px-4 py-2">จ่าย</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for payment in payments %}
-                <tr class="border border-gray-300">
-                    <td class="px-4 py-2">{{ payment.student_year }}</td>
-                    <td class="px-4 py-2">{{ payment.term }}</td>
-                    <td class="px-4 py-2">{{ payment.student.department.term_fees }}</td>
-                    <td class="px-4 py-2 {% if payment.status == 'N' %} text-red-500 {% elif payment.status == 'W' %} text-yellow-500 {% else %} text-green-500 {% endif %}">{{ payment.get_status_display }}</td>
-                    <td class="px-4 py-2">{% if payment.status != "Y" %}<a href="{% url 'personel_termfee_pay' payment.id %}" class="bg-amber-400 py-1 px-5 rounded text-white">จ่าย</a>{% endif %}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
+                <thead class="bg-orange-100">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">ปี</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">เทอม</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">ราคา</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">สถานะ</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">จ่าย</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for payment in payments %}
+                    <tr class="hover:bg-orange-50 transition-colors">
+                        <td class="px-6 py-3">{{ payment.student_year }}</td>
+                        <td class="px-6 py-3">{{ payment.term }}</td>
+                        <td class="px-6 py-3">{{ payment.student.department.term_fees }}</td>
+                        <td class="px-6 py-3 font-semibold 
+                            {% if payment.status == 'N' %} text-red-500 
+                            {% elif payment.status == 'W' %} text-yellow-500 
+                            {% else %} text-green-500 {% endif %}">
+                            {{ payment.get_status_display }}
+                        </td>
+                        <td class="px-6 py-3">
+                            {% if payment.status != "Y" %}
+                                <a href="{% url 'personel_termfee_pay' payment.id %}" 
+                                   class="bg-amber-500 hover:bg-amber-600 transition-colors text-white font-medium py-2 px-5 rounded-lg shadow">
+                                    จ่าย
+                                </a>
+                            {% else %}
+                                <span class="text-gray-400 font-medium">จ่ายแล้ว</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </section>
 </main>
 {% endblock %}
