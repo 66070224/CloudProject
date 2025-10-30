@@ -51,6 +51,7 @@
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คณะ</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">สาขา</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">แก้ไข</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ลบ</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -64,6 +65,10 @@
                     <td class="px-6 py-3">
                         <a href="{% url 'personel_student_edit' student.user.id %}" 
                            class="text-orange-500 hover:text-orange-600 font-medium">แก้ไข</a>
+                    </td>
+                    <td class="px-6 py-3">
+                        <a href="{% url 'personel_api_delete_student' student.user.id %}" 
+                           class="text-red-500 hover:text-red-600 font-medium">ลบ</a>
                     </td>
                 </tr>
                 {% endfor %}
