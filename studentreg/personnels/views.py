@@ -229,8 +229,6 @@ class EditProfessorView(LoginRequiredMixin, View):
             print(e)
             return render(request, "personnels/edit/professor.html", {"userform": userform, "professorform": professorform})
 
-
-
 #----------------------------------------------------------------------------------------------------------------------------
 # REGISTRA
 #----------------------------------------------------------------------------------------------------------------------------

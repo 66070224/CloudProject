@@ -12,6 +12,40 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import boto3
+from botocore.exceptions import ClientError
+import json
+
+def get_secret():
+    secret_name = "prod/App/env"
+    region_name = "us-east-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        raise e
+
+    # Parse the secret string (usually JSON)
+    secret = get_secret_value_response['SecretString']
+    
+    # ถ้า secret เป็น JSON
+    try:
+        secret_dict = json.loads(secret)
+        return secret_dict
+    except json.JSONDecodeError:
+        # ถ้าไม่ใช่ JSON ให้ return string
+        return secret
+
+secret = get_secret()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +60,7 @@ SECRET_KEY = 'django-insecure-=c$f+=2o!!ctf+z1@tf6z!&62_1s^u!ur)nd$o+x%kxut_wiqb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [config('EC2_IP'), config('ALB_DNS_NAME'), 'localhost']
+ALLOWED_HOSTS = [config('ALB_DNS_NAME'), 'localhost']
 
 
 # Application definition
@@ -86,12 +120,12 @@ WSGI_APPLICATION = 'studentreg.wsgi.application'
 
 DATABASES = {
     "default": {
-        'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT', default='5432'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': secret.get('DB_NAME'),
+        'USER': secret.get('DB_USER'),
+        'PASSWORD': secret.get('DB_PASSWORD'),
+        'HOST': secret.get('DB_HOST'),
+        'PORT': '5432',
     }
 }
 
@@ -152,11 +186,16 @@ STATIC_ROOT = BASE_DIR / "static"
 # AWS S3 setting
 INSTALLED_APPS += ['storages']
 
-AWS_ACCESS_KEY_ID = config('ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('SECRET_ACCESS_KEY')
-AWS_SESSION_TOKEN = config('SESSION_TOKEN')
-AWS_STORAGE_BUCKET_NAME = config('STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = config('S3_REGION_NAME')
+# Use this code snippet in your app.
+# If you need more information about configurations
+# or implementing the sample code, visit the AWS docs:
+# https://aws.amazon.com/developer/language/python/
+
+AWS_ACCESS_KEY_ID = secret.get('ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = secret.get('SECRET_ACCESS_KEY')
+AWS_SESSION_TOKEN = secret.get('SESSION_TOKEN')
+AWS_STORAGE_BUCKET_NAME = secret.get('STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = secret.get('S3_REGION_NAME')
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 
 
@@ -179,7 +218,7 @@ AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
 
 # Cognito
-COGNITO_USER_POOL_ID = config('USER_POOL_ID')
-COGNITO_APP_CLIENT_ID = config('APP_CLIENT_ID')
-COGNITO_REGION = config('REGION')
-COGNITO_APP_CLIENT_SECRET = config('APP_CLIENT_SECRET')
+COGNITO_USER_POOL_ID = secret.get('USER_POOL_ID')
+COGNITO_APP_CLIENT_ID = secret.get('APP_CLIENT_ID')
+COGNITO_REGION = secret.get('REGION')
+COGNITO_APP_CLIENT_SECRET = secret.get('APP_CLIENT_SECRET')
