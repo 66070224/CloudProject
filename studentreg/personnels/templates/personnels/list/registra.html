@@ -1,20 +1,29 @@
 {% extends 'base.html' %}
 {% block title %}Registra{% endblock %}
 
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-4xl mx-auto mt-10">
     <form action="" method="get" class="flex flex-col gap-4">
-        <input type="text" name="text" value="{{ text }}" 
+        <div class="flex gap-4 items-center">
+            <input type="text" name="name" value="{{ name }}" 
                class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
-        <div class="flex gap-5">
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="name" value="name" {% if type == "name" or type == "" %} checked {% endif %} class="accent-orange-400">
-                ชื่อ
-            </label>
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="faculty" value="faculty" {% if type == "faculty" %} checked {% endif %} class="accent-orange-400">
-                คณะ
-            </label>
+            <div class="flex min-w-[200px]">
+                <label for="faculty">คณะ: </label>
+                <select name="faculty" id="faculty">
+                    <option value="" {% if not faculty %}selected{% endif %}>-- เลือกตณะ --</option>
+                    {% for f in faculties %}
+                        <option value="{{ f.name }}" {% if f.name == faculty %} selected {% endif %}>{{ f.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <button type="submit" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-5 rounded-2xl shadow">
             Search
@@ -58,4 +67,15 @@
         </table>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function() {
+    $('#faculty').select2({
+      placeholder: "ค้นหาคณะ...",
+      allowClear: true
+    });
+  });
+</script>
 {% endblock %}

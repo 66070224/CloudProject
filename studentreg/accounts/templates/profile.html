@@ -7,28 +7,18 @@
         <h1 class="text-5xl font-extrabold text-orange-500 mb-4">โปรไฟล์</h1>
     </div>
     <img src="{{ user.img.url }}" alt="User Image" class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover mb-4 border-4 border-amber-400">
-    
-    <div class="text-lg flex flex-wrap justify-center gap-2 mb-2">
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">ชื่อ {{ user.title }}{{ user.first_name }}</span>
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">นามสกุล {{ user.last_name }}</span>
-    </div>
 
-    {% if user.is_student %}
-    <div class="text-lg flex flex-wrap justify-center gap-2 mb-2">
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">รหัสนักศึกษา {{ user.student.student_id }}</span>
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">คณะ {{ user.student.department.faculty.name }}</span>
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">สาขา {{ user.student.department.name }}</span>
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">ปี {{ user.student.student_year }}</span>
+    <div class="flex flex-col gap-2 text-center">
+        <p class="text-xl"><span class="font-semibold">ชื่อ:</span> {{ user.title }} {{ user.first_name }} {{ user.last_name }}</p>
+        <p class="text-xl"><span class="font-semibold">อีเมล:</span> {{ user.email }}</p>
+        {% if user.is_student %}
+        <p class="text-xl"><span class="font-semibold">รหัสนักศึกษา:</span> {{ user.student.student_id }}</p>
+        <p class="text-xl"><span class="font-semibold">ปีที่เข้าเรียน:</span> {{ user.student.student_year }}</p>
+        <p class="text-xl"><span class="font-semibold">สาขา:</span> {{ user.student.department.name }}</p>
+        {% elif user.is_professor %}
+        <p class="text-xl"><span class="font-semibold">สาขา:</span> {{ user.professor.department.name }}</p>
+        {% endif %}
     </div>
-    {% elif user.is_registra %}
-    <div class="text-lg flex justify-center mb-2">
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">คณะ {{ user.registra.faculty.name }}</span>
-    </div>
-    {% elif user.is_professor %}
-    <div class="text-lg flex justify-center mb-2">
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">คณะ {{ user.professor.faculty.name }}</span>
-    </div>
-    {% endif %}
 
     <div class="flex justify-center mt-4">
         <a href="{% url 'changepassword' %}" 
@@ -44,9 +34,28 @@
 {% if user.is_student %}
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-3xl mx-auto mt-10 items-center">
     <h2 class="text-2xl font-semibold text-orange-500 mb-4 mt-6">รายวิชาที่ลงทะเบียน</h2>
-    {% for enroll in enrolls %}
-        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">{{ enroll.section.course.code }} - เซ็ค {{ enroll.section.number }}</span>
-    {% endfor %}    
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
+            <thead class="bg-orange-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัสวิชา</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ชื่อ</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เซ็ค</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คะแนน</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for enroll in enrolls %}
+                <tr class="hover:bg-orange-50 transition-colors">
+                    <td class="px-6 py-3">{{ enroll.section.course.code }}</td>
+                    <td class="px-6 py-3">{{ enroll.section.course.name }}</td>
+                    <td class="px-6 py-3">{{ enroll.section.number }}</td>
+                    <td class="px-6 py-3">{{ enroll.grade.get_finalscore }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>  
 </section>
 {% endif %}
 
@@ -59,7 +68,6 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัส</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ชื่อ</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คณะ</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">สาขา</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ปี</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เทอม</th>
@@ -71,7 +79,6 @@
                 <tr class="hover:bg-orange-50 transition-colors">
                     <td class="px-6 py-3">{{ course.code }}</td>
                     <td class="px-6 py-3">{{ course.name }}</td>
-                    <td class="px-6 py-3">{{ course.department.faculty.name }}</td>
                     <td class="px-6 py-3">{{ course.department.name }}</td>
                     <td class="px-6 py-3">{{ course.year }}</td>
                     <td class="px-6 py-3">{{ course.term }}</td>

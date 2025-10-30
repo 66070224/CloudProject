@@ -2,19 +2,35 @@
 {% block title %}Course List{% endblock %}
 
 {% block content %}
-<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
-    <form action="" method="get" class="flex flex-col gap-2">
-        <input type="text" name="text" value="{{ text }}" class="border border-gray-300 rounded px-3 py-1">
-        <div class="flex flex-wrap gap-5">
-            <span><input type="radio" name="type" id="code" value="code" {% if type == "code" %} checked {% endif %}>รหัส</span>
-            <span><input type="radio" name="type" id="name" value="name" {% if type == "name" or type == "" %} checked {% endif %}>ชื่อ</span>
-            <span><input type="radio" name="type" id="faculty" value="faculty" {% if type == "faculty" %} checked {% endif %}>คณะ</span>
-            <span><input type="radio" name="type" id="department" value="department" {% if type == "department" %} checked {% endif %}>สาขา</span>
-            <span><input type="radio" name="type" id="year" value="year" {% if type == "year" %} checked {% endif %}>ปี</span>
-            <span><input type="radio" name="type" id="term" value="term" {% if type == "term" %} checked {% endif %}>เทอม</span>
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-10">
+    <form action="" method="get" class="flex flex-col gap-4">
+        <div class="flex gap-4 items-center">
+            <input type="text" name="code" value="{{ code }}" placeholder="รหัสวิชา"
+               class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <input type="text" name="name" value="{{ name }}" placeholder="ชื่อวิชา"
+               class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <div class="flex min-w-[200px]">
+                <label for="department_select">สาขา: </label>
+                <select name="department_select" id="department_select">
+                    <option value="" {% if not department_select %}selected{% endif %}>-- เลือกสาขา --</option>
+                    {% for d in departments %}
+                        <option value="{{ d.name }}" {% if d.name == department_select %} selected {% endif %}>{{ d.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex">
+                <label for="year">ปี: </label>
+                <input type="number" name="year" value="{{ year }}">
+            </div>
+            <div class="flex">
+                <label for="term">เทอม: </label>
+                <input type="number" name="term" value="{{ term }}">
+            </div>
         </div>
-        <button type="submit" class="bg-orange-400 hover:bg-orange-500 text-white py-2 px-6 rounded-2xl transition-colors">Search</button>
-    </form>
+        <button type="submit" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-5 rounded-2xl shadow">
+            Search
+        </button>
+    </form>    
 </section>
 
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
@@ -31,7 +47,6 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัส</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ชื่อ</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คณะ</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">สาขา</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ปี</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เทอม</th>
@@ -48,7 +63,6 @@
                 <tr class="hover:bg-orange-50 transition-colors">
                     <td class="px-6 py-3">{{ course.code }}</td>
                     <td class="px-6 py-3">{{ course.name }}</td>
-                    <td class="px-6 py-3">{{ course.department.faculty.name }}</td>
                     <td class="px-6 py-3">{{ course.department.name }}</td>
                     <td class="px-6 py-3">{{ course.year }}</td>
                     <td class="px-6 py-3">{{ course.term }}</td>
@@ -70,4 +84,15 @@
         </table>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function() {
+    $('#department').select2({
+      placeholder: "ค้นหาสาขา...",
+      allowClear: true
+    });
+  });
+</script>
 {% endblock %}
