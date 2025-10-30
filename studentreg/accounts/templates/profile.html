@@ -15,6 +15,7 @@
 
     {% if user.is_student %}
     <div class="text-lg flex flex-wrap justify-center gap-2 mb-2">
+        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">รหัสนักศึกษา {{ user.student.student_id }}</span>
         <span class="bg-white py-1 px-3 rounded-full border border-amber-500">คณะ {{ user.student.department.faculty.name }}</span>
         <span class="bg-white py-1 px-3 rounded-full border border-amber-500">สาขา {{ user.student.department.name }}</span>
         <span class="bg-white py-1 px-3 rounded-full border border-amber-500">ปี {{ user.student.student_year }}</span>

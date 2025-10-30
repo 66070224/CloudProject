@@ -64,6 +64,14 @@ class GradeView(LoginRequiredMixin, View):
         grade = Grade.objects.get(enroll=enroll)
         form = GradeForm(instance=grade)
         return render(request, "enrollments/grade/student.html", {"form": form})
+    def post(self, request, id):
+        enroll = Enroll.objects.get(id=id)
+        grade = Grade.objects.get(enroll=enroll)
+        form = GradeForm(request.POST, instance=grade)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("enrollment_enroll_list"))
+        return render(request, "enrollments/grade/student.html", {"form": form})
 
 
 #----------------------------------------------------------------------------------------------------------------------------

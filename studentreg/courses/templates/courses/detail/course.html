@@ -6,8 +6,13 @@
     <div class="mb-4 flex justify-center">
         <h1 class="text-5xl">รายละเอียดวิชา</h1>
     </div>
-    <div class="flex justify-center text-xl">
-        <h2>{{ course.name }}</h2>
+    <div class="flex justify-center flex-col text-xl">
+        <h2>รหัสวิชา: {{ course.code }}</h2>
+        <h2>ชื่อวิชา: {{ course.name }}</h2>
+        <h2>หน่วยกิต: {{ course.credits }}</h2>
+        <h2>สาขา: {{ course.department }}</h2>
+        <h2>ปี: {{ course.year }}</h2>
+        <h2>เทอม: {{ course.term }}</h2>
     </div>
 </section>
 

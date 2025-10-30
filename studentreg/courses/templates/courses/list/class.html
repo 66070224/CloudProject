@@ -30,6 +30,7 @@
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เวลาเริ่ม</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">จบ</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">แก้ไข</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ลบ</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -43,6 +44,9 @@
                     <td class="px-6 py-3">{{ class.end_time }}</td>
                     <td class="px-6 py-3">
                         <a href="{% url 'course_class_edit' class.id %}" class="text-orange-500 hover:text-orange-600 font-medium">แก้ไข</a>
+                    </td>
+                    <td class="px-6 py-3">
+                        <a href="{% url 'course_api_delete' 'class' class.id %}" class="text-red-500 hover:text-red-600 font-medium">ลบ</a>
                     </td>
                 </tr>
                 {% endfor %}

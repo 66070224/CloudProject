@@ -14,11 +14,13 @@
 </section>
 
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    {% if user.is_registra %}
     <div class="mb-4">
         <a href="{% url 'course_section_create' %}" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-6 rounded-2xl text-xl shadow">
             Create Section
         </a>
     </div>
+    {% endif %}
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
             <thead class="bg-orange-100">
@@ -26,7 +28,12 @@
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">วิชา</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เซ็ค</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">จำนวนนักศึกษา</th>
+                    {% if user.is_registra %}
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">แก้ไข</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ลบ</th>
+                    {% elif user.is_professor %}
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ดูรายละเอียด</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -35,9 +42,18 @@
                     <td class="px-6 py-3">{{ section.course.name }}</td>
                     <td class="px-6 py-3">{{ section.number }}</td>
                     <td class="px-6 py-3">{{ section.enrolls.count }}</td>
+                    {% if user.is_registra %}
                     <td class="px-6 py-3">
                         <a href="{% url 'course_section_edit' section.id %}" class="text-orange-500 hover:text-orange-600 font-medium">แก้ไข</a>
                     </td>
+                    <td class="px-6 py-3">
+                        <a href="{% url 'course_api_delete' 'section' section.id %}" class="text-red-500 hover:text-red-600 font-medium">ลบ</a>
+                    </td>
+                    {% elif user.is_professor %}
+                    <td class="px-6 py-3">
+                        <a href="{% url 'course_section_detail' section.id %}" class="text-orange-500 hover:text-orange-600 font-medium">ดูรายละเอียด</a>
+                    </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
