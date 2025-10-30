@@ -191,10 +191,10 @@ INSTALLED_APPS += ['storages']
 # or implementing the sample code, visit the AWS docs:
 # https://aws.amazon.com/developer/language/python/
 
-AWS_ACCESS_KEY_ID = secret.get('ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = secret.get('SECRET_ACCESS_KEY')
-AWS_SESSION_TOKEN = secret.get('SESSION_TOKEN')
-AWS_STORAGE_BUCKET_NAME = secret.get('STORAGE_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = secret.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = secret.get('AWS_SECRET_ACCESS_KEY')
+AWS_SESSION_TOKEN = secret.get('AWS_SESSION_TOKEN')
+AWS_STORAGE_BUCKET_NAME = secret.get('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_REGION_NAME = secret.get('S3_REGION_NAME')
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 
