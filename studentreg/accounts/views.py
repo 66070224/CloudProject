@@ -43,6 +43,10 @@ class LogoutView(LoginRequiredMixin, View):
     
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
+        if request.user.is_student:
+            enrolls = request.user.student.enrolls.select_related('section__course').all()
+            return render(request, 'profile.html', {'enrolls': enrolls})
+
         return render(request, 'profile.html')
 
 class ChangePassword(LoginRequiredMixin, View):

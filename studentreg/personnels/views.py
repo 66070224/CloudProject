@@ -11,6 +11,8 @@ from accounts.services import CognitoService
 
 cognito = CognitoService()
 
+from rest_framework.views import APIView
+
 #----------------------------------------------------------------------------------------------------------------------------
 # STUDENT
 #----------------------------------------------------------------------------------------------------------------------------
@@ -363,3 +365,63 @@ class PaymentDetailView(LoginRequiredMixin, View):
         payment.status = "Y"
         payment.save()
         return redirect(reverse("personel_payment_list"))
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# API
+#----------------------------------------------------------------------------------------------------------------------------
+
+class DeleteRegistraAPI(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+        
+        if not request.user.is_admin:
+            return redirect(reverse("home"))
+
+        try:
+            with transaction.atomic():
+                user = CustomUser.objects.get(id=id)
+                registra = Registra.objects.get(user=user)
+                registra.delete()
+                user.delete()
+                return redirect(reverse("personel_registra_list"))
+        except user.DoesNotExist:
+            return redirect(reverse("home"))
+        except Registra.DoesNotExist:
+            return redirect(reverse("home"))
+        
+class DeleteProfessorAPI(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+        
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        try:
+            with transaction.atomic():
+                user = CustomUser.objects.get(id=id)
+                professor = Professor.objects.get(user=user)
+                professor.delete()
+                user.delete()
+                return redirect(reverse("personel_professor_list"))
+        except user.DoesNotExist:
+            return redirect(reverse("home"))
+        except Professor.DoesNotExist:
+            return redirect(reverse("home"))
+        
+class DeleteStudentAPI(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+        
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        try:
+            with transaction.atomic():
+                user = CustomUser.objects.get(id=id)
+                student = Student.objects.get(user=user)
+                student.delete()
+                user.delete()
+                return redirect(reverse("personel_student_list"))
+        except user.DoesNotExist:
+            return redirect(reverse("home"))
+        except Student.DoesNotExist:
+            return redirect(reverse("home"))
+        

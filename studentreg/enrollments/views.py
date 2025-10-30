@@ -18,6 +18,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         return render(request, 'enrollments/index.html')
 
 
@@ -49,9 +53,19 @@ class EnrollListView(LoginRequiredMixin, View):
         if not request.user.is_registra:
             return redirect(reverse("home"))
 
-        registra = Registra.objects.get(user_id=request.user.id)
+        registra = Registra.objects.get(user=request.user)
         enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
         return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls})
+
+class EnrollConfirmListView(LoginRequiredMixin, View):
+    def get(self, request):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        registra = Registra.objects.get(user=request.user)
+        enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="con").order_by("date")
+        return render(request, 'enrollments/list/confirm.html', {"enrolls": enrolls})
 
 
 

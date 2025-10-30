@@ -19,5 +19,9 @@ urlpatterns = [
 
     path('payment', PaymentListView.as_view(), name="personel_payment_list"),
     path('payment/<int:id>', PaymentDetailView.as_view(), name="personel_payment_detail"),
+
+    path('api/delete/registra/<int:id>', DeleteRegistraAPI.as_view(), name="personel_api_delete_registra"),
+    path('api/delete/professor/<int:id>', DeleteProfessorAPI.as_view(), name="personel_api_delete_professor"),
+    path('api/delete/student/<int:id>', DeleteStudentAPI.as_view(), name="personel_api_delete_student"),
    
 ]

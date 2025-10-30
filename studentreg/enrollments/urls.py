@@ -1,11 +1,12 @@
 from django.urls import path
-from enrollments.views import IndexView, EnrollView, SubmitAPI, EnrollListView, ConfirmAPI, GradeView, RefundAPI
+from enrollments.views import IndexView, EnrollView, SubmitAPI, EnrollListView, ConfirmAPI, GradeView, RefundAPI, EnrollConfirmListView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="enrollment_index"),
     path('enrollment', EnrollView.as_view(), name="enrollment_enroll"),
 
-    path('enroll', EnrollListView.as_view(), name="enrollment_enroll_list"),
+    path('enroll/request', EnrollListView.as_view(), name="enrollment_enroll_list_request"),
+    path('enroll/confirmed', EnrollConfirmListView.as_view(), name="enrollment_enroll_list_confirmed"),
 
     path('grade/<int:id>', GradeView.as_view(), name="enrollment_grade_edit"),
 
