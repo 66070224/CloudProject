@@ -4,22 +4,8 @@
 {% block content %}
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-4xl mx-auto mt-10">
     <form action="" method="get" class="flex flex-col gap-4">
-        <input type="text" name="text" value="{{ text }}" 
+        <input type="text" name="name" value="{{ name }}" placeholder="ชื่อ"
                class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
-        <div class="flex gap-5">
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="name" value="name" {% if type == "name" or type == "" %} checked {% endif %} class="accent-orange-400">
-                ชื่อ
-            </label>
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="faculty" value="faculty" {% if type == "faculty" %} checked {% endif %} class="accent-orange-400">
-                คณะ
-            </label>
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="department" value="department" {% if type == "department" %} checked {% endif %} class="accent-orange-400">
-                สาขา
-            </label>
-        </div>
         <button type="submit" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-5 rounded-2xl shadow">
             Search
         </button>
@@ -38,7 +24,6 @@
             <thead class="bg-orange-100">
                 <tr>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ชื่อ</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คณะ</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">แก้ไข</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ลบ</th>
                 </tr>

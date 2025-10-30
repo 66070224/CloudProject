@@ -1,32 +1,35 @@
 {% extends 'base.html' %}
 {% block title %}Student List{% endblock %}
 
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-10">
     <form action="" method="get" class="flex flex-col gap-4">
-        <input type="text" name="text" value="{{ text }}" 
+        <div class="flex gap-4 items-center">
+            <input type="text" name="student_id" value="{{ student_id }}" placeholder="รหัสนักศึกษา"
                class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
-        <div class="flex flex-wrap gap-4">
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="id" value="id" {% if type == "id" %} checked {% endif %} class="accent-orange-400">
-                รหัส
-            </label>
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="name" value="name" {% if type == "name" or type == "" %} checked {% endif %} class="accent-orange-400">
-                ชื่อ
-            </label>
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="year" value="year" {% if type == "year" %} checked {% endif %} class="accent-orange-400">
-                ปี
-            </label>
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="faculty" value="faculty" {% if type == "faculty" %} checked {% endif %} class="accent-orange-400">
-                คณะ
-            </label>
-            <label class="flex items-center gap-1">
-                <input type="radio" name="type" id="department" value="department" {% if type == "department" %} checked {% endif %} class="accent-orange-400">
-                สาขา
-            </label>
+            <input type="text" name="name" value="{{ name }}" placeholder="ชื่อ"
+               class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <div class="flex">
+                <label for="department">ปี: </label>
+                <input type="number" name="year" value="{{ year }}">
+            </div>
+            <div class="flex min-w-[200px]">
+                <label for="department_select">สาขา: </label>
+                <select name="department_select" id="department_select">
+                    <option value="" {% if not department_select %}selected{% endif %}>-- เลือกสาขา --</option>
+                    {% for d in departments %}
+                        <option value="{{ d.name }}" {% if d.name == department_select %} selected {% endif %}>{{ d.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <button type="submit" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-5 rounded-2xl shadow">
             Search
@@ -48,7 +51,6 @@
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัส</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ชื่อ</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ปี</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คณะ</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">สาขา</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">แก้ไข</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ลบ</th>
@@ -60,7 +62,6 @@
                     <td class="px-6 py-3">{{ student.student_id }}</td>
                     <td class="px-6 py-3">{{ student.user.title }} {{ student.user.first_name }} {{ student.user.last_name }}</td>
                     <td class="px-6 py-3">{{ student.student_year }}</td>
-                    <td class="px-6 py-3">{{ student.department.faculty.name }}</td>
                     <td class="px-6 py-3">{{ student.department.name }}</td>
                     <td class="px-6 py-3">
                         <a href="{% url 'personel_student_edit' student.user.id %}" 
@@ -76,4 +77,15 @@
         </table>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function() {
+    $('#department_select').select2({
+      placeholder: "ค้นหาสาขา...",
+      allowClear: true
+    });
+  });
+</script>
 {% endblock %}
