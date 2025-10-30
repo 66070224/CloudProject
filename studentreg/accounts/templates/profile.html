@@ -24,6 +24,10 @@
     <div class="text-lg flex justify-center mb-2">
         <span class="bg-white py-1 px-3 rounded-full border border-amber-500">คณะ {{ user.registra.faculty.name }}</span>
     </div>
+    {% elif user.is_professor %}
+    <div class="text-lg flex justify-center mb-2">
+        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">คณะ {{ user.professor.faculty.name }}</span>
+    </div>
     {% endif %}
 
     <div class="flex justify-center mt-4">
@@ -32,5 +36,27 @@
            Change password
         </a>
     </div>
+
+    
+
 </section>
+
+{% if user.is_student %}
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-3xl mx-auto mt-10 items-center">
+    <h2 class="text-2xl font-semibold text-orange-500 mb-4 mt-6">รายวิชาที่ลงทะเบียน</h2>
+    {% for enroll in enrolls %}
+        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">{{ enroll.section.course.code }} - เซ็ค {{ enroll.section.number }}</span>
+    {% endfor %}    
+</section>
+{% endif %}
+
+{% if user.is_professor %}
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-3xl mx-auto mt-10 items-center">
+    <h2 class="text-2xl font-semibold text-orange-500 mb-4 mt-6">รายวิชาที่สอน</h2>
+    {% for course in user.professor.courses.all %}
+        <span class="bg-white py-1 px-3 rounded-full border border-amber-500">{{ course.code }} - {{ course.name }}</span>
+    {% endfor %}
+</section>
+{% endif %}
+
 {% endblock %}

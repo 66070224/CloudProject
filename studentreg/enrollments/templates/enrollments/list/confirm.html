@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Enroll List{% endblock %}
+
+{% block content %}
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8 overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
+        <thead class="bg-orange-100">
+            <tr>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัสนักศึกษา</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">วิชา</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">section</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ลบ</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            {% for enroll in enrolls %}
+            <tr class="hover:bg-orange-50 transition-colors">
+                <td class="px-6 py-3">{{ enroll.student.student_id }}</td>
+                <td class="px-6 py-3">{{ enroll.section.course.code }} {{ enroll.section.course.name }}</td>
+                <td class="px-6 py-3">{{ enroll.section.number }}</td>
+                <td class="px-6 py-3">
+                    <a href="{% url 'enrollment_api_refund' enroll.id %}" class="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition-colors">ลบ</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

@@ -2,10 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from django.views import View
 
 from enrollments.models import Enroll
-from personnels.models import Student, Registra
+from personnels.models import Student, Registra, Professor
 
 from courses.models import Course
-from departments.models import Department
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -44,5 +43,5 @@ class HomeView(LoginRequiredMixin, View):
             registra = Registra.objects.get(user=request.user)
             context["total_students"] = Student.objects.filter(department__faculty=registra.faculty).count()
             context["total_courses"] = Course.objects.filter(department__faculty=registra.faculty).count()
-            context["total_departments"] = Department.objects.filter(faculty=registra.faculty).count()
+            context["total_professors"] = Professor.objects.filter(faculty=registra.faculty).count()
         return render(request, 'home.html', context)
