@@ -57,6 +57,45 @@
     <p class="text-center text-gray-500">คุณยังไม่ได้ลงทะเบียน</p>
     {% endif %}
 </section>
+{% elif user.is_registra %}
+<section class="flex flex-col gap-5 bg-white/70 backdrop-blur-lg p-6 shadow-2xl rounded-2xl border border-orange-100">
+    <div class="flex justify-center">
+        <h1 class="text-4xl font-bold text-gray-700">
+            ยินดีต้อนรับ,
+            <a href="{% url 'profile' %}" class="text-orange-500 hover:underline">
+                {{user.first_name}}
+            </a>
+        </h1>
+    </div>
+</section>
+
+<section class="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-6">
+    <div class="bg-white shadow rounded-2xl p-5 border border-orange-100">
+        <h2 class="text-gray-500 text-sm">นักศึกษาทั้งหมด</h2>
+        <p class="text-3xl font-bold text-orange-500">{{ total_students }}</p>
+    </div>
+    <div class="bg-white shadow rounded-2xl p-5 border border-orange-100">
+        <h2 class="text-gray-500 text-sm">วิชาที่เปิดสอน</h2>
+        <p class="text-3xl font-bold text-orange-500">{{ total_courses }}</p>
+    </div>
+    <div class="bg-white shadow rounded-2xl p-5 border border-orange-100">
+        <h2 class="text-gray-500 text-sm">คณะทั้งหมด</h2>
+        <p class="text-3xl font-bold text-orange-500">{{ total_departments }}</p>
+    </div>
+</section>
+
+<div class="flex flex-wrap gap-3 mt-6">
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'personel_professor_list' %}">Professor List</a>
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'personel_student_list' %}">Student List</a>
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'personel_payment_list' %}">Term fee List</a>
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'enrollment_enroll_list' %}">Enroll List</a>
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'course_index' %}">Courses</a>
+</div>
 {% endif %}
 {% endif %}
 {% endblock %}
