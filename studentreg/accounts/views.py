@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout, get_user, update_session_auth_has
 from django.urls import reverse
 from accounts.models import CustomUser
 from django.contrib import messages
+from django.db import transaction, Error
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .services import CognitoService
@@ -55,10 +56,19 @@ class ChangePassword(LoginRequiredMixin, View):
         return render(request, 'changepassword.html', { "form": form })
     def post(self, request):
         form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว!')
-            return redirect(reverse("profile"))
+        with transaction.atomic():
+            if form.is_valid():
+                user = form.save()
+                update_session_auth_hash(request, user)
+                try:
+                    cognito.change_password_cognito(
+                        email=user.email,
+                        password=form.cleaned_data.get('new_password1')
+                    )
+                except Exception as e:
+                    messages.warning(request, f"เปลี่ยนรหัสผ่านใน Cognito ไม่สำเร็จ: {e}")
+                    raise Error(f'เปลี่ยนรหัสบน Cognito ไม่สำเร็จ: {e}')
+                messages.success(request, 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว!')
+                return redirect(reverse("profile"))
         messages.error(request, 'โปรดตรวจสอบข้อมูลอีกครั้ง')
         return render(request, 'changepassword.html', {'form': form})

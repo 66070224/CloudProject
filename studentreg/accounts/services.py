@@ -129,23 +129,28 @@ class CognitoService():
         except ClientError as e:
             print(f"Failed to update email: {e}")
             return False
-
-    def change_password_cognito(self, request, email, password, session):
+        
+    def delete_user_cognito(self, email):
         try:
-            response = self.client.respond_to_auth_challenge(
-                ClientId=self.CLIENT_ID,
-                ChallengeName='NEW_PASSWORD_REQUIRED',
-                Session=session,
-                ChallengeResponses={
-                    'USERNAME': email,
-                    'NEW_PASSWORD': password,
-                    'SECRET_HASH': self.get_secret_hash(email)
-                }
+            self.client.admin_delete_user(
+                UserPoolId=self.USER_POOL_ID,
+                Username=email
             )
-            return response
+            return True
+        except ClientError as e:
+            print(f"Failed to delete user: {e}")
+            return False
 
-        # กรณีเกิด Error อื่นๆ จะเก็บข้อมูลที่ใช้สำหรับแก้รหัสไว้อยู่
+    def change_password_cognito(self, email, password):
+        try:
+            self.client.admin_set_user_password(
+                UserPoolId=self.USER_POOL_ID,
+                Username=email,
+                Password=password,
+                Permanent=True  # ถ้าเป็น True จะไม่ต้องให้ user เปลี่ยนรหัสผ่านครั้งแรก
+            )
+            print("Password updated successfully in Cognito")
+        except self.client.exceptions.UserNotFoundException:
+            print("User not found")
         except Exception as e:
-            request.session["email"] = email
-            request.session["session"] = session
-            return JsonResponse({'status': 'error', 'message': f"{str(e)}"})
+            print("Error:", e)
