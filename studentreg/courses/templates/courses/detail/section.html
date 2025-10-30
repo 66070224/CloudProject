@@ -42,7 +42,7 @@
                     <td class="px-6 py-3">{{ enroll.grade.score4 }}</td>
                     <td class="px-6 py-3">{{ enroll.grade.get_finalscore }}</td>
                     <td class="px-6 py-3">
-                        <a href="{% url 'enrollment_grade_edit' enroll.id %}" class="text-orange-500 hover:text-orange-600 font-medium">แก้ไขคะแนน</a>
+                        <a href="{% url 'enrollment_grade_edit' enroll.id enroll.section.id %}" class="text-orange-500 hover:text-orange-600 font-medium">แก้ไขคะแนน</a>
                     </td>
                 </tr>
                 {% endfor %}

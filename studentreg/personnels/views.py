@@ -5,6 +5,7 @@ from personnels.forms import StudentForm, CustomerUserForm, ProfessorForm, Regis
 from django.db import transaction, Error
 from personnels.models import Student, Professor, Registra, Payment
 from accounts.models import CustomUser
+from departments.models import Faculty, Department
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts.services import CognitoService
@@ -12,6 +13,9 @@ from accounts.services import CognitoService
 cognito = CognitoService()
 
 from rest_framework.views import APIView
+
+from django.db.models import F, Q, Value, CharField
+from django.db.models.functions import Concat
 
 #----------------------------------------------------------------------------------------------------------------------------
 # STUDENT
@@ -22,28 +26,34 @@ class StudentListView(LoginRequiredMixin, View):
         if not request.user.is_registra:
             return redirect(reverse("home"))
 
-        text = request.GET.get("text")
-        type = request.GET.get("type")
+        student_id = request.GET.get("student_id")
+        name = request.GET.get("name")
+        year = request.GET.get("year")
+        department = request.GET.get("department_select")
 
         registra = Registra.objects.get(user_id=request.user.id)
-        students = Student.objects.filter(department__faculty=registra.faculty)
+        students = Student.objects.filter(department__faculty=registra.faculty).annotate(fully_name=Concat(F("user__title"), Value(" "), F("user__first_name"), Value(" "), F("user__last_name"), output_field=CharField()))
+        departments = Department.objects.filter(faculty=registra.faculty)
 
-        if text and type and text != "None":
-            if type == "id":
-                students = students.filter(student_id__icontains=text)
-            elif type == "name":
-                students = students.filter(user__first_name__icontains=text)
-            elif type == "year":
-                students = students.filter(year=text)
-            elif type == "department":
-                students = students.filter(department__name__icontains=text)
-            elif type == "faculty":
-                students = students.filter(department__faculty__name__icontains=text)
-        
-        if text == "None" or text == None:
-            text = ""
+        if student_id and student_id != "None":
+            students = students.filter(student_id__icontains=student_id)
+        if name and name != "None":
+            students = students.filter(fully_name__icontains=name)
+        if year and year != "None":
+            students = students.filter(student_year=year)
+        if department and department != "None":
+            students = students.filter(department__name__icontains=department)
 
-        return render(request, "personnels/list/student.html", {"students": students, "text": text, "type": type})
+        if student_id == "None" or student_id == None:
+            student_id = ""
+        if name == "None" or name == None:
+            name = ""
+        if year == "None" or year == None:
+            year = ""
+        if department == "None" or department == None:
+            department = ""
+
+        return render(request, "personnels/list/student.html", {"students": students, "name": name, "student_id": student_id, "year": year, "department_select": department, "departments": departments})
     
 class CreateStudentView(LoginRequiredMixin, View):
     def get(self, request):
@@ -131,20 +141,18 @@ class ProfessorListView(LoginRequiredMixin, View):
         if not request.user.is_registra:
             return redirect(reverse("home"))
 
-        text = request.GET.get("text")
-        type = request.GET.get("type")
+        name = request.GET.get("name")
 
-        registra = Registra.objects.get(user_id=request.user.id)
-        professors = Professor.objects.filter(faculty=registra.faculty)
+        registra = Registra.objects.get(user=request.user)
+        professors = Professor.objects.filter(faculty=registra.faculty).annotate(fully_name=Concat(F("user__title"), Value(" "), F("user__first_name"), Value(" "), F("user__last_name"), output_field=CharField()))
 
-        if text and type and text != "None":
-            if type == "name":
-                professors = professors.filter(user__first_name__icontains=text)
+        if name and name != "None":
+            professors = professors.filter(fully_name__icontains=name)
 
-        if text == "None" or text == None:
-            text = ""
+        if name == "None" or name == None:
+            name = ""
 
-        return render(request, "personnels/list/professor.html", {"professors": professors, "text": text, "type": type})
+        return render(request, "personnels/list/professor.html", {"professors": professors, "name": name })
     
 class CreateProfessorView(LoginRequiredMixin, View):
     def get(self, request):
@@ -232,21 +240,22 @@ class RegistralistView(LoginRequiredMixin, View):
         if not request.user.is_admin:
             return redirect(reverse("home"))
 
-        text = request.GET.get("text")
-        type = request.GET.get("type")
+        name = request.GET.get("name")
+        faculty = request.GET.get("faculty")
 
-        registras = Registra.objects.all()
+        registras = Registra.objects.all().annotate(fully_name=Concat(F("user__title"), Value(" "), F("user__first_name"), Value(" "), F("user__last_name"), output_field=CharField()))
 
-        if text and type and text != "None":
-            if type == "name":
-                registras = registras.filter(user__first_name__icontains=text)
-            elif type == "faculty":
-                registras = registras.filter(faculty__name__icontains=text)
+        if name and name != "None":
+            registras = registras.filter(fully_name__icontains=name)
+        if faculty and faculty != "None":
+            registras = registras.filter(faculty__name__icontains=faculty)
 
-        if text == "None" or text == None:
-            text = ""
+        if name == "None" or name == None:
+            name = ""
+        if faculty == "None" or faculty == None:
+            faculty = ""
 
-        return render(request, "personnels/list/registra.html", {"registras": registras, "text": text, "type": type})
+        return render(request, "personnels/list/registra.html", {"registras": registras, "name": name, "faculty": faculty, "faculties": Faculty.objects.all()})
         
 class CreateRegistraView(LoginRequiredMixin, View):
     def get(self, request):
@@ -414,7 +423,7 @@ class DeleteRegistraAPI(LoginRequiredMixin, APIView):
                     print("User deleted successfully")
                 else:
                     raise Error('ไม่สามารถลบ User ออกจาก Cognito ได้')
-                return redirect(reverse("personel_registra_list"))
+                return redirect(request.META['HTTP_REFERER'])
         except user.DoesNotExist:
             return redirect(reverse("home"))
         except Registra.DoesNotExist:
@@ -437,7 +446,7 @@ class DeleteProfessorAPI(LoginRequiredMixin, APIView):
                     print("User deleted successfully")
                 else:
                     raise Error('ไม่สามารถลบ User ออกจาก Cognito ได้')
-                return redirect(reverse("personel_professor_list"))
+                return redirect(request.META['HTTP_REFERER'])
         except user.DoesNotExist:
             return redirect(reverse("home"))
         except Professor.DoesNotExist:
@@ -460,7 +469,7 @@ class DeleteStudentAPI(LoginRequiredMixin, APIView):
                     print("User deleted successfully")
                 else:
                     raise Error('ไม่สามารถลบ User ออกจาก Cognito ได้')
-                return redirect(reverse("personel_student_list"))
+                return redirect(request.META['HTTP_REFERER'])
         except user.DoesNotExist:
             return redirect(reverse("home"))
         except Student.DoesNotExist:

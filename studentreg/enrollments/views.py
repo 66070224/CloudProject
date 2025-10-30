@@ -52,20 +52,44 @@ class EnrollListView(LoginRequiredMixin, View):
 
         if not request.user.is_registra:
             return redirect(reverse("home"))
+        
+        student_id = request.GET.get("student_id", "")
+        course_code = request.GET.get("course_code", "")
+        section_number = request.GET.get("section_number", "")
 
         registra = Registra.objects.get(user=request.user)
         enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
-        return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls})
+
+        if student_id != "":
+            enrolls = enrolls.filter(student__student_id__icontains=student_id)
+        if course_code != "":
+            enrolls = enrolls.filter(section__course__code__icontains=course_code)
+        if section_number != "":
+            enrolls = enrolls.filter(section__number__icontains=section_number)
+
+        return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls, "student_id": student_id, "course_code": course_code, "section_number": section_number})
 
 class EnrollConfirmListView(LoginRequiredMixin, View):
     def get(self, request):
 
         if not request.user.is_registra:
             return redirect(reverse("home"))
+        
+        student_id = request.GET.get("student_id", "")
+        course_code = request.GET.get("course_code", "")
+        section_number = request.GET.get("section_number", "")
 
         registra = Registra.objects.get(user=request.user)
         enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="con").order_by("date")
-        return render(request, 'enrollments/list/confirm.html', {"enrolls": enrolls})
+
+        if student_id != "":
+            enrolls = enrolls.filter(student__student_id__icontains=student_id)
+        if course_code != "":
+            enrolls = enrolls.filter(section__course__code__icontains=course_code)
+        if section_number != "":
+            enrolls = enrolls.filter(section__number__icontains=section_number)
+
+        return render(request, 'enrollments/list/confirm.html', {"enrolls": enrolls, "student_id": student_id, "course_code": course_code, "section_number": section_number})
 
 
 
@@ -73,18 +97,18 @@ class EnrollConfirmListView(LoginRequiredMixin, View):
 # GRADE
 #----------------------------------------------------------------------------------------------------------------------------
 class GradeView(LoginRequiredMixin, View):
-    def get(self, request, id):
+    def get(self, request, id, section):
         enroll = Enroll.objects.get(id=id)
         grade = Grade.objects.get(enroll=enroll)
         form = GradeForm(instance=grade)
         return render(request, "enrollments/grade/student.html", {"form": form})
-    def post(self, request, id):
+    def post(self, request, id, section):
         enroll = Enroll.objects.get(id=id)
         grade = Grade.objects.get(enroll=enroll)
         form = GradeForm(request.POST, instance=grade)
         if form.is_valid():
             form.save()
-            return redirect(reverse("enrollment_enroll_list"))
+            return redirect(reverse("course_section_detail", args=[section]))
         return render(request, "enrollments/grade/student.html", {"form": form})
 
 

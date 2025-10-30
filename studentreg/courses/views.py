@@ -10,6 +10,7 @@ from personnels.models import Professor, Registra
 from courses.forms import CourseForm, SectionForm, ClassForm
 from django.db import transaction, IntegrityError
 from enrollments.models import Enroll
+from departments.models import Department
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -28,32 +29,40 @@ class CourseListView(LoginRequiredMixin, View):
         if not (request.user.is_registra or request.user.is_professor):
             return redirect(reverse("home"))
 
-        text = request.GET.get("text")
-        type = request.GET.get("type")
+        code = request.GET.get("code", "")
+        name = request.GET.get("name", "")
+        department_select = request.GET.get("department_select", "")
+        year = request.GET.get("year", "")
+        term = request.GET.get("term", "")
 
         if request.user.is_registra:
             registra = Registra.objects.get(user=request.user)
             courses = Course.objects.filter(department__faculty=registra.faculty)
+            departments = Department.objects.filter(faculty=registra.faculty)
         elif request.user.is_professor:
             professor = Professor.objects.get(user=request.user)
             courses = Course.objects.filter(professors=professor)
+            departments = Department.objects.filter(faculty=professor.faculty)
 
-        if text and type and text != "None":
-            if type == "code":
-                courses = courses.filter(code=text)
-            elif type == "name":
-                courses = courses.filter(name=text)
-            elif type == "department":
-                courses = courses.filter(department__name__icontains=text)
-            elif type == "year":
-                courses = courses.filter(year=text)
-            elif type == "term":
-                courses = courses.filter(term=text)
+        if code and code != "None":
+            courses = courses.filter(code__icontains=code)
+        if name and name != "None":
+            courses = courses.filter(name__icontains=name)
+        if department_select and department_select != "None":
+            courses = courses.filter(department__name=department_select)
+        if year and year != "None":
+            try:
+                courses = courses.filter(year=int(year))
+            except Exception:
+                pass
+        if term and term != "None":
+            try:
+                courses = courses.filter(term=int(term))
+            except Exception:
+                pass
 
-        if text == "None" or text == None:
-            text = ""
 
-        return render(request, "courses/list/course.html", {"courses": courses, "text": text, "type": type})
+        return render(request, "courses/list/course.html", {"courses": courses, "code": code, "name": name, "department_select": department_select, "year": year, "term": term, "departments": departments })
     
 class CourseDetailView(LoginRequiredMixin, View):
     def get(self, request, code):
@@ -131,8 +140,8 @@ class SectionListView(LoginRequiredMixin, View):
         if not (request.user.is_registra or request.user.is_professor):
             return redirect(reverse("home"))
 
-        text = request.GET.get("text")
-        type = request.GET.get("type")
+        code = request.GET.get("code", "")
+        section_number = request.GET.get("section_number", "")
 
         if request.user.is_registra:
             registra = Registra.objects.get(user=request.user)
@@ -141,19 +150,12 @@ class SectionListView(LoginRequiredMixin, View):
             professor = Professor.objects.get(user=request.user)
             sections = Section.objects.filter(course__professors=professor)
 
-        if text and type and text != "None":
-            if type == "course":
-                sections = sections.filter(course__name__icontains=text)
-            elif type == "section":
-                try:
-                    sections = sections.filter(number=int(text))
-                except Exception:
-                    pass
+        if code and code != "None":
+            sections = sections.filter(course__code__icontains=code)
+        if section_number and section_number != "None":
+            sections = sections.filter(number__icontains=section_number)
 
-        if text == "None" or text == None:
-            text = ""
-
-        return render(request, "courses/list/section.html", {"sections": sections, "text": text, "type": type})
+        return render(request, "courses/list/section.html", {"sections": sections, "code": code, "section_number": section_number})
     
 class SectionDetailView(LoginRequiredMixin, View):
     def get(self, request, id):
@@ -221,19 +223,23 @@ class ClassListView(LoginRequiredMixin, View):
         if not request.user.is_registra:
             return redirect(reverse("home"))
 
-        text = request.GET.get("text")
-        type = request.GET.get("type")
+        types = ["LEC", "LAB"]
+        code = request.GET.get("code", "")
+        section_number = request.GET.get("section_number", "")
+        type = request.GET.get("type", "")
 
         registra = Registra.objects.get(user_id=request.user.id)
         classes = Class.objects.filter(section__course__department__faculty=registra.faculty)
 
-        if text and type and text != "None":
-            pass
+        if code and code != "None":
+            classes = classes.filter(section__course__code__icontains=code)
+        if section_number and section_number != "None":
+            classes = classes.filter(section__number__icontains=section_number)
+        if type and type != "None":
+            classes = classes.filter(type=type)
+        
 
-        if text == "None" or text == None:
-            text = ""
-
-        return render(request, "courses/list/class.html", {"classes": classes, "text": text, "type": type})
+        return render(request, "courses/list/class.html", {"classes": classes, "types": types, "code": code, "section_number": section_number, "type": type})
 
 class CreateClassView(LoginRequiredMixin, View):
     def get(self, request):
@@ -304,15 +310,15 @@ class DeleteAPI(LoginRequiredMixin, APIView):
             if type == "course":
                 course = Course.objects.get(code=id)
                 course.delete()
-                return redirect(reverse("course_course_list"))
+                return redirect(request.META['HTTP_REFERER'])
             elif type == "section":
                 section = Section.objects.get(id=id)
                 section.delete()
-                return redirect(reverse("course_section_list"))
+                return redirect(request.META['HTTP_REFERER'])
             elif type == "class":
                 aclass = Class.objects.get(id=id)
                 aclass.delete()
-                return redirect(reverse("course_class_list"))
+                return redirect(request.META['HTTP_REFERER'])
         except Class.DoesNotExist:
             return Response({
                 "text": "ไม่พบข้อมูลที่ต้องการลบ"
