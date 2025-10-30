@@ -2,15 +2,20 @@
 {% block title %}Section List{% endblock %}
 
 {% block content %}
-<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
-    <form action="" method="get" class="flex flex-col gap-2">
-        <input type="text" name="text" value="{{ text }}" class="border border-gray-300 rounded px-3 py-1">
-        <div class="flex flex-wrap gap-5">
-            <span><input type="radio" name="type" id="course" value="course" {% if type == "course" or type == "" %} checked {% endif %}>วิชา</span>
-            <span><input type="radio" name="type" id="section" value="section" {% if type == "section" %} checked {% endif %}>เซ็ค</span>
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-10">
+    <form action="" method="get" class="flex flex-col gap-4">
+        <div class="flex gap-4 items-center">
+            <input type="text" name="code" value="{{ code }}" placeholder="รหัสวิชา"
+               class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <div class="flex">
+                <label for="section_number">เซ็ค: </label>
+                <input type="number" name="section_number" value="{{ section_number }}">
+            </div>
         </div>
-        <button type="submit" class="bg-orange-400 hover:bg-orange-500 text-white py-2 px-6 rounded-2xl transition-colors">Search</button>
-    </form>
+        <button type="submit" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-5 rounded-2xl shadow">
+            Search
+        </button>
+    </form>    
 </section>
 
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
@@ -25,7 +30,7 @@
         <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
             <thead class="bg-orange-100">
                 <tr>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">วิชา</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัสวิชา</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เซ็ค</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">จำนวนนักศึกษา</th>
                     {% if user.is_registra %}
@@ -39,7 +44,7 @@
             <tbody class="divide-y divide-gray-200">
                 {% for section in sections %}
                 <tr class="hover:bg-orange-50 transition-colors">
-                    <td class="px-6 py-3">{{ section.course.name }}</td>
+                    <td class="px-6 py-3">{{ section.course.code }}</td>
                     <td class="px-6 py-3">{{ section.number }}</td>
                     <td class="px-6 py-3">{{ section.enrolls.count }}</td>
                     {% if user.is_registra %}

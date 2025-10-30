@@ -2,15 +2,29 @@
 {% block title %}Class List{% endblock %}
 
 {% block content %}
-<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
-    <form action="" method="get" class="flex flex-col gap-2">
-        <input type="text" name="text" value="{{ text }}" class="border border-gray-300 rounded px-3 py-1">
-        <div class="flex gap-5">
-            <span><input type="radio" name="type" id="course" value="course" {% if type == "course" or type == "" %} checked {% endif %}>วิชา</span>
-            <span><input type="radio" name="type" id="section" value="section" {% if type == "section" %} checked {% endif %}>เซ็ค</span>
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-10">
+    <form action="" method="get" class="flex flex-col gap-4">
+        <div class="flex gap-4 items-center">
+            <input type="text" name="code" value="{{ code }}" placeholder="รหัสวิชา"
+               class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <div class="flex">
+                <label for="section_number">เซ็ค: </label>
+                <input type="number" name="section_number" value="{{ section_number }}">
+            </div>
+            <div class="flex min-w-[200px]">
+                <label for="type">ประเภท: </label>
+                <select name="type" id="type">
+                    <option value="" {% if type == "" or None %}selected{% endif %}>-- เลือกประเภท --</option>
+                    {% for t in types %}
+                        <option value="{{ t }}" {% if t == type %} selected {% endif %}>{{ t }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-        <button type="submit" class="bg-orange-400 hover:bg-orange-500 text-white py-2 px-6 rounded-2xl transition-colors">Search</button>
-    </form>
+        <button type="submit" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-5 rounded-2xl shadow">
+            Search
+        </button>
+    </form>    
 </section>
 
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
@@ -54,4 +68,15 @@
         </table>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function() {
+    $('#type').select2({
+      placeholder: "ค้นหาประเภท...",
+      allowClear: true
+    });
+  });
+</script>
 {% endblock %}
