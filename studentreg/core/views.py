@@ -44,4 +44,9 @@ class HomeView(LoginRequiredMixin, View):
             context["total_students"] = Student.objects.filter(department__faculty=registra.faculty).count()
             context["total_courses"] = Course.objects.filter(department__faculty=registra.faculty).count()
             context["total_professors"] = Professor.objects.filter(faculty=registra.faculty).count()
+
+        if request.user.is_professor:
+            professor = Professor.objects.get(user=request.user)
+            context["total_courses"] = Course.objects.filter(department__faculty=professor.faculty).count()
+            context["total_students"] = Student.objects.filter(department__faculty=professor.faculty).count()
         return render(request, 'home.html', context)
