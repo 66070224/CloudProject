@@ -134,9 +134,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-# Root
-# STATIC_ROOT = BASE_DIR / "static"
-# MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -147,6 +144,10 @@ NPM_BIN_PATH = 'npm.cmd'
 
 if DEBUG:
     INSTALLED_APPS += ['django_browser_reload']
+
+# Root
+STATIC_ROOT = BASE_DIR / "static"
+# MEDIA_ROOT = BASE_DIR / 'media'
 
 # AWS S3 setting
 INSTALLED_APPS += ['storages']
@@ -160,8 +161,16 @@ AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 
 
 # Static files
-STATICFILES_STORAGE = "studentreg.storage_backends.StaticStorage"
-DEFAULT_FILE_STORAGE = "studentreg.storage_backends.MediaStorage"
+# STATICFILES_STORAGE = "studentreg.storage_backends.StaticStorage"
+# DEFAULT_FILE_STORAGE = "studentreg.storage_backends.MediaStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "studentreg.storage_backends.MediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "studentreg.storage_backends.StaticStorage",
+    },
+}
 # URL -> S3
 STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
