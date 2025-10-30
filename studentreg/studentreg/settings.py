@@ -165,3 +165,6 @@ DEFAULT_FILE_STORAGE = "studentreg.storage_backends.MediaStorage"
 # URL -> S3
 STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+
+AWS_DEFAULT_ACL = "public-read"
+AWS_QUERYSTRING_AUTH = False
