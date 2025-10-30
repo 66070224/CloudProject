@@ -18,6 +18,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         return render(request, 'enrollments/index.html')
 
 
@@ -27,17 +31,41 @@ class IndexView(LoginRequiredMixin, View):
 #----------------------------------------------------------------------------------------------------------------------------
 class EnrollView(LoginRequiredMixin, View):
     def get(self, request):
-        student = Student.objects.get(user_id=request.user.id)
-        if student.enrolled: return redirect(reverse("home"))
-        semester = Semester.objects.first()
-        courses = Course.objects.filter(year=student.student_year, term=semester.term)
-        return render(request, 'enrollments/enroll.html', {"courses": courses})
+
+        if not request.user.is_student:
+            return redirect(reverse("home"))
+        
+        try:
+            student = Student.objects.get(user=request.user)
+            if student.enrolled: return redirect(reverse("home"))
+            semester = Semester.objects.first()
+            courses = Course.objects.filter(year=student.student_year, term=semester.term)
+            return render(request, 'enrollments/enroll.html', {"courses": courses})
+        except Student.DoesNotExist:
+            return redirect(reverse("home"))
+        except Semester.DoesNotExist:
+            return Response("No semester found", status=500)
+        
     
 class EnrollListView(LoginRequiredMixin, View):
     def get(self, request):
-        registra = Registra.objects.get(user_id=request.user.id)
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        registra = Registra.objects.get(user=request.user)
         enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
         return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls})
+
+class EnrollConfirmListView(LoginRequiredMixin, View):
+    def get(self, request):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        registra = Registra.objects.get(user=request.user)
+        enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="con").order_by("date")
+        return render(request, 'enrollments/list/confirm.html', {"enrolls": enrolls})
 
 
 
@@ -49,6 +77,14 @@ class GradeView(LoginRequiredMixin, View):
         enroll = Enroll.objects.get(id=id)
         grade = Grade.objects.get(enroll=enroll)
         form = GradeForm(instance=grade)
+        return render(request, "enrollments/grade/student.html", {"form": form})
+    def post(self, request, id):
+        enroll = Enroll.objects.get(id=id)
+        grade = Grade.objects.get(enroll=enroll)
+        form = GradeForm(request.POST, instance=grade)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("enrollment_enroll_list"))
         return render(request, "enrollments/grade/student.html", {"form": form})
 
 
@@ -105,11 +141,25 @@ class SubmitAPI(LoginRequiredMixin, APIView):
 
 class ConfirmAPI(LoginRequiredMixin, APIView):
     def get(self, request, id, text):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
         enroll = Enroll.objects.get(id=id)
         if text == "c":
             enroll.status = "con"
             enroll.save()
         elif text == "r":
             enroll.delete()
+        return redirect(request.META['HTTP_REFERER'])
+    
+class RefundAPI(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        enroll = Enroll.objects.get(id=id)
+        enroll.delete()
         return redirect(request.META['HTTP_REFERER'])
     

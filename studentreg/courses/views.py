@@ -25,7 +25,7 @@ class CourseIndexView(LoginRequiredMixin, View):
 class CourseListView(LoginRequiredMixin, View):
     def get(self, request):
 
-        if not request.user.is_registra or request.user.is_professor:
+        if not (request.user.is_registra or request.user.is_professor):
             return redirect(reverse("home"))
 
         text = request.GET.get("text")
@@ -58,18 +58,18 @@ class CourseListView(LoginRequiredMixin, View):
 class CourseDetailView(LoginRequiredMixin, View):
     def get(self, request, code):
 
-        if not request.user.is_registra or request.user.is_professor:
+        if not (request.user.is_registra or request.user.is_professor):
             return redirect(reverse("home"))
         
         if request.user.is_registra:
             registra = Registra.objects.get(user=request.user)
             faculty = registra.faculty
+            course = Course.objects.get(code=code, faculty=faculty)
 
         if request.user.is_professor:
             professor = Professor.objects.get(user=request.user)
-            faculty = professor.faculty
+            course = Course.objects.get(code=code, professors=professor)
         
-        course = Course.objects.get(code=code, faculty=faculty)
         return render(request, "courses/detail/course.html", {"course": course})
 
 class CreateCourseView(LoginRequiredMixin, View):
@@ -128,7 +128,7 @@ class EditCourseView(LoginRequiredMixin, View):
 class SectionListView(LoginRequiredMixin, View):
     def get(self, request):
 
-        if not request.user.is_registra or request.user.is_professor:
+        if not (request.user.is_registra or request.user.is_professor):
             return redirect(reverse("home"))
 
         text = request.GET.get("text")
@@ -158,7 +158,7 @@ class SectionListView(LoginRequiredMixin, View):
 class SectionDetailView(LoginRequiredMixin, View):
     def get(self, request, id):
 
-        if not request.user.is_registra or request.user.is_professor:
+        if not (request.user.is_registra or request.user.is_professor):
             return redirect(reverse("home"))
         
         if request.user.is_registra:
@@ -292,3 +292,32 @@ class CourseDetailAPI(LoginRequiredMixin, APIView):
         course = self.get_object(code)
         serializer = CourseSerializer(course)
         return Response(serializer.data)
+    
+class DeleteAPI(LoginRequiredMixin, APIView):
+
+    def get(self, request, type, id):
+
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        try:
+            if type == "course":
+                course = Course.objects.get(code=id)
+                course.delete()
+                return redirect(reverse("course_course_list"))
+            elif type == "section":
+                section = Section.objects.get(id=id)
+                section.delete()
+                return redirect(reverse("course_section_list"))
+            elif type == "class":
+                aclass = Class.objects.get(id=id)
+                aclass.delete()
+                return redirect(reverse("course_class_list"))
+        except Class.DoesNotExist:
+            return Response({
+                "text": "ไม่พบข้อมูลที่ต้องการลบ"
+            }, status=404)
+        except IntegrityError:
+            return Response({
+                "text": "ไม่สามารถลบข้อมูลได้ เนื่องจากมีการใช้งานอยู่"
+            }, status=400)

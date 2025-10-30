@@ -1,34 +1,42 @@
 {% extends 'base.html' %}
 {% block title %}Course Detail{% endblock %}
+
 {% block content %}
-<section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-    <div class="flex justify-center">
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    <div class="mb-4 flex justify-center">
         <h1 class="text-5xl">รายละเอียดวิชา</h1>
     </div>
-    <div class="flex justify-center">
-        <h1>{{ course.name }}</h1>
+    <div class="flex justify-center flex-col text-xl">
+        <h2>รหัสวิชา: {{ course.code }}</h2>
+        <h2>ชื่อวิชา: {{ course.name }}</h2>
+        <h2>หน่วยกิต: {{ course.credits }}</h2>
+        <h2>สาขา: {{ course.department }}</h2>
+        <h2>ปี: {{ course.year }}</h2>
+        <h2>เทอม: {{ course.term }}</h2>
     </div>
 </section>
 
-<section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-    <div class="flex justify-center">
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    <div class="mb-4 flex justify-center">
         <h1 class="text-5xl">เซ็คทั้งหมด</h1>
     </div>
-    <div class="flex justify-center">
-        <table class="bg-white">
-            <thead>
-                <tr class="border border-gray-300">
-                    <th class="px-4 py-2">เซ็ค</th>
-                    <th class="px-4 py-2">จำนวนักศึกษา</th>
-                    <th class="px-4 py-2">รายละเอียด</th>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
+            <thead class="bg-orange-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">เซ็ค</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">จำนวนักศึกษา</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รายละเอียด</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-200">
                 {% for section in course.sections.all %}
-                <tr class="border border-gray-300">
-                    <td class="px-4 py-2">{{ section.number }}</td>
-                    <td class="px-4 py-2">{{ section.enrolls.count }}</td>
-                    <td class="px-4 py-2"><a href="{% url 'course_section_detail' section.id %}">รายละเอียด</a></td>
+                <tr class="hover:bg-orange-50 transition-colors">
+                    <td class="px-6 py-3">{{ section.number }}</td>
+                    <td class="px-6 py-3">{{ section.enrolls.count }}</td>
+                    <td class="px-6 py-3">
+                        <a href="{% url 'course_section_detail' section.id %}" class="text-orange-500 hover:text-orange-600 font-medium">รายละเอียด</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

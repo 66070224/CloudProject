@@ -1,39 +1,55 @@
 
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-5 py-2.5 w-full">
     <div class="flex-1">
-        <a href="{% url 'home' %}">REG</a>
+      <a href="{% url 'home' %}" class="text-xl font-bold text-orange-500 hover:text-orange-600 transition">
+        REG
+      </a>
     </div>
+
     {% if user.is_authenticated %}
-        {% if user.role == 'adm' %}
-        <div class="flex flex-1 gap-6">
-            <a href="/admin/">admin</a>
-            <a href="{% url 'personel_registra_list' %}">registra</a>
-        </div>
-        {% elif user.role == 'reg' %}
-        <div class="flex flex-1 gap-6">
-            <a href="{% url 'personel_professor_list' %}">Professor</a>
-            <a href="{% url 'personel_student_list' %}">Student</a>
-            <a href="{% url 'personel_payment_list' %}">Termfee</a>
-            <a href="{% url 'enrollment_enroll_list' %}">Enroll</a>
-            <a href="{% url 'course_index' %}">Courses</a>
-        </div>
-        {% elif user.role == 'pro' %}
-        <div class="flex flex-1 gap-6">
-            <a href="{% url 'course_index' %}">Courses</a>
-        </div>
-        {% elif user.role == 'stu' %}
-        <div class="flex flex-1 gap-6">
-            <a href="{% url 'enrollment_enroll' %}">Enroll</a>
-            <a href="{% url 'personel_termfee_list' %}">Termfee</a>
-        </div>
-        {% endif %}
-    <div class="flex flex-none gap-5">
+      {% if user.role == 'adm' %}
+      <div class="flex flex-1 justify-center gap-5 text-gray-700 text-sm">
+        <a href="/admin/" class="hover:text-orange-500 transition">Admin</a>
+        <a href="{% url 'personel_registra_list' %}" class="hover:text-orange-500 transition">Registra</a>
+      </div>
+
+      {% elif user.role == 'reg' %}
+      <div class="flex flex-1 justify-center gap-5 text-gray-700 text-sm">
+        <a href="{% url 'personel_professor_list' %}" class="hover:text-orange-500 transition">Professor</a>
+        <a href="{% url 'personel_student_list' %}" class="hover:text-orange-500 transition">Student</a>
+        <a href="{% url 'personel_payment_list' %}" class="hover:text-orange-500 transition">Termfee</a>
+        <a href="{% url 'enrollment_index' %}" class="hover:text-orange-500 transition">Enroll</a>
+        <a href="{% url 'course_index' %}" class="hover:text-orange-500 transition">Courses</a>
+      </div>
+
+      {% elif user.role == 'pro' %}
+      <div class="flex flex-1 justify-center gap-5 text-gray-700 text-sm">
+        <a href="{% url 'course_index' %}" class="hover:text-orange-500 transition">Courses</a>
+      </div>
+
+      {% elif user.role == 'stu' %}
+      <div class="flex flex-1 justify-center gap-5 text-gray-700 text-sm">
+        <a href="{% url 'enrollment_enroll' %}" class="hover:text-orange-500 transition">Enroll</a>
+        <a href="{% url 'personel_termfee_list' %}" class="hover:text-orange-500 transition">Termfee</a>
+      </div>
+      {% endif %}
+
+      <div class="flex items-center gap-4 flex-none text-gray-700 text-sm">
         {% if user.role != 'adm' %}
-        <a href="{% url 'profile' %}">{{ user.first_name }}  {{ user.last_name }}</a>
+          <a href="{% url 'profile' %}" class="font-medium hover:text-orange-500 transition">
+            {{ user.first_name }} {{ user.last_name }}
+          </a>
         {% else %}
-        <span>ADMIN</span>
+          <span class="font-semibold text-orange-600">ADMIN</span>
         {% endif %}
-        <a href="{% url 'logout' %}">logout</a>
+        <a href="{% url 'logout' %}" class="bg-orange-500 text-white px-3 py-1 rounded-md hover:bg-orange-600 transition text-sm">
+          Logout
+        </a>
+      </div>
+
     {% else %}
-        <a href="{% url 'login' %}" class="hover:bg-red-400">Login</a>
+      <a href="{% url 'login' %}" class="bg-orange-500 text-white px-4 py-1.5 rounded-md hover:bg-orange-600 transition text-sm">
+        Login
+      </a>
     {% endif %}
-    </div>
+  </div>

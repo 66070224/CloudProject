@@ -1,156 +1,134 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
-{% block head %}
-<style>
-    table {
-        background-color: white;
-    }
 
-    table,
-    th {
-        border: 1px gainsboro solid;
-        border-collapse: collapse;
-    }
-
-    tr,
-    td {
-        border-inline: 1px gainsboro solid;
-        border-collapse: collapse;
-        text-align: center;
-    }
-
-    tr {
-        height: 50px;
-    }
-</style>
-{% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
 {% if user.is_student %}
-<section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
+<section class="flex flex-col gap-5 bg-white/70 backdrop-blur-lg p-6 shadow-2xl rounded-2xl border border-orange-100">
     <div class="flex justify-center">
-        <h1 class="text-5xl">ตารางเรียน</h1>
+        <h1 class="text-4xl font-bold text-orange-500">ตารางเรียน</h1>
     </div>
     {% if user.student.enrolled %}
-    <table>
-        <thead>
-            <tr>
-                <th class="p-1"></th>
-                <th class="p-1" colspan="4">08:00-09:00</th>
-                <th class="p-1" colspan="4">09:00-10:00</th>
-                <th class="p-1" colspan="4">10:00-11:00</th>
-                <th class="p-1" colspan="4">11:00-12:00</th>
-                <th class="p-1" colspan="4">12:00-13:00</th>
-                <th class="p-1" colspan="4">13:00-14:00</th>
-                <th class="p-1" colspan="4">14:00-15:00</th>
-                <th class="p-1" colspan="4">15:00-16:00</th>
-                <th class="p-1" colspan="4">16:00-17:00</th>
-                <th class="p-1" colspan="4">17:00-18:00</th>
-                <th class="p-1" colspan="4">18:00-19:00</th>
-                <th class="p-1" colspan="4">19:00-20:00</th>
-            </tr>
-        </thead>
-        <tbody id="schedule">
-            <tr id="table_mon">
-                <td class="p1">Mon</td>
-            </tr>
-            <tr id="table_tue">
-                <td class="p1">Tue</td>
-            </tr>
-            <tr id="table_wed">
-                <td class="p1">Wed</td>
-            </tr>
-            <tr id="table_thu">
-                <td class="p1">Thu</td>
-            </tr>
-            <tr id="table_fri">
-                <td class="p1">Fri</td>
-            </tr>
-            <tr id="table_sat">
-                <td class="p1">Sat</td>
-            </tr>
-            <tr id="table_sun">
-                <td class="p1">Sun</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full border border-gray-200 border-collapse text-sm">
+            <thead>
+                <tr class="bg-orange-50 text-gray-700">
+                    <th class="border border-gray-200 p-2"></th>
+                    <th class="border border-gray-200 p-2" colspan="4">08:00-09:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">09:00-10:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">10:00-11:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">11:00-12:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">12:00-13:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">13:00-14:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">14:00-15:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">15:00-16:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">16:00-17:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">17:00-18:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">18:00-19:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">19:00-20:00</th>
+                </tr>
+            </thead>
+            <tbody id="schedule" class="text-gray-700">
+                <tr id="table_mon">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Mon</td>
+                </tr>
+                <tr id="table_tue">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Tue</td>
+                </tr>
+                <tr id="table_wed">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Wed</td>
+                </tr>
+                <tr id="table_thu">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Thu</td>
+                </tr>
+                <tr id="table_fri">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Fri</td>
+                </tr>
+                <tr id="table_sat">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Sat</td>
+                </tr>
+                <tr id="table_sun">
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Sun</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     {% else %}
-    <span>คุณยังไม่ได้ลงทะเบียน</span>
+    <p class="text-center text-gray-500">คุณยังไม่ได้ลงทะเบียน</p>
     {% endif %}
 </section>
 {% elif user.is_registra %}
-<section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
+<section class="flex flex-col gap-5 bg-white/70 backdrop-blur-lg p-6 shadow-2xl rounded-2xl border border-orange-100">
     <div class="flex justify-center">
-        <h1 class="text-5xl">ยินดิต้อนรับ, <a href="{% url 'profile' %}" class="text-orange-400">
-                {{user.first_name}}</a></h1>
+        <h1 class="text-4xl font-bold text-gray-700">
+            ยินดีต้อนรับ,
+            <a href="{% url 'profile' %}" class="text-orange-500 hover:underline">
+                {{user.first_name}}
+            </a>
+        </h1>
     </div>
 </section>
-<section class="flex flex-col gap-5 shadow-2xl p-5 rounded-2xl">
-    <div class="flex gap-5 ">
-        <div class="bg-white shadow rounded-lg p-4 border border-orange-100">
-            <h2 class="text-gray-500 text-sm">นักศึกษาทั้งหมด</h2>
-            <p class="text-2xl font-bold text-orange-500">{{ total_students }}</p>
-        </div>
-        <div class="bg-white shadow rounded-lg p-4 border border-orange-100">
-            <h2 class="text-gray-500 text-sm">วิชาที่เปิดสอน</h2>
-            <p class="text-2xl font-bold text-orange-500">{{ total_courses }}</p>
-        </div>
-        <div class="bg-white shadow rounded-lg p-4 border border-orange-100">
-            <h2 class="text-gray-500 text-sm">คณะทั้งหมด</h2>
-            <p class="text-2xl font-bold text-orange-500">{{ total_departments }}</p>
-        </div>
+
+<section class="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-6">
+    <div class="bg-white shadow rounded-2xl p-5 border border-orange-100">
+        <h2 class="text-gray-500 text-sm">นักศึกษาทั้งหมด</h2>
+        <p class="text-3xl font-bold text-orange-500">{{ total_students }}</p>
+    </div>
+    <div class="bg-white shadow rounded-2xl p-5 border border-orange-100">
+        <h2 class="text-gray-500 text-sm">วิชาที่เปิดสอน</h2>
+        <p class="text-3xl font-bold text-orange-500">{{ total_courses }}</p>
+    </div>
+    <div class="bg-white shadow rounded-2xl p-5 border border-orange-100">
+        <h2 class="text-gray-500 text-sm">อาจารย์ทั้งหมด</h2>
+        <p class="text-3xl font-bold text-orange-500">{{ total_professors }}</p>
     </div>
 </section>
-<div class="flex gap-5 mt-6">
-    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'personel_professor_list' %}">Professor List</a>
-    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'personel_student_list' %}">Student List</a>
-    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'personel_payment_list' %}">Term fee List</a>
-    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'enrollment_enroll_list' %}">Enroll List</a>
-    <a class="bg-orange-400 px-4 py-1 text-white rounded-2xl" href="{% url 'course_index' %}">Courses</a>
+
+<div class="flex flex-wrap gap-3 mt-6">
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'personel_professor_list' %}">Professor List</a>
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'personel_student_list' %}">Student List</a>
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'personel_payment_list' %}">Term fee List</a>
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'enrollment_index' %}">Enroll</a>
+    <a class="bg-orange-500 hover:bg-orange-600 transition px-4 py-2 text-white rounded-xl shadow-sm"
+        href="{% url 'course_index' %}">Courses</a>
 </div>
 {% endif %}
 {% endif %}
 {% endblock %}
+
 {% block script %}
 <script>
     window.addEventListener("load", load);
 
     function load() {
         const enrolls = JSON.parse('{{ enrolls_json|escapejs }}');
-        console.log(enrolls);
         const colors = [
-            '#EF4444',
-            '#F59E0B',
-            '#10B981',
-            '#3B82F6',
-            '#8B5CF6',
-            '#EC4899',
-            '#14B8A6',
-            '#F97316',
-            '#84CC16',
-            '#06B6D4',
-            '#6366F1',
-            '#22C55E',
+            '#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899',
+            '#14B8A6', '#F97316', '#84CC16', '#06B6D4', '#6366F1', '#22C55E',
         ];
         const tbody = document.getElementById("schedule");
         const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
         for (let d = 0; d < days.length; d++) {
             const tr = tbody.children[d];
-            tr.innerHTML = `<td class="p1">${days[d]}</td>`;
+            tr.innerHTML = `<td class="border border-gray-200 p-2 font-medium text-gray-600">${days[d]}</td>`;
             for (let t = 0; t < 48; t++) {
-                tr.appendChild(document.createElement("td"));
+                const td = document.createElement("td");
+                td.className = "border border-gray-200";
+                tr.appendChild(td);
             }
         }
 
         for (let i = 0; i < enrolls.length; i++) {
-
             const rannum = Math.floor(Math.random() * colors.length)
             const randomColor = colors[rannum];
             colors.splice(rannum, 1)
 
             const classes = enrolls[i].classes
-
             for (let c = 0; c < classes.length; c++) {
                 const dayIndex = days.indexOf(classes[c].day);
                 if (dayIndex === -1) return;
@@ -169,9 +147,11 @@
                     td.innerText = `${endIndex - startIndex}@${enrolls[i].course_code} ${enrolls[i].course_name}\n${classes[c].location}`;
                     td.style.backgroundColor = randomColor;
                     td.style.color = "white";
+                    td.classList.add("rounded-lg", "font-medium", "shadow-inner");
                 }
             }
         }
+
         for (d = 0; d < tbody.children.length; d++) {
             const day = tbody.children[d]
             for (t = 1; t < day.children.length; t++) {
@@ -185,7 +165,6 @@
                 }
             }
         }
-
     }
 </script>
 {% endblock %}

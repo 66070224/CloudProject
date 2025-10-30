@@ -9,8 +9,7 @@
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัสนักศึกษา</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">วิชา</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">section</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ยืนยัน</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ยกเลิก</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ลบ</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -20,10 +19,7 @@
                 <td class="px-6 py-3">{{ enroll.section.course.code }} {{ enroll.section.course.name }}</td>
                 <td class="px-6 py-3">{{ enroll.section.number }}</td>
                 <td class="px-6 py-3">
-                    <a href="{% url 'enrollment_api_confirm' enroll.id 'c' %}" class="text-white bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition-colors">ยืนยัน</a>
-                </td>
-                <td class="px-6 py-3">
-                    <a href="{% url 'enrollment_api_confirm' enroll.id 'r' %}" class="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition-colors">ยกเลิก</a>
+                    <a href="{% url 'enrollment_api_refund' enroll.id %}" class="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition-colors">ลบ</a>
                 </td>
             </tr>
             {% endfor %}

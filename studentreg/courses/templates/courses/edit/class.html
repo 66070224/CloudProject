@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% block title %}Edit Class{% endblock %}
+
 {% block content %}
-    <section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form.as_div }}
-            <button type="submit">Edit</button>
-        </form>
-    </section>
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <div class="flex justify-end mt-4">
+            <button type="submit" class="bg-orange-400 hover:bg-orange-500 text-white py-2 px-6 rounded-2xl shadow transition-colors">Edit</button>
+        </div>
+    </form>
+</section>
 {% endblock %}

@@ -1,34 +1,49 @@
 {% extends 'base.html' %}
 {% block title %}Section Detail{% endblock %}
+
 {% block content %}
-<section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-    <div class="flex justify-center">
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    <div class="mb-4 flex justify-center">
         <h1 class="text-5xl">รายละเอียดเซ็ค</h1>
     </div>
-    <div class="flex justify-center">
-        <h1>{{ section.name }}</h1>
+    <div class="flex justify-center text-xl">
+        <h2>วิชา: {{ section.course.name }}</h2>
+        <h2 class="ml-6">เซ็ค: {{ section.number }}</h2>
+        <h2 class="ml-6">ความจุ: {{ section.capacity }}</h2>
     </div>
 </section>
 
-<section class="flex flex-col gap-5 shadow-2xl p-10 rounded-2xl">
-    <div class="flex justify-center">
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8">
+    <div class="mb-4 flex justify-center">
         <h1 class="text-5xl">นักศึกษาทั้งหมด</h1>
     </div>
-    <div class="flex justify-center">
-        <table class="bg-white">
-            <thead>
-                <tr class="border border-gray-300">
-                    <th class="px-4 py-2">รหัสนักศึกษา</th>
-                    <th class="px-4 py-2">ชื่อ</th>
-                    <th class="px-4 py-2">แก้ไขคะแนน</th>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
+            <thead class="bg-orange-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัสนักศึกษา</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ชื่อ</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คะแนน 1</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คะแนน 2</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คะแนน 3</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คะแนน 4</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">คะแนนรวม</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">แก้ไขคะแนน</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-200">
                 {% for enroll in enrolls %}
-                <tr class="border border-gray-300">
-                    <td class="px-4 py-2">{{ enroll.student.student_id }}</td>
-                    <td class="px-4 py-2">{{ enroll.student.user.first_name }}</td>
-                    <td class="px-4 py-2"><a href="{% url 'enrollment_grade_edit' enroll.id %}">แก้ไขคะแนน</a></td>
+                <tr class="hover:bg-orange-50 transition-colors">
+                    <td class="px-6 py-3">{{ enroll.student.student_id }}</td>
+                    <td class="px-6 py-3">{{ enroll.student.user.get_full_name_with_title }}</td>
+                    <td class="px-6 py-3">{{ enroll.grade.score1 }}</td>
+                    <td class="px-6 py-3">{{ enroll.grade.score2 }}</td>
+                    <td class="px-6 py-3">{{ enroll.grade.score3 }}</td>
+                    <td class="px-6 py-3">{{ enroll.grade.score4 }}</td>
+                    <td class="px-6 py-3">{{ enroll.grade.get_finalscore }}</td>
+                    <td class="px-6 py-3">
+                        <a href="{% url 'enrollment_grade_edit' enroll.id %}" class="text-orange-500 hover:text-orange-600 font-medium">แก้ไขคะแนน</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

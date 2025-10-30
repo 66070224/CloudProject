@@ -1,113 +1,102 @@
 {% extends 'base.html' %}
 {% block title %}Normal{% endblock %}
-{% block head %}
-<style>
-    table, th{
-        border: 1px gainsboro solid;
-        border-collapse: collapse;
-    }
-    tr, td {
-        border-inline: 1px gainsboro solid;
-        border-collapse: collapse;
-        text-align: center;
-    }
-</style>
-{% endblock %}
-{% block content %}
-    <h1>ลงทะเบียนเรียน</h1>
 
-    <section>
-        <table>
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">ลงทะเบียนเรียน</h1>
+
+<section class="mb-6 overflow-x-auto">
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full border border-gray-200 border-collapse text-sm">
             <thead>
-                <tr>
-                    <th class="p-1"></th>
-                    <th class="p-1" colspan="4">08:00-09:00</th>
-                    <th class="p-1" colspan="4">09:00-10:00</th>
-                    <th class="p-1" colspan="4">10:00-11:00</th>
-                    <th class="p-1" colspan="4">11:00-12:00</th>
-                    <th class="p-1" colspan="4">12:00-13:00</th>
-                    <th class="p-1" colspan="4">13:00-14:00</th>
-                    <th class="p-1" colspan="4">14:00-15:00</th>
-                    <th class="p-1" colspan="4">15:00-16:00</th>
-                    <th class="p-1" colspan="4">16:00-17:00</th>
-                    <th class="p-1" colspan="4">17:00-18:00</th>
-                    <th class="p-1" colspan="4">18:00-19:00</th>
-                    <th class="p-1" colspan="4">19:00-20:00</th>
+                <tr class="bg-orange-50 text-gray-700">
+                    <th class="border border-gray-200 p-2"></th>
+                    <th class="border border-gray-200 p-2" colspan="4">08:00-09:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">09:00-10:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">10:00-11:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">11:00-12:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">12:00-13:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">13:00-14:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">14:00-15:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">15:00-16:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">16:00-17:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">17:00-18:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">18:00-19:00</th>
+                    <th class="border border-gray-200 p-2" colspan="4">19:00-20:00</th>
                 </tr>
             </thead>
-            <tbody id="schedule">
+            <tbody id="schedule" class="text-gray-700">
                 <tr id="table_mon">
-                    <td class="p1">Mon</td>
+                    <td class="border-y border-gray-200 p-2 font-medium text-gray-600">Mon</td>
                 </tr>
                 <tr id="table_tue">
-                    <td class="p1">Tue</td>
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Tue</td>
                 </tr>
                 <tr id="table_wed">
-                    <td class="p1">Wed</td>
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Wed</td>
                 </tr>
                 <tr id="table_thu">
-                    <td class="p1">Thu</td>
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Thu</td>
                 </tr>
                 <tr id="table_fri">
-                    <td class="p1">Fri</td>
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Fri</td>
                 </tr>
                 <tr id="table_sat">
-                    <td class="p1">Sat</td>
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Sat</td>
                 </tr>
                 <tr id="table_sun">
-                    <td class="p1">Sun</td>
+                    <td class="border border-gray-200 p-2 font-medium text-gray-600">Sun</td>
                 </tr>
             </tbody>
         </table>
-    </section>
+    </div>
+</section>
 
-    <section>
-        <table>
-            <thead>
-                <tr >
-                    <th>รหัส</th>
-                    <th>วิชา</th>
-                    <th>หน่วยกิต</th>
-                    <th>ผู้สอน</th>
-                    <th>กลุ่ม</th>
-                    <th>เวลาเรียน</th>
-                    <th>สถานที่</th>
-                    <th>รับ</th>
-                    <th>ลง</th>
-                    <th>ลบ</th>
-                </tr>
-            </thead>
-            <tbody id="queues">
-            </tbody>
-        </table>
-        <button onclick="submit()">ยืนยัน</button>
-    </section>
+<section class="mb-6 overflow-x-auto">
+    <table class="min-w-full border border-gray-200 text-center">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 p-2">รหัส</th>
+                <th class="border border-gray-300 p-2">วิชา</th>
+                <th class="border border-gray-300 p-2">หน่วยกิต</th>
+                <th class="border border-gray-300 p-2">ผู้สอน</th>
+                <th class="border border-gray-300 p-2">กลุ่ม</th>
+                <th class="border border-gray-300 p-2">เวลาเรียน</th>
+                <th class="border border-gray-300 p-2">สถานที่</th>
+                <th class="border border-gray-300 p-2">รับ</th>
+                <th class="border border-gray-300 p-2">ลง</th>
+                <th class="border border-gray-300 p-2">ลบ</th>
+            </tr>
+        </thead>
+        <tbody id="queues"></tbody>
+    </table>
+    <button onclick="submit()" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">ยืนยัน</button>
+</section>
 
-    <section>
-        <input id="inputcode" type="text" class="border border-amber-400 rounded-2xl bg-white">
-        <button onclick="toQueues(event)" id="inputbutton">เพิ่ม</button>
-    </section>
+<section class="mb-6 flex gap-2">
+    <input id="inputcode" type="text" class="border border-amber-400 rounded-2xl px-2 py-1 bg-white">
+    <button onclick="toQueues(event)" id="inputbutton" class="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-600">เพิ่ม</button>
+</section>
 
-    <section>
-        <table>
-            <thead>
-                <tr>
-                    <th>รหัสวิชา</th>
-                    <th>ชื่อวิชา</th>
-                    <th>หน่วยกิต</th>
-                </tr>
-            </thead>
-            <tbody id="courses">
-                {% for course in courses %}
-                <tr id="{{ course.code }}" class="cursor-pointer" onclick="toQueues(event)">
-                    <td>{{ course.code }}</td>
-                    <td>{{ course.name }}</td>
-                    <td>{{ course.credits }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </section>
+<section class="mb-6 overflow-x-auto">
+    <table class="min-w-full border border-gray-200 text-center">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 p-2">รหัสวิชา</th>
+                <th class="border border-gray-300 p-2">ชื่อวิชา</th>
+                <th class="border border-gray-300 p-2">หน่วยกิต</th>
+            </tr>
+        </thead>
+        <tbody id="courses">
+            {% for course in courses %}
+            <tr id="{{ course.code }}" class="cursor-pointer hover:bg-gray-100" onclick="toQueues(event)">
+                <td class="border border-gray-300 p-2">{{ course.code }}</td>
+                <td class="border border-gray-300 p-2">{{ course.name }}</td>
+                <td class="border border-gray-300 p-2">{{ course.credits }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
 {% endblock %}
 
 {% block script %}
@@ -286,9 +275,11 @@
 
         for (let d = 0; d < days.length; d++) {
             const tr = tbody.children[d];
-            tr.innerHTML = `<td class="p1">${days[d]}</td>`;
+            tr.innerHTML = `<td class="border border-gray-200 p-2 font-medium text-gray-600">${days[d]}</td>`;
             for (let t = 0; t < 48; t++) {
-                tr.appendChild(document.createElement("td"));
+                const td = document.createElement("td");
+                td.className = "border border-gray-200";
+                tr.appendChild(td);
             }
         }
 
@@ -352,4 +343,5 @@
     }
 
 </script>
+{{ block.super }}
 {% endblock %}

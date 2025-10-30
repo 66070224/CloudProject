@@ -2,11 +2,16 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse
 from personnels.forms import StudentForm, CustomerUserForm, ProfessorForm, RegistraForm, PayForm, EditCustomerUserForm
-from django.db import transaction
+from django.db import transaction, Error
 from personnels.models import Student, Professor, Registra, Payment
 from accounts.models import CustomUser
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from accounts.services import CognitoService
+
+cognito = CognitoService()
+
+from rest_framework.views import APIView
 
 #----------------------------------------------------------------------------------------------------------------------------
 # STUDENT
@@ -59,13 +64,19 @@ class CreateStudentView(LoginRequiredMixin, View):
         try:
             with transaction.atomic():
                 if userform.is_valid() and studentform.is_valid():
+                    email = userform.cleaned_data.get('email')
+                    password = userform.cleaned_data.get('password1')
                     user = userform.save(commit=False)
                     user.role = "stu"
                     student = studentform.save(commit=False)
                     student.user = user
                     user.save()
                     student.save()
-                    return redirect(reverse("personel_student_list"))
+                    created_result = cognito.create_user_cognito(email=email, password=password)
+                    if created_result["status"]:
+                        return redirect(reverse("personel_student_list"))
+                    else:
+                        raise Error('สร้าง User ใน Cognito ไม่สำเร็จ')
                 return render(request, "personnels/create/student.html", {"userform": userform, "studentform": studentform})
         except Exception as e:
             print(e)
@@ -88,14 +99,21 @@ class EditStudentView(LoginRequiredMixin, View):
             return redirect(reverse("home"))
 
         user = CustomUser.objects.get(id=id)
+        email = user.email
         student = Student.objects.get(user=user)
         userform = EditCustomerUserForm(request.POST, request.FILES, instance=user)
         studentform = StudentForm(request.POST, instance=student)
         try:
             with transaction.atomic():
                 if userform.is_valid() and studentform.is_valid():
+                    new_email = userform.cleaned_data.get('email')
                     userform.save()
                     studentform.save()
+                    success = cognito.update_user_email_cognito(email=email, new_email=new_email)
+                    if success:
+                        print("Update email success")
+                    else:
+                        raise Error('Update email failed')
                     return redirect(reverse("personel_student_list"))
                 return render(request, "personnels/edit/student.html", {"userform": userform, "studentform": studentform})
         except Exception as e:
@@ -147,13 +165,19 @@ class CreateProfessorView(LoginRequiredMixin, View):
         try:
             with transaction.atomic():
                 if userform.is_valid() and professorform.is_valid():
+                    email = userform.cleaned_data.get('email')
+                    password = userform.cleaned_data.get('password1')
                     user = userform.save(commit=False)
                     user.role = "pro"
                     professor = professorform.save(commit=False)
                     professor.user = user
                     user.save()
                     professor.save()
-                    return redirect(reverse("personel_professor_list"))
+                    created_result = cognito.create_user_cognito(email=email, password=password)
+                    if created_result["status"]:
+                        return redirect(reverse("personel_professor_list"))
+                    else:
+                        raise Error('สร้าง User ใน Cognito ไม่สำเร็จ')
                 return render(request, "personnels/create/professor.html", {"userform": userform, "professorform": professorform})
         except Exception as e:
             print(e)
@@ -176,14 +200,21 @@ class EditProfessorView(LoginRequiredMixin, View):
             return redirect(reverse("home"))
 
         user = CustomUser.objects.get(id=id)
+        email = user.email
         professor = Professor.objects.get(user=user)
         userform = EditCustomerUserForm(request.POST, request.FILES, instance=user)
         professorform = ProfessorForm(request.POST, instance=professor)
         try:
             with transaction.atomic():
                 if userform.is_valid() and professorform.is_valid():
+                    new_email = userform.cleaned_data.get('email')
                     userform.save()
                     professorform.save()
+                    success = cognito.update_user_email_cognito(email=email, new_email=new_email)
+                    if success:
+                        print("Update email success")
+                    else:
+                        raise Error('Update email failed')
                     return redirect(reverse("personel_professor_list"))
                 return render(request, "personnels/edit/professor.html", {"userform": userform, "professorform": professorform})
         except Exception as e:
@@ -236,13 +267,19 @@ class CreateRegistraView(LoginRequiredMixin, View):
         try:
             with transaction.atomic():
                 if userform.is_valid() and registraform.is_valid():
+                    email = userform.cleaned_data.get('email')
+                    password = userform.cleaned_data.get('password1')
                     user = userform.save(commit=False)
                     user.role = "reg"
                     registra = registraform.save(commit=False)
                     registra.user = user
                     user.save()
                     registra.save()
-                    return redirect(reverse("personel_registra_list"))
+                    created_result = cognito.create_user_cognito(email=email, password=password)
+                    if created_result["status"]:
+                        return redirect(reverse("personel_registra_list"))
+                    else:
+                        raise Error('สร้าง User ใน Cognito ไม่สำเร็จ')
                 return render(request, "personnels/create/registra.html", {"userform": userform, "registraform": registraform})
         except Exception as e:
             print(e)
@@ -265,14 +302,22 @@ class EditRegistraView(LoginRequiredMixin, View):
             return redirect(reverse("home"))
 
         user = CustomUser.objects.get(id=id)
+        email = user.email
         registra = Registra.objects.get(user=user)
         userform = EditCustomerUserForm(request.POST, request.FILES, instance=user)
         registraform = RegistraForm(request.POST, instance=registra)
         try:
             with transaction.atomic():
                 if userform.is_valid() and registraform.is_valid():
+                    new_email = userform.cleaned_data.get('email')
                     userform.save()
                     registraform.save()
+
+                    success = cognito.update_user_email_cognito(email=email, new_email=new_email)
+                    if success:
+                        print("Update email success")
+                    else:
+                        raise Error('Update email failed')
                     return redirect(reverse("personel_registra_list"))
                 return render(request, "personnels/edit/registra.html", {"userform": userform, "registraform": registraform})
         except Exception as e:
@@ -346,3 +391,78 @@ class PaymentDetailView(LoginRequiredMixin, View):
         payment.status = "Y"
         payment.save()
         return redirect(reverse("personel_payment_list"))
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+# API
+#----------------------------------------------------------------------------------------------------------------------------
+
+class DeleteRegistraAPI(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+        
+        if not request.user.is_admin:
+            return redirect(reverse("home"))
+
+        try:
+            with transaction.atomic():
+                user = CustomUser.objects.get(id=id)
+                registra = Registra.objects.get(user=user)
+                registra.delete()
+                user.delete()
+                success = cognito.delete_user_cognito(user.email)
+                if success:
+                    print("User deleted successfully")
+                else:
+                    raise Error('ไม่สามารถลบ User ออกจาก Cognito ได้')
+                return redirect(reverse("personel_registra_list"))
+        except user.DoesNotExist:
+            return redirect(reverse("home"))
+        except Registra.DoesNotExist:
+            return redirect(reverse("home"))
+        
+class DeleteProfessorAPI(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+        
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        try:
+            with transaction.atomic():
+                user = CustomUser.objects.get(id=id)
+                professor = Professor.objects.get(user=user)
+                professor.delete()
+                user.delete()
+                success = cognito.delete_user_cognito(user.email)
+                if success:
+                    print("User deleted successfully")
+                else:
+                    raise Error('ไม่สามารถลบ User ออกจาก Cognito ได้')
+                return redirect(reverse("personel_professor_list"))
+        except user.DoesNotExist:
+            return redirect(reverse("home"))
+        except Professor.DoesNotExist:
+            return redirect(reverse("home"))
+        
+class DeleteStudentAPI(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+        
+        if not request.user.is_registra:
+            return redirect(reverse("home"))
+
+        try:
+            with transaction.atomic():
+                user = CustomUser.objects.get(id=id)
+                student = Student.objects.get(user=user)
+                student.delete()
+                user.delete()
+                success = cognito.delete_user_cognito(user.email)
+                if success:
+                    print("User deleted successfully")
+                else:
+                    raise Error('ไม่สามารถลบ User ออกจาก Cognito ได้')
+                return redirect(reverse("personel_student_list"))
+        except user.DoesNotExist:
+            return redirect(reverse("home"))
+        except Student.DoesNotExist:
+            return redirect(reverse("home"))
+        
