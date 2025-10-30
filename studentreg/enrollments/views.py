@@ -97,18 +97,18 @@ class EnrollConfirmListView(LoginRequiredMixin, View):
 # GRADE
 #----------------------------------------------------------------------------------------------------------------------------
 class GradeView(LoginRequiredMixin, View):
-    def get(self, request, id):
+    def get(self, request, id, section):
         enroll = Enroll.objects.get(id=id)
         grade = Grade.objects.get(enroll=enroll)
         form = GradeForm(instance=grade)
         return render(request, "enrollments/grade/student.html", {"form": form})
-    def post(self, request, id):
+    def post(self, request, id, section):
         enroll = Enroll.objects.get(id=id)
         grade = Grade.objects.get(enroll=enroll)
         form = GradeForm(request.POST, instance=grade)
         if form.is_valid():
             form.save()
-            return redirect(reverse("enrollment_enroll_list"))
+            return redirect(reverse("course_section_detail", args=[section]))
         return render(request, "enrollments/grade/student.html", {"form": form})
 
 
