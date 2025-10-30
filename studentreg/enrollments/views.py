@@ -52,20 +52,44 @@ class EnrollListView(LoginRequiredMixin, View):
 
         if not request.user.is_registra:
             return redirect(reverse("home"))
+        
+        student_id = request.GET.get("student_id", "")
+        course_code = request.GET.get("course_code", "")
+        section_number = request.GET.get("section_number", "")
 
         registra = Registra.objects.get(user=request.user)
         enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="pen").order_by("date")
-        return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls})
+
+        if student_id != "":
+            enrolls = enrolls.filter(student__student_id__icontains=student_id)
+        if course_code != "":
+            enrolls = enrolls.filter(section__course__code__icontains=course_code)
+        if section_number != "":
+            enrolls = enrolls.filter(section__number__icontains=section_number)
+
+        return render(request, 'enrollments/list/enroll.html', {"enrolls": enrolls, "student_id": student_id, "course_code": course_code, "section_number": section_number})
 
 class EnrollConfirmListView(LoginRequiredMixin, View):
     def get(self, request):
 
         if not request.user.is_registra:
             return redirect(reverse("home"))
+        
+        student_id = request.GET.get("student_id", "")
+        course_code = request.GET.get("course_code", "")
+        section_number = request.GET.get("section_number", "")
 
         registra = Registra.objects.get(user=request.user)
         enrolls = Enroll.objects.filter(section__course__department__faculty=registra.faculty, status="con").order_by("date")
-        return render(request, 'enrollments/list/confirm.html', {"enrolls": enrolls})
+
+        if student_id != "":
+            enrolls = enrolls.filter(student__student_id__icontains=student_id)
+        if course_code != "":
+            enrolls = enrolls.filter(section__course__code__icontains=course_code)
+        if section_number != "":
+            enrolls = enrolls.filter(section__number__icontains=section_number)
+
+        return render(request, 'enrollments/list/confirm.html', {"enrolls": enrolls, "student_id": student_id, "course_code": course_code, "section_number": section_number})
 
 
 

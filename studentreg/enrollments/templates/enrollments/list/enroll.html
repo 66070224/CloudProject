@@ -2,12 +2,30 @@
 {% block title %}Enroll List{% endblock %}
 
 {% block content %}
+<section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-10">
+    <form action="" method="get" class="flex flex-col gap-4">
+        <div class="flex gap-4 items-center">
+            <input type="text" name="student_id" value="{{ student_id }}" placeholder="รหัสนักศึกษา"
+               class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <input type="text" name="course_code" value="{{ course_code }}" placeholder="รหัสวิชา"
+               class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <div class="flex">
+                <label for="section_number">เซ็ค: </label>
+                <input type="number" name="section_number" value="{{ section_number }}">
+            </div>
+        </div>
+        <button type="submit" class="bg-orange-400 hover:bg-orange-500 transition-colors text-white py-2 px-5 rounded-2xl shadow">
+            Search
+        </button>
+    </form>    
+</section>
+
 <section class="flex flex-col gap-6 shadow-2xl p-8 md:p-10 rounded-2xl bg-white max-w-5xl mx-auto mt-8 overflow-x-auto">
     <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
         <thead class="bg-orange-100">
             <tr>
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัสนักศึกษา</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">วิชา</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">รหัสวิชา</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">section</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ยืนยัน</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ยกเลิก</th>
@@ -17,7 +35,7 @@
             {% for enroll in enrolls %}
             <tr class="hover:bg-orange-50 transition-colors">
                 <td class="px-6 py-3">{{ enroll.student.student_id }}</td>
-                <td class="px-6 py-3">{{ enroll.section.course.code }} {{ enroll.section.course.name }}</td>
+                <td class="px-6 py-3">{{ enroll.section.course.code }}</td>
                 <td class="px-6 py-3">{{ enroll.section.number }}</td>
                 <td class="px-6 py-3">
                     <a href="{% url 'enrollment_api_confirm' enroll.id 'c' %}" class="text-white bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition-colors">ยืนยัน</a>

@@ -304,15 +304,15 @@ class DeleteAPI(LoginRequiredMixin, APIView):
             if type == "course":
                 course = Course.objects.get(code=id)
                 course.delete()
-                return redirect(reverse("course_course_list"))
+                return redirect(request.META['HTTP_REFERER'])
             elif type == "section":
                 section = Section.objects.get(id=id)
                 section.delete()
-                return redirect(reverse("course_section_list"))
+                return redirect(request.META['HTTP_REFERER'])
             elif type == "class":
                 aclass = Class.objects.get(id=id)
                 aclass.delete()
-                return redirect(reverse("course_class_list"))
+                return redirect(request.META['HTTP_REFERER'])
         except Class.DoesNotExist:
             return Response({
                 "text": "ไม่พบข้อมูลที่ต้องการลบ"

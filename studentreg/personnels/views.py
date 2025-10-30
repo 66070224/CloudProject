@@ -375,7 +375,7 @@ class DeleteRegistraAPI(LoginRequiredMixin, APIView):
                 registra = Registra.objects.get(user=user)
                 registra.delete()
                 user.delete()
-                return redirect(reverse("personel_registra_list"))
+                return redirect(request.META['HTTP_REFERER'])
         except user.DoesNotExist:
             return redirect(reverse("home"))
         except Registra.DoesNotExist:
@@ -393,7 +393,7 @@ class DeleteProfessorAPI(LoginRequiredMixin, APIView):
                 professor = Professor.objects.get(user=user)
                 professor.delete()
                 user.delete()
-                return redirect(reverse("personel_professor_list"))
+                return redirect(request.META['HTTP_REFERER'])
         except user.DoesNotExist:
             return redirect(reverse("home"))
         except Professor.DoesNotExist:
@@ -411,7 +411,7 @@ class DeleteStudentAPI(LoginRequiredMixin, APIView):
                 student = Student.objects.get(user=user)
                 student.delete()
                 user.delete()
-                return redirect(reverse("personel_student_list"))
+                return redirect(request.META['HTTP_REFERER'])
         except user.DoesNotExist:
             return redirect(reverse("home"))
         except Student.DoesNotExist:
