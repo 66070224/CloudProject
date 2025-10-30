@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse
 from personnels.forms import StudentForm, CustomerUserForm, ProfessorForm, RegistraForm, PayForm, EditCustomerUserForm
-from django.db import transaction
+from django.db import transaction, DatabaseError
 from personnels.models import Student, Professor, Registra, Payment
 from accounts.models import CustomUser
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from accounts.services import CognitoService
+
+cognito = CognitoService()
 
 #----------------------------------------------------------------------------------------------------------------------------
 # STUDENT
@@ -153,7 +156,6 @@ class CreateProfessorView(LoginRequiredMixin, View):
                     professor.user = user
                     user.save()
                     professor.save()
-                    return redirect(reverse("personel_professor_list"))
                 return render(request, "personnels/create/professor.html", {"userform": userform, "professorform": professorform})
         except Exception as e:
             print(e)
@@ -236,13 +238,20 @@ class CreateRegistraView(LoginRequiredMixin, View):
         try:
             with transaction.atomic():
                 if userform.is_valid() and registraform.is_valid():
+                    email = userform.cleaned_data.get('email')
+                    password = userform.cleaned_data.get('password1')
                     user = userform.save(commit=False)
                     user.role = "reg"
                     registra = registraform.save(commit=False)
                     registra.user = user
                     user.save()
                     registra.save()
-                    return redirect(reverse("personel_registra_list"))
+                    created_result = cognito.create_user_cognito(email=email, password=password)
+                    print(created_result)
+                    if created_result["status"]:
+                        return redirect(reverse("personel_registra_list"))
+                    else:
+                        raise DatabaseError('สร้าง User ใน Cognito ไม่สำเร็จ')
                 return render(request, "personnels/create/registra.html", {"userform": userform, "registraform": registraform})
         except Exception as e:
             print(e)
@@ -265,14 +274,22 @@ class EditRegistraView(LoginRequiredMixin, View):
             return redirect(reverse("home"))
 
         user = CustomUser.objects.get(id=id)
+        email = user.email
         registra = Registra.objects.get(user=user)
         userform = EditCustomerUserForm(request.POST, request.FILES, instance=user)
         registraform = RegistraForm(request.POST, instance=registra)
         try:
             with transaction.atomic():
                 if userform.is_valid() and registraform.is_valid():
+                    new_email = userform.cleaned_data.get('email')
                     userform.save()
                     registraform.save()
+
+                    success = cognito.update_user_email_cognito(email=email, new_email=new_email)
+                    if success:
+                        print("Update email success")
+                    else:
+                        raise DatabaseError('Update email failed')
                     return redirect(reverse("personel_registra_list"))
                 return render(request, "personnels/edit/registra.html", {"userform": userform, "registraform": registraform})
         except Exception as e:

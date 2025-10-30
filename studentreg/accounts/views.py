@@ -7,6 +7,9 @@ from accounts.models import CustomUser
 from django.contrib import messages
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .services import CognitoService
+
+cognito = CognitoService()
 
 # Create your views here.
 class LoginView(View):
@@ -20,9 +23,17 @@ class LoginView(View):
             return redirect(reverse("home"))
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect(reverse("home"))
+            email = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            login_result = cognito.login_cognito(email=email, password=password)
+
+            if 'AuthenticationResult' in login_result:
+                request.session["AccessToken"] = login_result["AuthenticationResult"]["AccessToken"]
+                request.session["RefreshToken"] = login_result["AuthenticationResult"]["RefreshToken"]
+                request.session["IdToken"] = login_result["AuthenticationResult"]["IdToken"]
+                user = form.get_user()
+                login(request, user)
+                return redirect(reverse("home"))
         return render(request, 'login.html', {"form": form})
 
 class LogoutView(LoginRequiredMixin, View):

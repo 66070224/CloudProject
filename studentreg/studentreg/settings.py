@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,9 +87,9 @@ WSGI_APPLICATION = 'studentreg.wsgi.application'
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'studentreg',
+        'NAME': 'register_cognito',
         'USER': 'postgres',
-        'PASSWORD': 'password',
+        'PASSWORD': 'postgres_2547',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -144,3 +145,18 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 NPM_BIN_PATH = 'npm.cmd'
+
+# AWS
+COGNITO_USER_POOL_ID = config('USER_POOL_ID')
+COGNITO_APP_CLIENT_ID = config('APP_CLIENT_ID')
+COGNITO_REGION = config('REGION')
+COGNITO_APP_CLIENT_SECRET = config('APP_CLIENT_SECRET')
+
+AUTHENTICATION_BACKENDS = (
+    # 'accounts.backends.CognitoBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+AWS_ACCESS_KEY_ID = config('ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('SECRET_ACCESS_KEY')
+AWS_SESSION_TOKEN = config('SESSION_TOKEN')
